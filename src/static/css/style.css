@@ -1,0 +1,14 @@
+body {
+    padding-top: 100px;
+    padding-bottom: 50px;
+}
+.starter-template {
+    padding: 40px 15px;
+    text-align: center;
+}
+
+#site_preview {
+	height: 300px;
+	overflow-y: scroll !important;
+	margin-bottom: 30px;
+}

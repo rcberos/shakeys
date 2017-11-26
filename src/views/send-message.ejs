@@ -1,0 +1,44 @@
+<% include ./partials/header %>
+<% include ./partials/navigation %>
+
+<div class="container">
+	<div class="row">
+		<div class="col-md-6">
+			<form method="POST" action="/textblast">
+				<div class="form-group">
+					
+					<% if (locals.success) { %>
+						<h1>Message sent</h1>
+					 <%} %>
+
+					<h3>Send message to all our our site partners</h3>
+					<!-- <label>Message</label> -->
+					<textarea rows="5" class="form-control" name="message" placeholder="Type your message here..."></textarea>	
+				</div>
+				<div class="form-group">
+					<input type="submit" class="btn btn-primary" value="Send Message">	
+				</div>
+			</form>
+		</div>
+		<div class="col-md-6">
+			<div id="site_preview">
+				<table class="table table-hover table-striped table-bordered">
+				<tr>
+					<th>Site Name</th>
+					<th>Number</th>
+				</tr>
+				<% results.forEach(function(item){ %>
+					<tr>
+						<td><%= item.Room %></td>
+						<td>0<%= item.ContactPerson %></td>
+					</tr>
+				 <% }) %>
+				</table>
+			</div>
+			<h4>We currently have: <span class="badge"><%= results.length %></span> site partners <small>(with contact number in the database)</small></h4>
+		</div>
+	</div>
+</div>
+
+
+<% include ./partials/footer %>
