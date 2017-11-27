@@ -19,6 +19,11 @@
 					<input type="submit" class="btn btn-primary" value="Send Message">	
 				</div>
 			</form>
+			<div class="well">
+				<label>Last message sent: </label>
+				<p><%= message_data.message %><p>
+				<p class="text-right"><span class="badge"><%= message_data.created_at %></span></p>
+			</div>
 		</div>
 		<div class="col-md-6">
 			<div id="site_preview">

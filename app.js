@@ -8,7 +8,8 @@ const express 	= require('express'),
 const server_port = process.env.PORT || this.SERVER_PORT || 3000;
 const env = process.env.NODE_ENV || 'development';
 
-var site_data;
+var site_data,
+    last_message;
 
 var connection = mysql.createConnection({
   host     : 'maindb.com4k2xtorpw.ap-southeast-1.rds.amazonaws.com',
@@ -55,8 +56,13 @@ app.route("/textblast")
    .get((req,res) => {
 
    		connection.query("SELECT Room,ContactPerson FROM AircastRpiLocation WHERE ContactPerson != 0", function(error,results,fields){
-			site_data = results;
-			res.render("send-message",{results:results});
+  			site_data = results;
+        connection.query("SELECT number_used, message,created_at FROM aircast_notification_blast ORDER BY id DESC LIMIT 1",function(error2,results2,fields2){
+          last_message = results2[0];
+          console.log(results2[0]);
+          res.render("send-message",{results:site_data,message_data:last_message});  
+        });
+  			
 		});
    })
    .post((req,res) => {
