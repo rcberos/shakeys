@@ -71,7 +71,7 @@ app.route("/textblast")
       var date_sent = moment().format('ddd, MMM DD, YYYY | hh:mm a');
       last_message.message = message;
       last_message.created_at = date_sent;
-
+      
       request('http://ec2-54-169-234-246.ap-southeast-1.compute.amazonaws.com/api/v0/send-message-blast.php?message='+message,function(error,response,body){
           console.log('error:', error); // Print the error if one occurred
           console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
@@ -80,6 +80,14 @@ app.route("/textblast")
       })
    });
 
+
+app.route('/feedback')
+   .get((req,res)=>{
+      res.render('feedback-form');
+   })
+   .post((req,res)=>{
+
+   })
 
 app.listen(server_port, function() {
 	console.log('starting server at port ' + server_port);
