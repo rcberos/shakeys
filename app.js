@@ -3,6 +3,7 @@ const express 	= require('express'),
 	cors 		= require('cors'),
 	mysql		= require('mysql'),
   request = require('request'),
+  moment  = require('moment'),
 	app 		= express();
 
 const server_port = process.env.PORT || this.SERVER_PORT || 3000;
@@ -57,7 +58,7 @@ app.route("/textblast")
 
    		connection.query("SELECT Room,ContactPerson FROM AircastRpiLocation WHERE ContactPerson != 0", function(error,results,fields){
   			site_data = results;
-        connection.query("SELECT number_used, message,created_at FROM aircast_notification_blast ORDER BY id DESC LIMIT 1",function(error2,results2,fields2){
+        connection.query("SELECT message,created_at FROM aircast_notification_blast ORDER BY id DESC LIMIT 1",function(error2,results2,fields2){
           last_message = results2[0];
           console.log(results2[0]);
           res.render("send-message",{results:site_data,message_data:last_message});  
@@ -67,12 +68,15 @@ app.route("/textblast")
    })
    .post((req,res) => {
       let message = req.body.message;
-      console.log(message);
+      var date_sent = moment().format('ddd, MMM DD, YYYY | hh:mm a');
+      last_message.message = message;
+      last_message.created_at = date_sent;
+
       request('http://ec2-54-169-234-246.ap-southeast-1.compute.amazonaws.com/api/v0/send-message-blast.php?message='+message,function(error,response,body){
           console.log('error:', error); // Print the error if one occurred
           console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
           console.log('body:', body); // Print the HTML for the Google homepage.
-          res.render("send-message",{results:site_data,success:"success"});
+          res.render("send-message",{results:site_data,success:"success",message_data:last_message});
       })
    });
 
@@ -80,4 +84,5 @@ app.route("/textblast")
 app.listen(server_port, function() {
 	console.log('starting server at port ' + server_port);
 });
+
 
