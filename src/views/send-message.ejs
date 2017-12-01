@@ -31,11 +31,13 @@
 				<tr>
 					<th>Site Name</th>
 					<th>Number</th>
+					<th>Contact Person</th>
 				</tr>
 				<% results.forEach(function(item){ %>
 					<tr>
 						<td><%= item.Room %></td>
 						<td><a href="tel:+63<%= item.ContactPerson %>">0<%= item.ContactPerson %></a></td>
+						<td><%= item.ContactPersonName %></td>
 					</tr>
 				 <% }) %>
 				</table>
