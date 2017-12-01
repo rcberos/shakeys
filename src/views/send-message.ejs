@@ -35,7 +35,7 @@
 				<% results.forEach(function(item){ %>
 					<tr>
 						<td><%= item.Room %></td>
-						<td>0<%= item.ContactPerson %></td>
+						<td><a href="tel:+63<%= item.ContactPerson %>">0<%= item.ContactPerson %></a></td>
 					</tr>
 				 <% }) %>
 				</table>
