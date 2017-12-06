@@ -1,0 +1,51 @@
+<% include ./partials/header %>
+<% include ./partials/navigation %>
+
+	<div class="container">
+		<div class="col-md-12">
+			<div class="col-md-6"><h1>Template Manager</h1></div>	
+			<div class="col-md-6">
+				<div class="inner-addon right-addon">
+				    <i class="glyphicon glyphicon-search icon-search" ></i>
+				    <input type="text" class="form-control input-lg" placeholder="Search..." />
+				</div>
+			</div>	
+		</div>
+
+		<br/>
+		<div class="col-md-12">
+			<table class="table table-striped table-hover">
+				<tr>
+					<thead>
+						<th>RpiID</th>
+						<th>Location</th>
+						<th>Room</th>	
+						<th>Operation Hours</th>	
+						<th>View Details</th>	
+					</thead>
+				</tr>
+				<tr>
+					<tbody>
+						<% results.forEach(function(item){ %>
+						<tr>
+							<td><span class="badge"><%= item.RpiID %></span></td>
+							<td><%= item.Location %></td>
+							<td><%= item.Room %></td>
+							<% if (item.OpenTime == '00:00:00') { %>
+								<td>Not Specified</td>	
+							<% }else{ %> 
+								<td><%= moment(item.OpenTime, "HH:mm:ss").format("hh:mm A") %> - <%= moment(item.CloseTime, "HH:mm:ss").format("hh:mm A") %></td>
+							<% } %>
+							<td><a href="/templates-manager/<%= item.RpiID %>" class="btn btn-primary btn-sm">Toggle Template</a></td>
+						</tr>
+						<% }) %>
+					</tbody>
+				</tr>
+					
+			</table>
+		</div>
+
+		
+	</div>
+
+<% include ./partials/footer %>

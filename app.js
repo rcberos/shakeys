@@ -6,11 +6,14 @@ const express 	= require('express'),
   moment  = require('moment'),
 	app 		= express();
 
-const server_port = process.env.PORT || this.SERVER_PORT || 3000;
+const server_port = process.env.PORT || this.SERVER_PORT || 5000;
 const env = process.env.NODE_ENV || 'development';
 
 var site_data,
-    last_message;
+    last_message,
+    campaign_files,
+    rpi_campaign,
+    rpi_location;
 
 var connection = mysql.createConnection({
   host     : 'maindb.com4k2xtorpw.ap-southeast-1.rds.amazonaws.com',
@@ -32,8 +35,8 @@ app.set('view engine', 'ejs');
 
 app.set('views',__dirname+'/src/views');
 app.use(express.static(__dirname+'/src/static'));
-app.use('/css', express.static(__dirname + '/src/static/css'));
-app.use('/js', express.static(__dirname + '/src/static/js'));
+// app.use('/css', express.static(__dirname + '/src/static/css'));
+// app.use('/js', express.static(__dirname + '/src/static/js'));
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -87,6 +90,85 @@ app.route('/feedback')
    })
    .post((req,res)=>{
 
+   })
+
+app.route('/templates-manager')
+  .get((req,res) =>{
+
+      if (rpi_location) {
+        res.render('templates-manager',{results: rpi_location,moment:moment});
+      }else {
+        connection.query("SELECT * FROM AircastRpiLocation", function(error,results,body){
+        rpi_location = results;        
+         res.render('templates-manager',{results: results,moment:moment});
+        })
+      }
+            
+  })
+
+app.route("/templates-manager/:id")
+  .get((req,res)=>{
+      var RpiID =  req.params.id;
+      console.log(rpi_campaign);
+
+      if (rpi_location) {
+        rpi_location = rpi_location;
+      }else {
+        connection.query("SELECT * FROM AircastRpiLocation", function(error,results,body){
+          rpi_location = results;        
+        })
+      }
+      
+      if (rpi_campaign) {
+        res.render('templates-item',{ID:RpiID,rpi_location:rpi_location, rpi_campaign: rpi_campaign,campaign_files:campaign_files,moment:moment});
+      }else {
+        console.log("getting data");
+        connection.query("SELECT * FROM AircastRpiCampaign WHERE (Template != 'temp2' and Template !='temp4' and Template !='temp1')",function(error,results,body){
+          rpi_campaign = results;
+
+          connection.query("SELECT * FROM AircastCampaignFiles",function(error2,results2,body2){
+            campaign_files = results2;
+            res.render('templates-item',{ID:RpiID,rpi_location:rpi_location,rpi_campaign: rpi_campaign,campaign_files:campaign_files,moment:moment});
+          }) //end of 2nd query
+        }) // end of 1st query
+      }
+      
+      // res.render()
+  })
+
+app.route("/update-campaign/:id/:param")
+   .post((req,res) => {
+      var id = req.params.id;
+      var new_param = req.params.param;
+
+      connection.query("UPDATE AircastCampaignFiles SET FileName = ? WHERE CampaignID = ?",[new_param,id],function(error,results,body){
+        if (results.changedRows == 0) {
+          res.send('failed');
+        }else {
+          res.send('success');
+        }
+        rpi_location = '', rpi_campaign = '';
+      });
+
+   })
+
+app.route("/toggle-campaign/:rpiid/:campaign_id/:status")
+   .post((req,res) => {
+      var status = req.params.status;
+      var campaign_id = req.params.campaign_id;
+      var rpi_id = req.params.rpiid;
+
+      var query = 'UPDATE AircastRpiCampaign SET isEnabled = '+status+' WHERE CampaignID = '+campaign_id+' and RpiID = '+rpi_id;
+      console.log(query);
+
+      connection.query(query,function(error,results,body){
+        if (results.changedRows == 0) {
+          res.send('failed');
+        }else {
+          res.send('success');
+        }
+        rpi_location = '', rpi_campaign = '';
+      });
    })
 
 app.listen(server_port, function() {
