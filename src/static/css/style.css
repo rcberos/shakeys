@@ -102,3 +102,7 @@ body {
 #toast-container > div {
   opacity: 1 !important; 
 }
+
+.margin-bottom-30 {
+  margin-bottom: 30px;
+}
