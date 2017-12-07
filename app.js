@@ -171,6 +171,11 @@ app.route("/toggle-campaign/:rpiid/:campaign_id/:status")
       });
    })
 
+app.route('/aircast-location')
+   .get((req,res) => {
+      res.render("aircast-location");
+   }) 
+
 app.listen(server_port, function() {
 	console.log('starting server at port ' + server_port);
 });
