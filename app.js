@@ -142,12 +142,18 @@ app.route("/update-campaign/:id/:param")
       var new_param = req.params.param;
 
       connection.query("UPDATE AircastCampaignFiles SET FileName = ? WHERE CampaignID = ?",[new_param,id],function(error,results,body){
-        if (results.changedRows == 0) {
-          res.send('failed');
+        console.log(results);
+        if (results) {
+          if (results.changedRows == 0) {
+            res.send('failed');
+          }else {
+            res.send('success');
+          }
+          rpi_location = '', rpi_campaign = '';
         }else {
-          res.send('success');
+           res.send('failed');
         }
-        rpi_location = '', rpi_campaign = '';
+        
       });
 
    })
@@ -162,12 +168,16 @@ app.route("/toggle-campaign/:rpiid/:campaign_id/:status")
       console.log(query);
 
       connection.query(query,function(error,results,body){
-        if (results.changedRows == 0) {
-          res.send('failed');
-        }else {
-          res.send('success');
-        }
-        rpi_location = '', rpi_campaign = '';
+        if(results) {
+          if (results.changedRows == 0) {
+            res.send('failed');
+          }else {
+            res.send('success');
+          }
+          rpi_location = '', rpi_campaign = '';  
+          }else {
+            res.send('failed');
+          }
       });
    })
 

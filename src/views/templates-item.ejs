@@ -2,7 +2,7 @@
 <% include ./partials/navigation %>
 
 	<div class="container">
-		<div class="col-md-10">
+		<div class="col-md-8">
 			<% rpi_location.forEach(function(item){ %>
 				<% if (item.RpiID == ID) { %>
 					<h1><%= item.Room %> <small>(RpiID: <span id="tv_id"><%= item.RpiID %></span>)</small></h1>
@@ -61,6 +61,23 @@
 			</table>
 
 			<a href="/templates-manager" class="btn btn-primary">Go back</a> 
+		</div>
+		<div class="col-md-4">
+			<div class="well">
+				<ol type="1">
+					<h1>Reminders</h1>
+					<li>Our tv for aircast demo is @ RPIID 2 (Terminal)</li>
+					<li>If you encouter "failed to save" message, refresh the browser and try again.</li>
+					<li>When turning off the template on the tv, just press the toggle button and it should work.</li>
+					<li>When changing the paramater (ex: facebook post content from jollibee to mcdo) make sure you disable first the template, then update the parameter, then wait 30 seconds to 1 minute before enabling again the template.</li>
+					<li>Please dont leave the parameter empty, and make sure you double check the info before changing the paramater (ex: aircast id: 204348506747303)</li>
+					<li>In order to get the facebook id, just go to this link <a href="https://findmyfbid.com/" target="_blank">https://findmyfbid.com/</a> and paste the url of the page (ex: https://www.facebook.com/aircastph)</li>
+					<li>For instagram post, just get the username from instagram.</li>
+					<li>Our twitter is currently set to #GPChristmasParty2017, we'll put a paramater soon.</li>
+
+
+				</ol>
+			</div>
 		</div>
 	</div>
 
