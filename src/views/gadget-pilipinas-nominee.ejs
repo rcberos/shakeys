@@ -1,0 +1,27 @@
+<% include ./partials/header %>
+<% include ./partials/navigation %>
+
+	<div class="container">
+		<h1 class="margin-bottom-30">Gadget Pilipinas Nominees</h1>
+		
+		<h4 class="margin-bottom-30 alert alert-info">People who completed the survey (<%= results.length %>)</h4>
+		<table class="table table-hover table-striped">
+			<th>ID</th>
+			<th>Messenger ID</th>
+			<th>First Name</th>
+			<th>Last Name</th>
+			<% results.forEach(function(item){ %>
+				<tr>
+					<td><span class="badge"><%= item.id %></span></td>
+					<td><%= item.MessengerId %></td>
+					<td><%= item.Fname %></td>
+					<td><%= item.Lname %></td>
+				</tr>
+
+			<% }) %>
+		</table>
+		<a href="/gadget-pilipinas" class="btn btn-primary">Go Back</a>
+	</div>
+
+
+<% include ./partials/footer %>
