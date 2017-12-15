@@ -37,7 +37,7 @@
 							<% }else{ %> 
 								<td><%= moment(item.OpenTime, "HH:mm:ss").format("hh:mm A") %> - <%= moment(item.CloseTime, "HH:mm:ss").format("hh:mm A") %></td>
 							<% } %>
-							<td><a href="/show-campaigns/<%= item.RpiID %>" class="btn btn-primary btn-sm">Toggle Template</a></td>
+							<td><a href="/show-campaigns/<%= item.RpiID %>" class="btn btn-primary btn-sm">View Campaign</a></td>
 						</tr>
 						<% }) %>
 					</tbody>
