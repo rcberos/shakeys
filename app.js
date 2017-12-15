@@ -196,17 +196,6 @@ app.route('/add-template')
 app.route('/show-campaigns')
   .get((req,res) => {
 
-
-      if (rpi_location && campaign_files && aircast_campaign && rpi_campaign_complete) {
-        console.log("has all the data needed");
-      }else {
-        console.log("missing data");
-      }
-
-
-      if (rpi_location && campaign_files && aircast_campaign && rpi_campaign_complete) {
-        res.render("show-campaigns",{rpi_location,aircast_campaign,campaign_files,rpi_campaign_complete,moment});
-      }else {
         connection.query("SELECT * FROM AircastRpiLocation", function(error,results,body){
           rpi_location = results;
 
@@ -227,7 +216,6 @@ app.route('/show-campaigns')
           }) // end of 2nd query
 
        }); // end of 1st query   
-      }
     
   })
 
