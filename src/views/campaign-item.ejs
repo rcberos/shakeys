@@ -1,0 +1,79 @@
+<% include ./partials/header %>
+<% include ./partials/navigation %>
+
+	<div class="container">
+		<div class="col-md-7">
+			<% var orientation; %>
+			<% rpi_location.forEach(function(item){ %>
+				<% if (item.RpiID == ID) { %>
+					<h1><%= item.Room %> <small>(RpiID: <span id="tv_id"><%= item.RpiID %></span>)</small></h1>
+				<% orientation = item.Orientation %>
+				<% } %>
+			<% }); %>
+						<span id="orientation-type" style="display: none;"><%= orientation %></span>
+			<table class="table table-hover table-striped">
+				<thead>
+					<th>CampaignID</th>
+					<th>File Type</th>
+					<th>Name</th>
+					<th>Preview</th>
+					<th>Status</th>
+				</thead>
+				<tbody>
+					<% rpi_campaign_complete.forEach(function(campaign){ %>
+						<% var temp; %>
+						<% if (ID == campaign.RpiID) { %>
+							<tr>
+								<td><span class="badge"><%=campaign.CampaignID %></span></td>
+								<% for (var i = 0; i < aircast_campaign.length; i++) { %>
+									<% if (campaign.CampaignID == aircast_campaign[i].CampaignID) {  %>
+										<% temp = aircast_campaign[i].Template; var param; var hasData = false; %>
+										<% if (temp == 'temp4') { temp = 'Image' %>
+										<% } else if (temp == 'temp2') { temp = 'Video' %>
+										<% } else { temp = 'Template' } %>
+										<td><%= temp %></td>
+										<td><%= aircast_campaign[i].CampaignName %></td>
+									<% } %>
+								<% } %>
+	
+								<% for (var i = 0; i < campaign_files.length; i++) { %>
+									<% if (temp == 'Template') {%>
+										<td>No Preview Available</td>
+									<% break; } %>
+									<% if (campaign.CampaignID == campaign_files[i].CampaignID) {  %>
+										<% if (temp != 'Template') { %>
+											<td><button data-type="<%= temp %>" data-link="https://s3-ap-southeast-1.amazonaws.com/rpitv/Aircast/<%= campaign_files[i].FileName %>" onclick='previewCampaign(this)'>preview campaign</button></td>
+										<% }else { %>
+											
+										<% } %>
+										
+									<% } %>
+								<% } %>
+																	
+								<% if (campaign.isEnabled == 0) { %>
+									<td><input type="checkbox" id="campaign-<%= campaign.CampaignID %>" onchange="toggleCampaign(<%= campaign.CampaignID %>)" class="js-switch"></td>
+								<% } else { %>
+									<td><input type="checkbox" id="campaign-<%= campaign.CampaignID %>" onchange="toggleCampaign(<%= campaign.CampaignID %>)" class="js-switch" checked></td>
+								<% } %> 
+							</tr>
+						<% } %>
+					<%});%>
+				</tbody>
+
+			</table>
+
+			<a href="/show-campaigns" class="btn btn-primary">Go back</a> 
+		</div>
+		<div id="aircast-preview-first">
+			<% if (orientation == 'landscape'){ %>
+			  <img src="/img/aircast-landscape.png" class="aircast-frame" style="width: 600px;">
+			 <% }else{ %>
+			 <img src="/img/aircast-portrait.png" class="aircast-frame" style="width: 400px;">
+			 <% } %>
+		</div>
+		<div id="aircast-preview">
+			
+		</div>
+	</div>
+
+<% include ./partials/footer %>

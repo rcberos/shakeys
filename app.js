@@ -12,7 +12,9 @@ const env = process.env.NODE_ENV || 'development';
 var site_data,
     last_message,
     campaign_files,
+    aircast_campaign,
     rpi_campaign,
+    rpi_campaign_complete,
     rpi_location;
 
 var connection = mysql.createConnection({
@@ -186,103 +188,72 @@ app.route('/aircast-location')
       res.render("aircast-location");
    }) 
 
+app.route('/add-template')
+   .get((req,res) => {
+      res.render('add-template');
+   })
 
-app.route('/gadget-pilipinas')
-    .get((req,res) => {
-      res.render('gadget-pilipinas');
-    })
-
-app.route('/gadget-pilipinas/votes')
-    .get((req,res) => {
-
-    res.render("gadget-pilipinas-votes");
-      
-    })
-
-app.route('/gadget-pilipinas/nominee')
-    .get((req,res) => {
-      let sql = "SELECT id, MessengerId, Fname, Lname FROM `gp_users` WHERE Gadget_Accessory <> '' and Game_of_the_Year <> '' and Budget_Smartphone <> '' and Low_Mid_Range <> '' and High_Mid_Range <> '' and Flagship_Smartphone <> '' and  Gaming_Laptop <> '' and Choice_Award <> '' and Local_Tech <> '' and Technewsmaker <> '' and Smartphone <> ''";
-      connection.query(sql, function(error,results,body) {
-          res.render('gadget-pilipinas-nominee',{results:results});
-      });
-    })
-
-app.get("/api/votes",(req,res)=>{
-
-    var data = [];
-      var accessory = [],
-          game = [],
-          budget = [],
-          mid = [],
-          high = [],
-          flagship = [],
-          laptop = [],
-          choiceAward = [],
-          localtech = [],
-          newsMaker = [],
-          smartphone = [];
-
-
-    connection.query("SELECT * FROM gp_users",function(error,results,body){
-      if (results) {
-
-        results.forEach( function(item, index) {
-          if (item.Gadget_Accessory !== '') {
-            accessory.push(item.Gadget_Accessory);  
-          }
-          if (item.Game_of_the_Year !== '') {
-            game.push(item.Game_of_the_Year);  
-          }
-          if (item.Budget_Smartphone !== '') {
-           budget.push(item.Budget_Smartphone); 
-          }
-          if (item.Low_Mid_Range !== '') {
-           mid.push(item.Low_Mid_Range);  
-          }
-          if (item.High_Mid_Range !== '') {
-           high.push(item.High_Mid_Range);  
-          }
-          if (item.Flagship_Smartphone !== '') {
-           flagship.push(item.Flagship_Smartphone);  
-          }
-          if (item.Gaming_Laptop !== '') {
-           laptop.push(item.Gaming_Laptop);  
-          }
-          if (item.Choice_Award !== '') {
-           choiceAward.push(item.Choice_Award);  
-          }
-          if (item.Local_Tech !== '') {
-           localtech.push(item.Local_Tech);  
-          }
-          if (item.Technewsmaker !== '') {
-           newsMaker.push(item.Technewsmaker);  
-          }
-          if (item.Smartphone !== '') {
-           smartphone.push(item.Smartphone);  
-          }          
-        });
-
-        data.push(accessory);
-        data.push(game);
-        data.push(budget);
-        data.push(mid);
-        data.push(high);
-        data.push(flagship);
-        data.push(laptop);
-        data.push(choiceAward);
-        data.push(localtech);
-        data.push(newsMaker);
-        data.push(smartphone);
-
-        console.log(data);
-
-        res.json(data);
+app.route('/show-campaigns')
+  .get((req,res) => {
+      if (rpi_location && campaign_files && aircast_campaign && rpi_campaign_complete) {
+        res.render("show-campaigns",{rpi_location,aircast_campaign,campaign_files,rpi_campaign_complete,moment});
       }else {
-        res.send("failed");
-      }
-    })
+        connection.query("SELECT * FROM AircastRpiLocation", function(error,results,body){
+          rpi_location = results;
 
-});
+          connection.query("SELECT * FROM AircastCampaign", function(error2,results2,body2){
+            aircast_campaign = results2;
+
+               connection.query("SELECT * FROM AircastCampaignFiles",function(error3,results3,body3){
+                campaign_files = results2;
+
+                connection.query("SELECT * FROM AircastRpiCampaign", function(error4,results4,body4) {
+                  rpi_campaign_complete = results4;
+
+                  res.render("show-campaigns",{rpi_location,aircast_campaign,campaign_files,rpi_campaign_complete,moment});
+                });
+             
+              }); //end of 3rd query
+
+          }) // end of 2nd query
+
+       }); // end of 1st query   
+      }
+    
+  })
+
+app.route('/show-campaigns/:id')
+  .get((req,res) => {
+
+      var RpiID =  req.params.id;
+
+      if (rpi_location && campaign_files && aircast_campaign && rpi_campaign_complete) {
+        res.render("campaign-item",{ID:RpiID,rpi_location,aircast_campaign,campaign_files,rpi_campaign_complete,moment});
+      }else {
+        connection.query("SELECT * FROM AircastRpiLocation", function(error,results,body){
+          rpi_location = results;
+
+          connection.query("SELECT * FROM AircastCampaign", function(error2,results2,body2){
+            aircast_campaign = results2;
+
+               connection.query("SELECT * FROM AircastCampaignFiles",function(error3,results3,body3){
+                campaign_files = results3;
+
+                connection.query("SELECT * FROM AircastRpiCampaign", function(error4,results4,body4) {
+                  rpi_campaign_complete = results4;
+
+                  res.render("campaign-item",{ID:RpiID,rpi_location,aircast_campaign,campaign_files,rpi_campaign_complete,moment});
+                });
+             
+              }); //end of 3rd query
+
+          }) // end of 2nd query
+
+       }); // end of 1st query   
+      }
+    
+  })
+
 
 app.listen(server_port, function() {
 	console.log('starting server at port ' + server_port);

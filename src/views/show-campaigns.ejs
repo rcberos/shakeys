@@ -1,9 +1,10 @@
 <% include ./partials/header %>
 <% include ./partials/navigation %>
 
-	<div class="container">
+
+<div class="container">
 		<div class="col-md-12">
-			<div class="col-md-6"><h1 class="margin-bottom-30"><a class="glyphicon glyphicon-plus" href="/add-template" style="text-decoration: none;"></a>  Template Manager</h1></div>	
+			<div class="col-md-6"><h1 class="margin-bottom-30">Campaign Manager</h1></div>	
 			<div class="col-md-6">
 				<div class="inner-addon right-addon">
 				    <i class="glyphicon glyphicon-search icon-search" ></i>
@@ -26,7 +27,7 @@
 				</tr>
 				<tr>
 					<tbody>
-						<% results.forEach(function(item){ %>
+						<% rpi_location.forEach(function(item){ %>
 						<tr>
 							<td><span class="badge"><%= item.RpiID %></span></td>
 							<td><%= item.Location %></td>
@@ -36,7 +37,7 @@
 							<% }else{ %> 
 								<td><%= moment(item.OpenTime, "HH:mm:ss").format("hh:mm A") %> - <%= moment(item.CloseTime, "HH:mm:ss").format("hh:mm A") %></td>
 							<% } %>
-							<td><a href="/templates-manager/<%= item.RpiID %>" class="btn btn-primary btn-sm">Toggle Template</a></td>
+							<td><a href="/show-campaigns/<%= item.RpiID %>" class="btn btn-primary btn-sm">Toggle Template</a></td>
 						</tr>
 						<% }) %>
 					</tbody>
@@ -47,5 +48,4 @@
 
 		
 	</div>
-
 <% include ./partials/footer %>

@@ -74,3 +74,38 @@
                 }
     	})
     }
+
+    function previewCampaign(data) {
+
+      $("#aircast-preview-first").hide(); 
+      var link = $(data).attr("data-link");
+      var type = $(data).attr("data-type");
+      console.log(link + type);
+
+      var orientation = $("#orientation-type").text();
+
+      if (orientation == 'landscape') {
+        $("#aircast-preview").css("width","410px");
+
+          if (type == 'Image') {
+            $("#aircast-preview").html("<img src="+link+" style='width: 400px;' />");  
+          }else {
+            $("#aircast-preview").html("<video src="+link+" style='width: 400px;' autoplay loop controls />")
+          }
+
+      }else {
+
+
+        if (type == 'Image') {
+            $("#aircast-preview").css("width","260px");
+            $("#aircast-preview").html("<img src="+link+" style='width: 250px;' />");  
+          }else {
+            $("#aircast-preview").css("width","410px");
+            $("#aircast-preview").html("<video src="+link+" style='width: 400px;' autoplay loop controls />")
+          }
+
+      }
+
+
+      
+    }

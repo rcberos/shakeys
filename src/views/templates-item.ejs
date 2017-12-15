@@ -50,9 +50,13 @@
 									<% }else { %>
 										<td><input type="text" class="form-control" disabled placeholder="parameter not required"></td>
 									<% } %>
+								<% if (hasData) { %>
+									<td><button class="btn btn-primary" onclick="updateParameter(<%= item.CampaignID %>)">Update</button></td>
+								<% } else { %>
+										<td><button class="btn btn-default" onclick="updateParameter(<%= item.CampaignID %>)" disabled>Update</button></td>
+								<% } %>
 								
 								<% param = '';%>
-								<td><button class="btn btn-primary" onclick="updateParameter(<%= item.CampaignID %>)">Update</button></td>
 							<% } %>
 						</tr>
 					<% }) %>

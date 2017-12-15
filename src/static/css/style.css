@@ -7,6 +7,22 @@ body {
     text-align: center;
 }
 
+.aircast-frame {
+  width: 300px;
+}
+
+#aircast-preview {
+  position: fixed;
+  right: 50px;
+  border: 5px solid white;
+  box-shadow: 0 0 20px rgba(0,0,0,.4);
+}
+
+ #aircast-preview-first {
+    position: fixed;
+    right: 20px;
+ }
+
 #site_preview {
 	height: 300px;
 	overflow-y: scroll !important;
@@ -121,5 +137,5 @@ body {
 }
 
 #gadget-list a {
-  text-decoration: none;l
+  text-decoration: none;
 }
