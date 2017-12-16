@@ -13,6 +13,7 @@
 						<span id="orientation-type" style="display: none;"><%= orientation %></span>
 
 			<select class="form-control" style="margin-top: 10px; margin-bottom: 10px;" onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);">
+				<option disabled selected>Select Site Location...</option>
 				<% rpi_location.forEach(function(item){ %>
 					<option value="/show-campaigns/<%= item.RpiID %>"><%= item.RpiID %> | <%= item.Room %></option>
 				<% }); %>
@@ -26,8 +27,9 @@
 					<th>Status</th>
 				</thead>
 				<tbody>
+					<% var template_count = 0, campaign_count = 0 , active_campaign_count = 0, video_count = 0 , image_count = 0; %>
 					<% rpi_campaign_complete.forEach(function(campaign){ %>
-						<% var temp; %>
+						<% var temp, template_name;%>
 						<% if (ID == campaign.RpiID) { %>
 							<tr>
 								<td><span class="badge"><%=campaign.CampaignID %></span></td>
@@ -39,26 +41,53 @@
 										<% } else { temp = 'Template' } %>
 										<td><%= temp %></td>
 										<td><%= aircast_campaign[i].CampaignName %></td>
+										<% template_name = aircast_campaign[i].CampaignName %>
 									<% } %>
 								<% } %>
 	
 								<% for (var i = 0; i < campaign_files.length; i++) { %>
 									<% if (temp == 'Template') {%>
-										<td>No Preview Available</td>
+									<% template_count++; %>
+										<%if (template_name == 'AircastRestaurant') { %>
+											<td><a href="https://aircast-templates.herokuapp.com/restaurant" target="_blank"><button>preview campaign</button></td>
+										<% } else if (template_name == 'AircastNews') { %>
+											<td><a href="https://aircast-templates.herokuapp.com/news" target="_blank"><button>preview campaign</button></td>
+										<% } else if (template_name == 'AircastWeather') { %>
+											<td><a href="https://aircast-templates.herokuapp.com/weather" target="_blank"><button>preview campaign</button></td>
+										<% } else if (template_name == 'AircastCurrency') { %>
+											<td><a href="https://aircast-templates.herokuapp.com/currency" target="_blank"><button>preview campaign</button></td>
+										<% } else if (template_name == 'AircastTwitter') { %>
+											<td><a href="https://aircast-templates.herokuapp.com/twitter" target="_blank"><button>preview campaign</button></td>
+										<% } else if (template_name == 'AircastHugot') { %>
+											<td><a href="https://aircast-templates.herokuapp.com/hugot" target="_blank"><button>preview campaign</button></td>
+										<% } else if (template_name == 'AircastUpcomingMovies') { %>
+											<td><a href="https://aircast-templates.herokuapp.com/upcoming-movies" target="_blank"><button>preview campaign</button></td>
+										<% } else if (template_name == 'Instagram Post') { %>
+											<td><a href="https://aircast-templates.herokuapp.com/instagram-post" target="_blank"><button>preview campaign</button></td>
+										<% } else if (template_name == 'Facebook Posts') { %>
+											<td><a href="https://aircast-templates.herokuapp.com/facebook-post" target="_blank"><button>preview campaign</button></td>
+										<% } %>
 									<% break; } %>
 									<% if (campaign.CampaignID == campaign_files[i].CampaignID) {  %>
+
+										<% if (temp == 'Video'){ %>
+											<% video_count++ %>
+										<% }else{ %>
+											<% image_count++; %>
+										<% } %>
+
 										<% if (temp != 'Template') { %>
 											<td><button data-type="<%= temp %>" data-link="https://s3-ap-southeast-1.amazonaws.com/rpitv/Aircast/<%= campaign_files[i].FileName %>" onclick='previewCampaign(this)'>preview campaign</button></td>
-										<% }else { %>
-											
 										<% } %>
 										
 									<% } %>
 								<% } %>
-																	
+
+								<% campaign_count++; %>									
 								<% if (campaign.isEnabled == 0) { %>
 									<td><input type="checkbox" id="campaign-<%= campaign.CampaignID %>" onchange="toggleCampaign(<%= campaign.CampaignID %>)" class="js-switch"></td>
 								<% } else { %>
+									<% active_campaign_count++; %>
 									<td><input type="checkbox" id="campaign-<%= campaign.CampaignID %>" onchange="toggleCampaign(<%= campaign.CampaignID %>)" class="js-switch" checked></td>
 								<% } %> 
 							</tr>
@@ -71,15 +100,22 @@
 			<a href="/show-campaigns" class="btn btn-primary">Go back</a> 
 		</div>
 		<div id="aircast-preview-first">
-			<% if (orientation == 'landscape'){ %>
 			  <img src="/img/aircast-landscape.png" class="aircast-frame" style="width: 600px;">
-			 <% }else{ %>
-			 <img src="/img/aircast-portrait.png" class="aircast-frame" style="width: 400px;">
-			 <% } %>
+			 <div class="quick-stats">
+				 <h4>Quick Stats: </h4>
+				 <hr>
+				 <p>Tv Orientation: <%= orientation %></p>
+				 <p>Number of Campaigns: <strong> <%= campaign_count %></strong></p>
+				 <p>Active Campaigns: <strong> <%= active_campaign_count %></strong></p>
+				 <p>Images Campaigns Count: <strong> <%= image_count %></strong></p>			 
+				 <p>Video Campaigns Count: <strong><%= video_count %></strong></p>
+				 <p>Templates Count: <strong> <%= template_count %></strong></p>				 
+			 </div>
 		</div>
 		<div id="aircast-preview">
 			
 		</div>
+
 	</div>
 
 <% include ./partials/footer %>
