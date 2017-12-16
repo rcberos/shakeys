@@ -21,7 +21,8 @@ var connection = mysql.createConnection({
   host     : 'maindb.com4k2xtorpw.ap-southeast-1.rds.amazonaws.com',
   user     : 'Gameplandigital',
   password : 'Gameplan01',
-  database : 'gp_digital'
+  database : 'gp_digital',
+  multipleStatements: true
 });
 
 connection.connect(function(err) {
@@ -147,8 +148,10 @@ app.route("/update-campaign/:id/:param")
         console.log(results);
         if (results) {
           if (results.changedRows == 0) {
+            console.log('query failed');
             res.send('failed');
           }else {
+            console.log('query success');
             res.send('success');
           }
           rpi_location = '', rpi_campaign = '';
@@ -172,8 +175,10 @@ app.route("/toggle-campaign/:rpiid/:campaign_id/:status")
       connection.query(query,function(error,results,body){
         if(results) {
           if (results.changedRows == 0) {
+            console.log('query failed');
             res.send('failed');
           }else {
+            console.log('query success');
             res.send('success');
           }
           rpi_location = '', rpi_campaign = '';  
@@ -196,27 +201,15 @@ app.route('/add-template')
 app.route('/show-campaigns')
   .get((req,res) => {
 
-        connection.query("SELECT * FROM AircastRpiLocation", function(error,results,body){
-          rpi_location = results;
+      console.log("getting data from the database");
+      connection.query("SELECT * FROM AircastRpiLocation;SELECT * FROM AircastCampaign;SELECT * FROM AircastCampaignFiles;SELECT * FROM AircastRpiCampaign", function(error,results,body){
+          rpi_location = results[0];
+          aircast_campaign = results[1];
+          campaign_files = results[2];
+          rpi_campaign_complete = results[3];
 
-          connection.query("SELECT * FROM AircastCampaign", function(error2,results2,body2){
-            aircast_campaign = results2;
-
-               connection.query("SELECT * FROM AircastCampaignFiles",function(error3,results3,body3){
-                campaign_files = results2;
-
-                connection.query("SELECT * FROM AircastRpiCampaign", function(error4,results4,body4) {
-                  rpi_campaign_complete = results4;
-
-                  res.render("show-campaigns",{rpi_location,aircast_campaign,campaign_files,rpi_campaign_complete,moment});
-                });
-             
-              }); //end of 3rd query
-
-          }) // end of 2nd query
-
-       }); // end of 1st query   
-    
+          res.render("show-campaigns",{rpi_location,aircast_campaign,campaign_files,rpi_campaign_complete,moment});
+       }); // end of 1st query      
   })
 
 app.route('/show-campaigns/:id')
@@ -228,25 +221,15 @@ app.route('/show-campaigns/:id')
         console.log("has all the data needed");
         res.render("campaign-item",{ID:RpiID,rpi_location,aircast_campaign,campaign_files,rpi_campaign_complete,moment});
       }else {
-        connection.query("SELECT * FROM AircastRpiLocation", function(error,results,body){
-          rpi_location = results;
+        console.log("getting data from the database");
+        connection.query("SELECT * FROM AircastRpiLocation;SELECT * FROM AircastCampaign;SELECT * FROM AircastCampaignFiles;SELECT * FROM AircastRpiCampaign", function(error,results,body){
+            rpi_location = results[0];
+            aircast_campaign = results[1];
+            campaign_files = results[2];
+            rpi_campaign_complete = results[3];
 
-          connection.query("SELECT * FROM AircastCampaign", function(error2,results2,body2){
-            aircast_campaign = results2;
-
-               connection.query("SELECT * FROM AircastCampaignFiles",function(error3,results3,body3){
-                campaign_files = results3;
-
-                connection.query("SELECT * FROM AircastRpiCampaign", function(error4,results4,body4) {
-                  rpi_campaign_complete = results4;
-
-                  res.render("campaign-item",{ID:RpiID,rpi_location,aircast_campaign,campaign_files,rpi_campaign_complete,moment});
-                });
-             
-              }); //end of 3rd query
-
-          }) // end of 2nd query
-
+            res.render("campaign-item",{ID:RpiID,rpi_location,aircast_campaign,campaign_files,rpi_campaign_complete,moment});
+       
        }); // end of 1st query   
       }
     

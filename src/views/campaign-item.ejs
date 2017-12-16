@@ -11,6 +11,12 @@
 				<% } %>
 			<% }); %>
 						<span id="orientation-type" style="display: none;"><%= orientation %></span>
+
+			<select class="form-control" style="margin-top: 10px; margin-bottom: 10px;" onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);">
+				<% rpi_location.forEach(function(item){ %>
+					<option value="/show-campaigns/<%= item.RpiID %>"><%= item.RpiID %> | <%= item.Location %></option>
+				<% }); %>
+			</select>
 			<table class="table table-hover table-striped">
 				<thead>
 					<th>CampaignID</th>
