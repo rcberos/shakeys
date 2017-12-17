@@ -66,6 +66,8 @@
 											<td><a href="https://aircast-templates.herokuapp.com/instagram-post" target="_blank"><button>preview campaign</button></td>
 										<% } else if (template_name == 'Facebook Posts') { %>
 											<td><a href="https://aircast-templates.herokuapp.com/facebook-post" target="_blank"><button>preview campaign</button></td>
+										<% } else { %>
+											<td>no preview available</button></td>
 										<% } %>
 									<% break; } %>
 									<% if (campaign.CampaignID == campaign_files[i].CampaignID) {  %>
@@ -85,10 +87,10 @@
 
 								<% campaign_count++; %>									
 								<% if (campaign.isEnabled == 0) { %>
-									<td><input type="checkbox" id="campaign-<%= campaign.CampaignID %>" onchange="toggleCampaign(<%= campaign.CampaignID %>)" class="js-switch"></td>
+									<td data-hasData="false"><input type="checkbox" id="campaign-<%= campaign.CampaignID %>" onchange="toggleCampaign(<%= campaign.CampaignID %>)" class="js-switch"></td>
 								<% } else { %>
 									<% active_campaign_count++; %>
-									<td><input type="checkbox" id="campaign-<%= campaign.CampaignID %>" onchange="toggleCampaign(<%= campaign.CampaignID %>)" class="js-switch" checked></td>
+									<td data-hasData="true"><input type="checkbox" id="campaign-<%= campaign.CampaignID %>" onchange="toggleCampaign(<%= campaign.CampaignID %>)" class="js-switch" checked></td>
 								<% } %> 
 							</tr>
 						<% } %>
@@ -99,23 +101,26 @@
 
 			<a href="/show-campaigns" class="btn btn-primary">Go back</a> 
 		</div>
-		<div id="aircast-preview-first">
-			  <img src="/img/aircast-landscape.png" class="aircast-frame" style="width: 600px;">
-			 <div class="quick-stats">
-				 <h4>Quick Stats: </h4>
-				 <hr>
-				 <p>Tv Orientation: <%= orientation %></p>
-				 <p>Number of Campaigns: <strong> <%= campaign_count %></strong></p>
-				 <p>Active Campaigns: <strong> <%= active_campaign_count %></strong></p>
-				 <p>Images Campaigns Count: <strong> <%= image_count %></strong></p>			 
-				 <p>Video Campaigns Count: <strong><%= video_count %></strong></p>
-				 <p>Templates Count: <strong> <%= template_count %></strong></p>				 
-			 </div>
+		<div class="col-md-5" style="position: relative;">
+			<button id="toggle-campaign" class="btn btn-primary">Toggle Campaign</button>
+			<button id="show-stats" class="btn btn-success">Show Stats</button>
+			<div id="aircast-preview-first">
+				  <img src="/img/aircast-landscape.png" class="aircast-frame" style="width: 600px;">
+				 <div class="quick-stats">
+					 <h4>Quick Stats: </h4>
+					 <hr>
+					 <p>Tv Orientation: <%= orientation %></p>
+					 <p>Number of Campaigns: <strong> <%= campaign_count %></strong></p>
+					 <p>Active Campaigns: <strong> <%= active_campaign_count %></strong></p>
+					 <p>Images Campaigns Count: <strong> <%= image_count %></strong></p>			 
+					 <p>Video Campaigns Count: <strong><%= video_count %></strong></p>
+					 <p>Templates Count: <strong> <%= template_count %></strong></p>				 
+				 </div>
+			</div>
+			<div id="aircast-preview">
+				
+			</div>
 		</div>
-		<div id="aircast-preview">
-			
-		</div>
-
 	</div>
 
 <% include ./partials/footer %>

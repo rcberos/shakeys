@@ -66,7 +66,6 @@ app.route("/textblast")
   			site_data = results;
         connection.query("SELECT message,created_at FROM aircast_notification_blast ORDER BY id DESC LIMIT 1",function(error2,results2,fields2){
           last_message = results2[0];
-          console.log(results2[0]);
           res.render("send-message",{results:site_data,message_data:last_message});  
         });
   			
@@ -79,9 +78,6 @@ app.route("/textblast")
       last_message.created_at = date_sent;
       
       request('http://ec2-54-169-234-246.ap-southeast-1.compute.amazonaws.com/api/v0/send-message-blast.php?message='+message,function(error,response,body){
-          console.log('error:', error); // Print the error if one occurred
-          console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
-          console.log('body:', body); // Print the HTML for the Google homepage.
           res.render("send-message",{results:site_data,success:"success",message_data:last_message});
       })
    });
@@ -125,7 +121,6 @@ app.route("/templates-manager/:id")
       if (rpi_campaign) {
         res.render('templates-item',{ID:RpiID,rpi_location:rpi_location, rpi_campaign: rpi_campaign,campaign_files:campaign_files,moment:moment});
       }else {
-        console.log("getting data");
         connection.query("SELECT * FROM AircastRpiCampaign WHERE (Template != 'temp2' and Template !='temp4' and Template !='temp1')",function(error,results,body){
           rpi_campaign = results;
 
@@ -201,7 +196,6 @@ app.route('/add-template')
 app.route('/show-campaigns')
   .get((req,res) => {
 
-      console.log("getting data from the database");
       connection.query("SELECT * FROM AircastRpiLocation;SELECT * FROM AircastCampaign;SELECT * FROM AircastCampaignFiles;SELECT * FROM AircastRpiCampaign", function(error,results,body){
           rpi_location = results[0];
           aircast_campaign = results[1];
@@ -218,10 +212,8 @@ app.route('/show-campaigns/:id')
       var RpiID =  req.params.id;
 
       if (rpi_location && campaign_files && aircast_campaign && rpi_campaign_complete) {
-        console.log("has all the data needed");
         res.render("campaign-item",{ID:RpiID,rpi_location,aircast_campaign,campaign_files,rpi_campaign_complete,moment});
       }else {
-        console.log("getting data from the database");
         connection.query("SELECT * FROM AircastRpiLocation;SELECT * FROM AircastCampaign;SELECT * FROM AircastCampaignFiles;SELECT * FROM AircastRpiCampaign", function(error,results,body){
             rpi_location = results[0];
             aircast_campaign = results[1];

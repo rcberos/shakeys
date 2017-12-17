@@ -1,4 +1,5 @@
     var elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch'));
+    var toggleCampaign = true;
 
     elems.forEach(function(html) {
       var switchery = new Switchery(html);
@@ -22,6 +23,11 @@
       "hideMethod": "fadeOut"
     }
 
+    $("#show-stats").on("click",function(){
+      $("#aircast-preview").hide();
+      $("#aircast-preview-first").show(); 
+    });
+
     var $rows = $('#rpi-table tr');
     $('#search').keyup(function() {
         var val = $.trim($(this).val()).replace(/ +/g, ' ').toLowerCase();
@@ -31,6 +37,18 @@
             return !~text.indexOf(val);
         }).hide();
     });
+
+    $("#toggle-campaign").on("click",function(){
+
+      if (toggleCampaign) {
+        $("td[data-hasData='false']").parent('tr').hide();
+        toggleCampaign = false;
+      }else {
+        $("td[data-hasData='false']").parent('tr').show();
+        toggleCampaign = true;
+      }
+      
+    })
 
     function updateParameter(campaign_id) {
     	var new_param = $("#param-"+campaign_id).val();
@@ -77,6 +95,7 @@
 
     function previewCampaign(data) {
 
+      $("#aircast-preview").show();
       $("#aircast-preview-first").hide(); 
       var link = $(data).attr("data-link");
       var type = $(data).attr("data-type");
