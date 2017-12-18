@@ -6,7 +6,7 @@ const express 	= require('express'),
   moment  = require('moment'),
 	app 		= express();
 
-const server_port = process.env.PORT || this.SERVER_PORT || 3000;
+const server_port = process.env.PORT || this.SERVER_PORT || 5000;
 const env = process.env.NODE_ENV || 'development';
 
 var site_data,

@@ -1,5 +1,5 @@
     var elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch'));
-    var toggleCampaign = true;
+    var varToggleCampaign = true;
 
     elems.forEach(function(html) {
       var switchery = new Switchery(html);
@@ -23,6 +23,31 @@
       "hideMethod": "fadeOut"
     }
 
+    function toggleCampaign(campaign_id) {
+      var status = $("#campaign-"+campaign_id).is(":checked");
+      var rpid = $("#tv_id").text();
+      console.log(rpid);
+      console.log(status);
+      console.log(campaign_id);
+
+      $.ajax({
+        type: 'POST',  // http method
+        url: '/toggle-campaign/'+rpid+'/'+campaign_id+'/'+status,
+            success: function (data) {
+              console.log(data);
+                if (data == 'success') {
+                  toastr.success("Updated");
+                }else {
+                  toastr.warning("Failed to update. Please try again.");
+                }
+            },
+            error: function (data) {
+                    toastr.warning("Failed to update. Please check your internet connection.");
+                }
+      })
+    }
+
+
     $("#show-stats").on("click",function(){
       $("#aircast-preview").hide();
       $("#aircast-preview-first").show(); 
@@ -40,12 +65,12 @@
 
     $("#toggle-campaign").on("click",function(){
 
-      if (toggleCampaign) {
+      if (varToggleCampaign) {
         $("td[data-hasData='false']").parent('tr').hide();
-        toggleCampaign = false;
+        varToggleCampaign = false;
       }else {
         $("td[data-hasData='false']").parent('tr').show();
-        toggleCampaign = true;
+        varToggleCampaign = true;
       }
       
     })
@@ -69,29 +94,7 @@
     	})
     }
 
-    function toggleCampaign(campaign_id) {
-    	var status = $("#campaign-"+campaign_id).is(":checked");
-    	var rpid = $("#tv_id").text();
-    	console.log(rpid);
-    	console.log(status);
-    	console.log(campaign_id);
 
-    	$.ajax({
-    		type: 'POST',  // http method
-    		url: '/toggle-campaign/'+rpid+'/'+campaign_id+'/'+status,
-            success: function (data) {
-           		console.log(data);
-                if (data == 'success') {
-                	toastr.success("Updated");
-                }else {
-                	toastr.warning("Failed to update. Please try again.");
-                }
-            },
-            error: function (data) {
-                    toastr.warning("Failed to update. Please check your internet connection.");
-                }
-    	})
-    }
 
     function previewCampaign(data) {
 
