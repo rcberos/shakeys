@@ -1,256 +1,239 @@
 <% include ./partials/header %>
 <% include ./partials/navigation %>
+	
 
- 	<body>
- 		<div class="container">
- 			<h3>Aircast Sites Location (<span id="total_counts">0</span>)</h3>
-		    <div id="map"></div>
-		    <button id="drop" onclick="drop()">Drop Markers again.</button>	
- 		</div>
-	    
-	    <script>
 
-	      var aircast_sites = [
-		    { 
-		        name: "HGS, 1800 Bldg. (eastwood)",
-		        lat: 14.6093692, lng: 121.0773443
-		    },
-		    { 
-		        name: "HGS, 1880 Bldg. (eastwood)",
-		        lat: 14.607843, lng: 121.078181
-		    },
-		    { 
-		        name: "HGS, E-Commerce Bldg. (Eastwood)",
-		        lat: 14.6087948, lng: 121.0798817
-		    },
-		    { 
-		        name: "HGS, Aeon Bldg. (Alabang)",
-		        lat: 14.4231007, lng: 121.0376617
-		    },
-		    { 
-		        name: "HGS, Southkey Bldg. (Alabang)",
-		        lat: 14.4250749, lng: 121.0386413
-		    },
-		    { 
-		        name: "HGS, Plaza E Bldg. (Alabang)",
-		        lat: 14.4267499, lng: 121.0373467
-		    },
-		    { 
-		        name: "HGS, Filinvest Bldg. (Alabang)",
-		        lat: 14.4232716, lng: 121.0351275
-		    },
-		    { 
-		        name: "HGS, Cyberpark Bldg. (Libis)",
-		        lat: 14.6079561, lng: 121.0779677
-		    },
-		    { 
-		        name: "The Keatchen, Taytay Rizal",
-		        lat: 14.5679809, lng: 121.140049
-		    },
-		    { 
-		        name: "Village Eats, Cainta Rizal",
-		        lat: 14.5956532, lng: 121.109904
-		    },
-		    { 
-		        name: "Chiebog Food Park, Fairview, Quezon City",
-		        lat: 14.720117, lng: 121.0628701
-		    },    { 
-		        name: "The Yard Xavierville, Quezon City",
-		        lat: 14.6347033, lng: 121.0693711
-		    },
-		    { 
-		        name: "The Yard Underground, Pasig City",
-		        lat: 14.5719735, lng: 121.0634572
-		    },
-		    { 
-		        name: "Hangout Food Park, Caloocan",
-		        lat: 14.753664, lng: 121.0375092
-		    },
-		    { 
-		        name: "Nova Food Park, Novaliches",
-		        lat: 14.7219442, lng: 121.0304453
-		    },
-		    { 
-		        name: "Open Kitchen, P.Tuazon Cubao",
-		        lat: 14.6152875, lng: 121.043655
-		    },
-		    { 
-		        name: "Congressional",
-		        lat: 14.6731304, lng: 121.058078
-		    },
-		    { 
-		        name: "Kalye One, Abad Santos",
-		        lat: 14.5992162, lng: 121.0357853
-		    },
-		    { 
-		        name: "Davids Salon, E.Rodriguez Quezon City",
-		        lat: 14.6214707, lng: 121.0197975
-		    },
-		    { 
-		        name: "Davids Salon, SM Mega 1",
-		        lat: 14.5862102, lng: 121.0547723 
-		    },
-		    { 
-		        name: "Davids Salon, Mega 2",
-		        lat: 14.5855403, lng: 121.0549378
-		    },
-		    { 
-		        name: "Davids Salon, Podium",
-		        lat: 14.5857922, lng: 121.0570333 
-		    },
-		    { 
-		        name: "Davids Salon, Ruby Rd.",
-		        lat: 14.5862152, lng: 121.0593733
-		    },
-		    { 
-		        name: "Davids Salon, Shangrila",
-		        lat: 14.5803032, lng: 121.0530423
-		    },
-		    { 
-		        name: "Davids Salon, Galleria",
-		        lat: 14.5906002, lng: 121.0580173
-		    },
-		    { 
-		        name: "Davids Salon, SM Makati",
-		        lat: 14.5489965, lng: 121.0099887
-		    },
-		    { 
-		        name: "Davids Salon, Greenbelt",
-		        lat: 14.5534862, lng: 121.0195523 
-		    },
-		    { 
-		        name: "Davids Salon, Walter Mart-Pasong Tamo",
-		        lat: 14.5508142, lng: 121.0110513
-		    },
-		    { 
-		        name: "Davids Salon, Juno",
-		        lat: 14.5625049, lng: 121.0259514
-		    },
-		    { 
-		        name: "Davids Salon, Ayala Alabang/Madrigal Business Park",
-		        lat: 14.4241495, lng: 121.0233414 
-		    },
-		    { 
-		        name: "Davids Salon, SM Light",
-		        lat: 14.5737702, lng: 121.0472969 
-		    },
-		    { 
-		        name: "Davids Salon, Valero",
-		        lat: 14.5586141, lng: 121.0210682
-		    },
-		    { 
-		        name: "Davids Salon, Eastwood",
-		        lat: 14.6104032, lng: 121.0762613
-		    },
-		    { 
-		        name: "Davids Salon, Burgos Circle",
-		        lat: 14.5501956, lng: 121.0475297
-		    },
-		    { 
-		        name: "Davids Salon, Market Market",
-		        lat: 14.5501698, lng: 121.0540958
-		    },
-		    { 
-		        name: "Anytime Fitness, Maginhawa",
-		        lat: 14.646333, lng: 121.0575288
-		    },
-		    { 
-		        name: "Anytime Fitness, Eton Plaza",
-		        lat: 14.5575919, lng: 121.0159075
-		    },
-		    { 
-		        name: "Anytime Fitness, Paseo Makati",
-		        lat: 14.5576042, lng: 121.0206726
-		    },
-		    { 
-		        name: "Warner Music, BGC Taguig",
-		        lat: 14.5871082, lng: 121.0611143
-		    },
-		    { 
-		        name: "David's Salon Office, Cardona St., Jp Rizal Makati City",
-		        lat: 14.5714169, lng: 121.0176913
-		    },
-		    { 
-		        name: "Cafe Del Mar, Venice Piaza Mall Mckinley",
-		        lat: 14.5343624, lng: 121.0487154
-		    },
-		    { 
-		        name: "Empire Bar, Venice Piaza Mall Mckinley",
-		        lat: 14.5340891, lng: 121.0488301
-		    },
-		    { 
-		        name: "New Bombay, Venice Piaza Mall Mckinley",
-		        lat: 14.5341089, lng: 121.0489743
-		    },
-		    { 
-		        name: "Café Bonjour, BGC Taguig",
-		        lat: 14.5599942, lng: 121.0545821
-		    },
-		    { 
-		        name: "Café Bonjour, Pasay",
-		        lat: 14.5207305, lng: 121.0136077
-		    },
-		    { 
-		        name: "Café Bonjour, Shaw",
-		        lat: 14.5207305, lng: 121.03994
-		    },
-		    { 
-		        name: "Café Bonjour, Greenhills",
-		        lat: 14.60646, lng: 121.03994
-		    },
 
-		];	
+    <div class="container" style="margin-top: -20px;">
+      <div class="col-md-7">
+        <div id="map"></div>
+      </div>
+      <div class="col-md-5" id="aircast-sort-item">
+        <h2 id="aircast-site-group">Site List</h2>
+        <button id="sort-all" class="btn-aircast">All</button>
+        <button id="sort-bpo" class="btn-aircast">BPO</button>
+        <button id="sort-food-park" class="btn-aircast">Food Park</button>
+        <button id="sort-salon" class="btn-aircast">Salon</button>
+        <button id="sort-fitness" class="btn-aircast">Fitness Center</button>
+        <button id="sort-store" class="btn-aircast">Modern Trade Support</button>
+        <button id="sort-restaurant" class="btn-aircast">Bar and Restaurant</button>
+        <button id="sort-university" class="btn-aircast">University</button>
+        <button id="sort-office" class="btn-aircast">Office</button>
+        <div class="site-list-div">
+          <ol class="site-list">
+          
+          </ol>  
+        </div>
+      </div> 
+    </div>
 
-	      var markers = [];
-	      var map;
-	      var counter = 0 ;
+    <script type="text/javascript">
 
-	      document.ready(drop());
+	  var mapStyle = [{ "featureType": "administrative.country", "elementType": "geometry", "stylers": [{ "visibility": "simplified" },{ "hue": "#ff0000"}]}];
+      
+      var markers = [],
+      	  infowindow = null,
+      	  map,sitesListCount,
+      	  counter = 0, count = 0;
+      	  
 
-	      function initMap() {
-	        var uluru = {lat: 14.5803032, lng: 121.0530423};
-	        map = new google.maps.Map(document.getElementById('map'), {
-	          zoom: 12,
-	          center: uluru
-	        });
-	      }
+      var aircast_sites = [];
 
-	      function drop() {
-	          clearMarkers();
-	          for (var i = 0; i < aircast_sites.length; i++) {
-	            addMarkerWithTimeout(aircast_sites[i], i * 100);
-	          }
-	        }
+      $("#sort-bpo").on("click",function(){
+      	$(".site-list li").show();
+      	$('.site-list li').filter("li[data-category!='BPO']").hide();
+      	count = sitesListCount - $('.site-list li').filter("li[data-category!='BPO']").length     
+      	$("#aircast-site-group").html('BPO <small>('+count+')</small>')
 
-	      function clearMarkers() {
-	        counter = 0;
-	        for (var i = 0; i < markers.length; i++) {
-	          markers[i].setMap(null);
-	        }
-	        markers = [];
-	      }
+      });
 
-	      function addMarkerWithTimeout(position, timeout) {
-	          window.setTimeout(function() {
-	            $("#total_counts").text(counter);
-	            counter++;
+      $("#sort-food-park").on("click",function(){
+      	$(".site-list li").show();
+      	$('.site-list li').filter("li[data-category!='Food Park']").hide();
+      	count = sitesListCount - $('.site-list li').filter("li[data-category!='Food Park']").length     
+      	$("#aircast-site-group").html('Food Park <small>('+count+')</small>')
+      });
 
-	            markers.push(new google.maps.Marker({
-	              position: {
-	                lat: position.lat,
-	                lng: position.lng
-	              },
-	              map: map,
-	              animation: google.maps.Animation.DROP,
-	              icon: '/img/custom_icon.png',
-	              title: position.name
-	            }));
-	          }, timeout);
-	        }
+      $("#sort-salon").on("click",function(){
+      	$(".site-list li").show();
+      	$('.site-list li').filter("li[data-category!='Salon']").hide();
+      	count = sitesListCount - $('.site-list li').filter("li[data-category!='Salon']").length     
+      	$("#aircast-site-group").html('Salon <small>('+count+')</small>')
+      });
+
+      $("#sort-fitness").on("click",function(){
+      	$(".site-list li").show();
+      	$('.site-list li').filter("li[data-category!='Fitness Center']").hide();
+      	count = sitesListCount - $('.site-list li').filter("li[data-category!='Fitness Center']").length     
+      	$("#aircast-site-group").html('Fitness Center <small>('+count+')</small>')
+      });
+
+      $("#sort-store").on("click",function(){
+      	$(".site-list li").show();
+      	$('.site-list li').filter("li[data-category!='Modern Trade Support']").hide();
+      	count = sitesListCount - $('.site-list li').filter("li[data-category!='Modern Trade Support']").length     
+      	$("#aircast-site-group").html('Modern Trade Support <small>('+count+')</small>')
+      });
+
+      $("#sort-restaurant").on("click",function(){
+      	$(".site-list li").show();
+      	$('.site-list li').filter("li[data-category!='Bar and Restaurant']").hide();
+      	count = sitesListCount - $('.site-list li').filter("li[data-category!='Bar and Restaurant']").length     
+      	$("#aircast-site-group").html('Bar and Restaurant <small>('+count+')</small>')
+      });
+
+      $("#sort-university").on("click",function(){
+      	$(".site-list li").show();
+      	$('.site-list li').filter("li[data-category!='University']").hide();
+      	count = sitesListCount - $('.site-list li').filter("li[data-category!='University']").length     
+      	$("#aircast-site-group").html('University <small>('+count+')</small>')
+      });
+
+      $("#sort-office").on("click",function(){
+      	$(".site-list li").show();
+      	$('.site-list li').filter("li[data-category!='Office']").hide();
+      	count = sitesListCount - $('.site-list li').filter("li[data-category!='Office']").length     
+      	$("#aircast-site-group").html('Office <small>('+count+')</small>')
+      });
+
+      $("#sort-all").on("click",function(){
+      	$(".site-list li").show();   
+      	$("#aircast-site-group").html('Aircast Sites <small>('+sitesListCount+')</small>')
+      });
+
+
+
+      function fetchData() {
+
+  	    $.ajax({
+      		url: '/api/rpi-location',
+      		success: function(data){
+      			sortSiteData(data);
+      		}
+      	})
+
+      }
+
+      function sortSiteData(data){
+      	
+      	for (var i = 0; i < data.length; i++) {
+
+      		if (data[i].isDeployed && (data[i].Category !== 'Gameplan' && data[i].Category !== 'Demo' && data[i].Category !== 'Inactive')) {
+
+      				aircast_sites.push(data[i]);
+      		}
+      	}
+      		console.log(aircast_sites);
+      		initMap();
+      }
+
+
+      function initMap() {
+
+        var uluru = {lat: 14.5862152, lng: 121.0593733};
+        map = new google.maps.Map(document.getElementById('map'), {
+        styles: mapStyle,
+          zoom: 12,
+          center: uluru
+        });
+        
+
+        //event if map click close all window
+        google.maps.event.addListener(map,'click',function(){
+            infowindow.close();
+          })
+        // add drop
+          drop();
+      }
+
+
+      function drop() {
+          for (var i = 0; i < aircast_sites.length; i++) {
+            //alert(aircast_sites.length);
+            addMarkerWithTimeout(aircast_sites[i], i * 100);
+            $(".site-list").append('<li class="marker-link" onclick="markerEvent(this)" data-markerid="' + i +'" data-category="'+aircast_sites[i].Category+'">'+aircast_sites[i].Room+'</li>');
+          }
+          sitesListCount = $(".site-list li").length;
+          $("#aircast-site-group").html('Aircast Sites <small>('+sitesListCount+')</small>')
+        }
+      function clearMarkers() {
+        counter = 0;
+        for (var i = 0; i < markers.length; i++) {
+          markers[i].setMap(null);
+        }
+        markers = [];
+        drop();
+      }
+      function addMarkerWithTimeout(site, timeout, index) {/*
+        var marker1;
+          window.setTimeout(function() {*/
+            $("#total_counts").text(counter);
+            counter++;
+          var marker = new google.maps.Marker({
+            position: {lat : site.Latitude, lng : site.Longitude},
+            map: map,
+            animation: google.maps.Animation.DROP,
+            icon: 'img/custom_icon.png',
+            title: site.Room
+          });
+          google.maps.event.addListener(marker, 'click', function(event) {
+              clickMarker(marker, site);
+              });
+              markers[index] = marker;
+              markers.push(markers[index]);
+        }
+
+
+
+        function clickMarker(marker, site) {
+
+          if(infowindow){
+              infowindow.close();
+          }
+
+          infowindow = new google.maps.InfoWindow({
+            maxWidth: 300,
+            content: "<h3>"+site.Room+"</h3>"+imageString(site.SiteImage,site.Room)+"<br/><p><b>Address: </b>"+site.Address+"</p>"
+          +"<p><b>Operation Hours:</b> "+moment(site.OpenTime, "HH:mm:ss").format("hh:mm A")+" - "+ moment(site.CloseTime, "HH:mm:ss").format("hh:mm A") +"</p><p><b>Estimate Traffic Count: </b>"+site.FootTraffic+"</p>"
+          });
+          infowindow.open(map,marker);
+      }
+
+      function imageString(path,alt){
+        var image_url;
+        if(path!==""){
+          image_url = '<img class="aircast-site-image" src="'+path+'" alt="'+alt+'"><div>';
+        }else{
+          image_url = '<img class="aircast-site-image"  src="img/unavailable.png" alt='+alt+'><div>';
+        }
+        return image_url;
+      }
+
+        function placeMarker(map, location,details) {
+          var marker = new google.maps.Marker({
+                position: location,
+                map: map,
+                animation: google.maps.Animation.DROP,
+                icon: 'custom_icon.png',
+                title: position.name
+            })
+          
+        }
+
+        function markerEvent(data) {
+
+          if(infowindow){
+              infowindow.close();
+          }
+
+          google.maps.event.trigger(markers[$(data).data('markerid')], 'click');
+
+        }
 
     </script>
-    <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAppPFcfzyJyLxd4h__Hi-dpG50oCXuc0w&callback=initMap">
+
+	<script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAppPFcfzyJyLxd4h__Hi-dpG50oCXuc0w&callback=fetchData">
     </script>
 
 <% include ./partials/footer %>

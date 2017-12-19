@@ -179,3 +179,45 @@ table a:hover {
 #gadget-list a {
   text-decoration: none;
 }
+
+
+/*aircast locator*/
+ .site-list-div {
+  height: 350px;
+  margin-top: 20px;
+  overflow-y: scroll; 
+ }
+
+.site-list-div li {
+  cursor: pointer;
+
+}
+
+.site-list-div li:hover {
+  background: #00A849AA;
+}
+
+ .aircast-site-image {
+  border: 2px solid white;
+  box-shadow: 1px 1px 5px rgba(0,0,0,.6);
+  height:200px; 
+  width:300px;
+ }
+
+ #aircast-sort-item .btn-aircast {
+    background: #00A849;
+    color: white;
+    margin-bottom: 5px;
+    border-radius: 7px;
+    outline: none;
+    border: 2px solid green;
+    transition: .1s;
+ }
+
+  #aircast-sort-item .btn-aircast:hover {
+  background: #13dc6a;
+  }
+
+
+
+
