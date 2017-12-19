@@ -185,7 +185,7 @@ app.route("/toggle-campaign/:rpiid/:campaign_id/:status")
 
 app.route('/aircast-location')
    .get((req,res) => {
-      res.render("aircast-location");
+        res.render("aircast-location",{rpi_location});  
    }) 
 
 app.route('/add-template')
@@ -226,6 +226,13 @@ app.route('/show-campaigns/:id')
       }
     
   })
+
+app.route("/api/rpi-location")
+   .get((req,res) => {
+      connection.query("SELECT * FROM AircastRpiLocation",(error,results,body)=>{
+        res.json(results);
+      });
+   })
 
 
 app.listen(server_port, function() {
