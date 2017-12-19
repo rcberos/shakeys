@@ -190,11 +190,16 @@ table a:hover {
 
 .site-list-div li {
   cursor: pointer;
+  list-style: none;
 
 }
 
 .site-list-div li:hover {
+  padding-left: 10px;
   background: #00A849AA;
+  border-radius: 10px;
+  color: white;
+  font-size: 16px;
 }
 
  .aircast-site-image {
