@@ -5,6 +5,21 @@
 
 
     <div class="container" style="margin-top: -20px;">
+		
+		<!-- The Modal -->
+		<div id="myModal" class="modal">
+
+		  <!-- The Close Button -->
+		  <span class="close">X</span>
+
+		  <!-- Modal Content (The Image) -->
+		  <img class="modal-content" id="img01">
+
+		  <!-- Modal Caption (Image Text) -->
+		  <div id="caption"></div>
+		</div>
+
+
       <div class="col-md-7">
         <div id="map"></div>
       </div>
@@ -202,9 +217,9 @@
       function imageString(path,alt){
         var image_url;
         if(path!==""){
-          image_url = '<img class="aircast-site-image" src="'+path+'" alt="'+alt+'"><div>';
+          image_url = '<img class="aircast-site-image" src="'+path+'" alt="'+alt+'" onclick=previewImage(this)><div>';
         }else{
-          image_url = '<img class="aircast-site-image"  src="img/unavailable.png" alt='+alt+'><div>';
+          image_url = '<img class="aircast-site-image" src="img/unavailable.png" alt='+alt+' onclick=previewImage(this)><div>';
         }
         return image_url;
       }
@@ -228,6 +243,22 @@
 
           google.maps.event.trigger(markers[$(data).data('markerid')], 'click');
 
+        }
+
+        function previewImage(data) {
+        	var modal = document.getElementById('myModal');
+        	var modalImg = document.getElementById("img01");
+        	modal.style.display = "block";
+        	modalImg.src = data.src;
+        	console.log(data);
+
+			        	// Get the <span> element that closes the modal
+			var span = document.getElementsByClassName("close")[0];
+
+			// When the user clicks on <span> (x), close the modal
+			span.onclick = function() { 
+			  modal.style.display = "none";
+			}
         }
 
     </script>
