@@ -7,7 +7,7 @@
 			<button class="btn btn-info">Add template to all</button>
 		</div>
 		
-	<div id="template-per-tv" class="col-md-5 form-horizontal">
+	<div id="template-per-tv" class="col-md-6 form-horizontal">
 		<div class="form-group">
 			<h3>Add template per tv</h3>	
 		</div>
@@ -26,12 +26,6 @@
 	    </div>
 	  </div>
 	  <div class="form-group">
-	    <label class="col-sm-3 control-label">CampaignID:</label>
-	    <div class="col-sm-9">
-	      <input type="text" class="form-control" id="per-tv-campaign">
-	    </div>
-	  </div>
-	  <div class="form-group">
 	    <label class="col-sm-3 control-label">Template:</label>
 	    <div class="col-sm-9">
 	    	<select class="form-control" id="per-tv-template" onchange="checkParam()">
@@ -39,12 +33,18 @@
 	    		<% template_list.forEach(function(item){ %>
 	    				<% for (var i = 0; i < aircast_campaign.length; i++) { %>
 							<% if (aircast_campaign[i].CampaignID == item.CampaignID) { %>
-								<option value="<%= aircast_campaign[i].Template %>"><%= aircast_campaign[i].CampaignName %></option>
+								<option value="<%= aircast_campaign[i].Template %>*<%= aircast_campaign[i].CampaignName %>"><%= aircast_campaign[i].CampaignName %></option>
 								<% break; %>
 							<% } %>	
 	    				<% } %>
 	    			<% }) %>
 	    	</select>
+	    </div>
+	  </div>
+	  <div class="form-group" id="per-tv-campaign-div" style="display: none;">
+	    <label class="col-sm-3 control-label" id="per-tv-campaign-label">CampaignID:</label>
+	    <div class="col-sm-9">
+	      <input type="text" class="form-control" id="per-tv-campaign" placeholder="enter campaign id from the database">
 	    </div>
 	  </div>
 	  <div class="form-group" id="per-tv-parameter-div" style="display: none;">
@@ -73,14 +73,27 @@
 		var hasParameter = false;
 
 		function checkParam() {
-			var perTvTemplate = $("#per-tv-template").val();
+
+			console.log($("#per-tv-template").val());
+			var temp = ($("#per-tv-template").val()).split("*");
+			var perTvTemplate = temp[0];
+			var perTvTemplateText = temp[1];
+
 
 			if (perTvTemplate == 'temp26' || perTvTemplate == 'temp27') {
 				$("#per-tv-parameter-div").show();
+				$("#per-tv-campaign-label").text('Campaign Name: ');
+				$("#per-tv-campaign").val(perTvTemplateText);
+				$("#per-tv-campaign").attr('disabled',true);
+				$("#per-tv-campaign-div").show();
 				hasParameter = true;
 			}else {
 				$("#per-tv-parameter-div").hide();
 				$("#per-tv-parameter").val('');
+				$("#per-tv-campaign-label").text('Campaign ID: ');
+				$("#per-tv-campaign").attr('disabled',false);
+				$("#per-tv-campaign").val("");
+				$("#per-tv-campaign-div").show();
 				hasParameter = false;
 			}
 		}
@@ -88,13 +101,19 @@
 
 		$("#per-tv-submit").on('click',function(){
 
+		var temp = $("#per-tv-template").val();
+		var perTvTemplate;
+		
+			if (temp != null) {
+				temp = ($("#per-tv-template").val()).split("*");
+				perTvTemplate = temp[0];
+			}
+		
 		var perTvId = $("#per-tv-id").val();
 		var perTvCampaign = $("#per-tv-campaign").val();
-		var perTvTemplate = $("#per-tv-template").val();
 		var perTvStatus = $("#per-tv-status").is(":checked");
 		var perTvParameter = $("#per-tv-parameter").val();
 
-		console.log('/add-template-one/'+perTvId+'/'+perTvCampaign+'/'+perTvTemplate+'/'+perTvStatus+'/'+perTvParameter);
 
 		if (perTvId == null) {
 			$("#add-template-message").removeClass('alert-success').addClass('alert-info');
@@ -129,6 +148,8 @@
 							$("#per-tv-parameter").val('');
 							$('#per-tv-id').prop('selectedIndex',0);
 							$('#per-tv-template').prop('selectedIndex',0);
+							$("#per-tv-parameter-div").hide();
+							$("#per-tv-campaign-div").hide();
 							$("#add-template-message").slideUp(300,function(){
 								$(this).removeClass('alert-info').addClass('alert-success');
 								$(this).html("Successfully added");

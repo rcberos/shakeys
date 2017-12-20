@@ -9,6 +9,8 @@ const express 	= require('express'),
 const server_port = process.env.PORT || this.SERVER_PORT || 5000;
 const env = process.env.NODE_ENV || 'development';
 
+
+
 var site_data,
     last_message,
     campaign_files,
@@ -34,6 +36,18 @@ connection.connect(function(err) {
 
   console.log('connected as id ' + connection.threadId);
 });
+
+
+function twoDigits(d) {
+    if(0 <= d && d < 10) return "0" + d.toString();
+    if(-10 < d && d < 0) return "-0" + (-1*d).toString();
+    return d.toString();
+}
+
+Date.prototype.toMysqlFormat = function() {
+    return this.getUTCFullYear() + "-" + twoDigits(1 + this.getUTCMonth()) + "-" + twoDigits(this.getUTCDate()) + " " + twoDigits(this.getHours()) + ":" + twoDigits(this.getUTCMinutes()) + ":" + twoDigits(this.getUTCSeconds());
+};
+
 
 app.set('view engine', 'ejs');
 
@@ -210,41 +224,68 @@ app.get('/add-template-one/:id/:campaign/:template/:status',function(req,res){
 
 app.get('/add-template-one/:id/:campaign/:template/:status/:parameter',function(req,res){
   let rpi_id = req.params.id;
-  let campaign_id = req.params.campaign;
+  let campaign_name = req.params.campaign;
   let template_name = req.params.template;
   let status = req.params.status;
   let parameter = req.params.parameter;
   let request1 = false;
   let request2 = false;
+  let last_campaign_id = 0;
+  let MyDate = new Date();
+  let new_date = MyDate.toMysqlFormat();
 
-  connection.query("INSERT INTO AircastRpiCampaign (RpiID, CampaignID, Template, isReady, isEnabled, isPriority) VALUES (?,?,?,?,?,?)",[rpi_id,campaign_id,template_name,1,status,1],(error,results,body) => {
-    console.log('1st query', results);
-      if(results) {
-          if (results.affectedRows == 0) {
-            request1 = false;
-          }else {
-            request1 = true;
-
-            connection.query("INSERT INTO AircastCampaignFiles (CampaignID, Filetype, Filename) VALUES (?,?,?)",[campaign_id,'source',parameter],(error,results,body) => {
-                console.log('2nd query', results);
-                if(results) {
-                  if (results.affectedRows == 0) {
-                    request2 = false;
-                    checkQuery();
-                  }else {
-                    request2 = true;
-                    checkQuery();
-                  }
-                }else {
-                  res.send('failed');
-                }
-            });
-          }
-        }else {
-          res.send('failed');
-        }
-
+  connection.query("SELECT * FROM `AircastCampaign` ORDER BY CampaignID DESC LIMIT 1",(error,results,body)=> {
+    console.log(results);
+      last_campaign_id = results[0].CampaignID + 1;
+      addAircastCampaign();
   });
+
+
+  console.log(rpi_id + '-' +  campaign_name + ' - ' + template_name + ' - ' + status + ' - ' + parameter + ' - ' + last_campaign_id);
+
+
+  function addAircastCampaign(){
+    connection.query("INSERT INTO AircastCampaign (CampaignID, CampaignName, Template, StartDate, EndDate, S3Uploaded, isApproved, UserID, Weight) VALUES (?,?,?,?,?,?,?,?,?)",[last_campaign_id,campaign_name,template_name,new_date,new_date,1,1,1,1],(error,results,body) => {
+        addRpiCampaign();
+    });
+
+  }
+
+
+  function addRpiCampaign() {
+
+      connection.query("INSERT INTO AircastRpiCampaign (RpiID, CampaignID, Template, isReady, isEnabled, isPriority) VALUES (?,?,?,?,?,?)",[rpi_id,last_campaign_id,template_name,1,status,1],(error,results,body) => {
+        console.log('1st query', results);
+          if(results) {
+              if (results.affectedRows == 0) {
+                request1 = false;
+              }else {
+                request1 = true;
+
+                connection.query("INSERT INTO AircastCampaignFiles (CampaignID, Filetype, Filename) VALUES (?,?,?)",[last_campaign_id,'source',parameter],(error,results,body) => {
+                    console.log('2nd query', results);
+                    if(results) {
+                      if (results.affectedRows == 0) {
+                        request2 = false;
+                        checkQuery();
+                      }else {
+                        request2 = true;
+                        checkQuery();
+                      }
+                    }else {
+                      res.send('failed');
+                    }
+                });
+              }
+            }else {
+              res.send('failed');
+            }
+
+      });
+
+  }
+
+
 
 
 
