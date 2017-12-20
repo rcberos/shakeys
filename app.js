@@ -190,7 +190,15 @@ app.route('/aircast-location')
 
 app.route('/add-template')
    .get((req,res) => {
-      res.render('add-template');
+
+      if (rpi_location) {
+        res.render('add-template',{rpi_location});
+      }else {
+        connection.query("SELECT * FROM AircastRpiLocation", function(error,results,body){
+        rpi_location = results;        
+         res.render('add-template',{rpi_location});
+        })
+      }
    })
 
 app.route('/show-campaigns')
@@ -211,9 +219,20 @@ app.route('/show-campaigns/:id')
 
       var RpiID =  req.params.id;
 
-      if (rpi_location && campaign_files && aircast_campaign && rpi_campaign_complete) {
-        res.render("campaign-item",{ID:RpiID,rpi_location,aircast_campaign,campaign_files,rpi_campaign_complete,moment});
-      }else {
+      // if (rpi_location && campaign_files && aircast_campaign && rpi_campaign_complete) {
+      //   res.render("campaign-item",{ID:RpiID,rpi_location,aircast_campaign,campaign_files,rpi_campaign_complete,moment});
+      // }else {
+      //   connection.query("SELECT * FROM AircastRpiLocation;SELECT * FROM AircastCampaign;SELECT * FROM AircastCampaignFiles;SELECT * FROM AircastRpiCampaign", function(error,results,body){
+      //       rpi_location = results[0];
+      //       aircast_campaign = results[1];
+      //       campaign_files = results[2];
+      //       rpi_campaign_complete = results[3];
+
+      //       res.render("campaign-item",{ID:RpiID,rpi_location,aircast_campaign,campaign_files,rpi_campaign_complete,moment});
+       
+      //  }); // end of 1st query   
+      // }
+
         connection.query("SELECT * FROM AircastRpiLocation;SELECT * FROM AircastCampaign;SELECT * FROM AircastCampaignFiles;SELECT * FROM AircastRpiCampaign", function(error,results,body){
             rpi_location = results[0];
             aircast_campaign = results[1];
@@ -223,7 +242,7 @@ app.route('/show-campaigns/:id')
             res.render("campaign-item",{ID:RpiID,rpi_location,aircast_campaign,campaign_files,rpi_campaign_complete,moment});
        
        }); // end of 1st query   
-      }
+
     
   })
 
