@@ -15,7 +15,8 @@ var site_data,
     aircast_campaign,
     rpi_campaign,
     rpi_campaign_complete,
-    rpi_location;
+    rpi_location,
+    template_list;
 
 var connection = mysql.createConnection({
   host     : 'maindb.com4k2xtorpw.ap-southeast-1.rds.amazonaws.com',
@@ -95,12 +96,15 @@ app.route('/templates-manager')
   .get((req,res) =>{
 
       if (rpi_location) {
-        res.render('templates-manager',{results: rpi_location,moment:moment});
+        res.render('templates-manager',{rpi_location,moment:moment});
       }else {
-        connection.query("SELECT * FROM AircastRpiLocation", function(error,results,body){
-        rpi_location = results;        
-         res.render('templates-manager',{results: results,moment:moment});
-        })
+        connection.query("SELECT * FROM AircastRpiLocation; SELECT * FROM AircastRpiCampaign WHERE (Template != 'temp2' and Template !='temp4' and Template !='temp1'); SELECT * FROM AircastCampaignFiles",function(error,results,body){
+          rpi_location = results[0];
+          rpi_campaign = results[1];
+          campaign_files = results[2];
+          res.render('templates-manager',{rpi_location,moment:moment});
+        }) //end of 1nd query
+
       }
             
   })
@@ -118,17 +122,16 @@ app.route("/templates-manager/:id")
         })
       }
       
-      if (rpi_campaign) {
-        res.render('templates-item',{ID:RpiID,rpi_location:rpi_location, rpi_campaign: rpi_campaign,campaign_files:campaign_files,moment:moment});
+      if (rpi_location && rpi_campaign && campaign_files) {
+        res.render('templates-item',{ID:RpiID,rpi_location,rpi_campaign,campaign_files,moment});
       }else {
-        connection.query("SELECT * FROM AircastRpiCampaign WHERE (Template != 'temp2' and Template !='temp4' and Template !='temp1')",function(error,results,body){
-          rpi_campaign = results;
+          connection.query("SELECT * FROM AircastRpiLocation; SELECT * FROM AircastRpiCampaign WHERE (Template != 'temp2' and Template !='temp4' and Template !='temp1'); SELECT * FROM AircastCampaignFiles",function(error,results,body){
+            rpi_location = results[0];
+            rpi_campaign = results[1];
+            campaign_files = results[2];
+            res.render('templates-item',{ID:RpiID,rpi_location,rpi_campaign,campaign_files,moment});
+          }) //end of 1nd query
 
-          connection.query("SELECT * FROM AircastCampaignFiles",function(error2,results2,body2){
-            campaign_files = results2;
-            res.render('templates-item',{ID:RpiID,rpi_location:rpi_location,rpi_campaign: rpi_campaign,campaign_files:campaign_files,moment:moment});
-          }) //end of 2nd query
-        }) // end of 1st query
       }
       
       // res.render()
@@ -183,20 +186,103 @@ app.route("/toggle-campaign/:rpiid/:campaign_id/:status")
       });
    })
 
+
+app.get('/add-template-one/:id/:campaign/:template/:status',function(req,res){
+  let rpi_id = req.params.id;
+  let campaign_id = req.params.campaign;
+  let template_name = req.params.template;
+  let status = req.params.status;
+
+
+  connection.query("INSERT INTO AircastRpiCampaign (RpiID, CampaignID, Template, isReady, isEnabled, isPriority) VALUES (?,?,?,?,?,?)",[rpi_id,campaign_id,template_name,1,status,1],(error,results,body) => {
+      if(results) {
+          if (results.affectedRows == 0) {
+            res.send('failed');
+          }else {
+            res.send('success');
+          }
+        }else {
+          res.send('failed');
+        }
+
+  });
+})
+
+app.get('/add-template-one/:id/:campaign/:template/:status/:parameter',function(req,res){
+  let rpi_id = req.params.id;
+  let campaign_id = req.params.campaign;
+  let template_name = req.params.template;
+  let status = req.params.status;
+  let parameter = req.params.parameter;
+  let request1 = false;
+  let request2 = false;
+
+  connection.query("INSERT INTO AircastRpiCampaign (RpiID, CampaignID, Template, isReady, isEnabled, isPriority) VALUES (?,?,?,?,?,?)",[rpi_id,campaign_id,template_name,1,status,1],(error,results,body) => {
+    console.log('1st query', results);
+      if(results) {
+          if (results.affectedRows == 0) {
+            request1 = false;
+          }else {
+            request1 = true;
+
+            connection.query("INSERT INTO AircastCampaignFiles (CampaignID, Filetype, Filename) VALUES (?,?,?)",[campaign_id,'source',parameter],(error,results,body) => {
+                console.log('2nd query', results);
+                if(results) {
+                  if (results.affectedRows == 0) {
+                    request2 = false;
+                    checkQuery();
+                  }else {
+                    request2 = true;
+                    checkQuery();
+                  }
+                }else {
+                  res.send('failed');
+                }
+            });
+          }
+        }else {
+          res.send('failed');
+        }
+
+  });
+
+
+
+  function checkQuery(){
+    console.log('checking data', request1 + request2);
+    if (request1 && request2) {
+      res.send('success');
+    }else {
+      res.send('failed');
+    }
+  }
+
+})
+
 app.route('/aircast-location')
    .get((req,res) => {
-        res.render("aircast-location",{rpi_location});  
+        if (rpi_location) {
+          res.render("aircast-location",{rpi_location});    
+        }else {
+          connection.query("SELECT * FROM AircastRpiLocation", function(error,results,body){
+            rpi_location = results;   
+            res.render("aircast-location",{rpi_location});       
+          })
+        }
+        
    }) 
 
 app.route('/add-template')
    .get((req,res) => {
 
-      if (rpi_location) {
-        res.render('add-template',{rpi_location});
+      if (rpi_location && aircast_campaign && template_list) {
+        res.render('add-template',{rpi_location,aircast_campaign,template_list});
       }else {
-        connection.query("SELECT * FROM AircastRpiLocation", function(error,results,body){
-        rpi_location = results;        
-         res.render('add-template',{rpi_location});
+        connection.query("SELECT * FROM AircastRpiLocation; SELECT * FROM AircastCampaign; SELECT * FROM AircastRpiCampaign WHERE (Template != 'temp2' and Template != 'temp4' and Template != 'temp1') GROUP BY Template", function(error,results,body){
+         rpi_location = results[0];
+         aircast_campaign = results[1];
+         template_list = results[2];
+         res.render('add-template',{rpi_location,aircast_campaign,template_list});
         })
       }
    })

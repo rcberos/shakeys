@@ -3,18 +3,22 @@
 
 	<div class="container" >
 		<div class="row">
-			<button class="btn btn-default">Add template per tv</button>
-			<button class="btn btn-default">Add template to all</button>
+			<button class="btn btn-info">Add template per tv</button>
+			<button class="btn btn-info">Add template to all</button>
 		</div>
 		
 	<div id="template-per-tv" class="col-md-5 form-horizontal">
 		<div class="form-group">
 			<h3>Add template per tv</h3>	
 		</div>
+		<div class="form-group">
+			<p class="alert alert-info" id="add-template-message" style="display: none;"></p>
+		</div>
 	  <div class="form-group">
 	    <label class="col-sm-3 control-label">RPI ID:</label>
 	    <div class="col-sm-9">
-			<select class="form-control">
+			<select class="form-control" id="per-tv-id">
+				<option disabled="disabled" selected="selected">Select Rpi ID</option>
 				<% rpi_location.forEach(function(item){ %>
 					<option value="<%= item.RpiID%>"><%= item.RpiID %> | <%= item.Room %></option>
 				<% }) %>
@@ -30,25 +34,117 @@
 	  <div class="form-group">
 	    <label class="col-sm-3 control-label">Template:</label>
 	    <div class="col-sm-9">
-	      <input type="text" class="form-control" id="per-tv-template">
+	    	<select class="form-control" id="per-tv-template" onchange="checkParam()">
+	    		<option disabled="disabled" selected="selected" >Select template to add</option>
+	    		<% template_list.forEach(function(item){ %>
+	    				<% for (var i = 0; i < aircast_campaign.length; i++) { %>
+							<% if (aircast_campaign[i].CampaignID == item.CampaignID) { %>
+								<option value="<%= aircast_campaign[i].Template %>"><%= aircast_campaign[i].CampaignName %></option>
+								<% break; %>
+							<% } %>	
+	    				<% } %>
+	    			<% }) %>
+	    	</select>
+	    </div>
+	  </div>
+	  <div class="form-group" id="per-tv-parameter-div" style="display: none;">
+	    <label class="col-sm-3 control-label">Parameter:</label>
+	    <div class="col-sm-9">
+	    	<input type="text" class="form-control" id="per-tv-parameter" > 
 	    </div>
 	  </div>
 	  <div class="form-group">
-	    <label class="col-sm-3 control-label">isEnable:</label>
+	    <label class="col-sm-3 control-label">isEnable: </small></label>
 	    <div class="col-sm-9">
-	      <input type="checkbox" class="js-switch" id="per-tv-id">
+	      <input type="checkbox" class="js-switch" id="per-tv-status">
 	    </div>
 	  </div>
 	  <div class="form-group">
 	  	<div class="col-sm-9 col-md-offset-3">
-	    	<button class="btn btn-primary">Add Template</button>
+	    	<button class="btn btn-primary" id="per-tv-submit">Add Template</button>
 		</div>
 	  </div>
 	</div>
-	
-
-
 
 	</div>
+
+	<script type="text/javascript">
+
+		var hasParameter = false;
+
+		function checkParam() {
+			var perTvTemplate = $("#per-tv-template").val();
+
+			if (perTvTemplate == 'temp26' || perTvTemplate == 'temp27') {
+				$("#per-tv-parameter-div").show();
+				hasParameter = true;
+			}else {
+				$("#per-tv-parameter-div").hide();
+				$("#per-tv-parameter").val('');
+				hasParameter = false;
+			}
+		}
+
+
+		$("#per-tv-submit").on('click',function(){
+
+		var perTvId = $("#per-tv-id").val();
+		var perTvCampaign = $("#per-tv-campaign").val();
+		var perTvTemplate = $("#per-tv-template").val();
+		var perTvStatus = $("#per-tv-status").is(":checked");
+		var perTvParameter = $("#per-tv-parameter").val();
+
+		console.log('/add-template-one/'+perTvId+'/'+perTvCampaign+'/'+perTvTemplate+'/'+perTvStatus+'/'+perTvParameter);
+
+		if (perTvId == null) {
+			$("#add-template-message").removeClass('alert-success').addClass('alert-info');
+			$("#add-template-message").slideUp(300,function(){
+				$(this).html("Missing Rpi ID");
+			}).slideDown();
+		}
+		else if (perTvCampaign == '') {
+			$("#add-template-message").removeClass('alert-success').addClass('alert-info');
+			$("#add-template-message").slideUp(300,function(){
+				$(this).html("Don't forget the Campaign ID");
+			}).slideDown();
+		}else if (perTvTemplate == null) {
+			$("#add-template-message").removeClass('alert-success').addClass('alert-info');
+			$("#add-template-message").slideUp(300,function(){
+				$(this).html("Please select the template to add");
+			}).slideDown();
+		}else if (hasParameter && perTvParameter == '') {
+			$("#add-template-message").removeClass('alert-success').addClass('alert-info');
+			$("#add-template-message").slideUp(300,function(){
+				$(this).html("Don't forget to add the parameter");
+			}).slideDown();
+		}else {
+				
+				$.ajax({
+					url: '/add-template-one/'+perTvId+'/'+perTvCampaign+'/'+perTvTemplate+'/'+perTvStatus+'/'+perTvParameter,
+					success: function(data){
+						console.log(data);
+						if (data == 'success') {
+
+							$("#per-tv-campaign").val('');
+							$("#per-tv-parameter").val('');
+							$('#per-tv-id').prop('selectedIndex',0);
+							$('#per-tv-template').prop('selectedIndex',0);
+							$("#add-template-message").slideUp(300,function(){
+								$(this).removeClass('alert-info').addClass('alert-success');
+								$(this).html("Successfully added");
+							}).slideDown();
+
+						}else {
+							$("#add-template-message").slideUp(300,function(){
+								$(this).html("Failed to add for unknown reason. Please try again.");
+							}).slideDown();
+						}
+
+					}	
+				});
+
+			}
+		});
+	</script>
 
 <% include ./partials/footer %>
