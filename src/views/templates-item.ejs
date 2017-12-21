@@ -8,6 +8,13 @@
 					<h1><%= item.Room %> <small>(RpiID: <span id="tv_id"><%= item.RpiID %></span>)</small></h1>
 				<% } %>
 			<% }); %>
+
+			<select class="form-control" style="margin-top: 10px; margin-bottom: 10px;" onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);">
+				<option disabled selected>Select Site Location...</option>
+				<% rpi_location.forEach(function(item){ %>
+					<option value="/templates-manager/<%= item.RpiID %>"><%= item.RpiID %> | <%= item.Room %></option>
+				<% }); %>
+			</select>
 				
 			<table class="table table-hover table-striped">
 				<thead>
@@ -28,12 +35,12 @@
 								<% if (temp == 'temp15') { temp = 'Hugot'} %>
 								<% if (temp == 'temp16') { temp = 'Upcoming Movies'} %>
 								<% if (temp == 'temp17') { temp = 'News'} %>
-								<% if (temp == 'temp18') { temp = 'Weather'} %>
-								<% if (temp == 'temp19') { temp = 'Currency'} %>
-								<% if (temp == 'temp20') { temp = 'Twitter'} %>
-								<% if (temp == 'temp22') { temp = 'Hugot'} %>
-								<% if (temp == 'temp23') { temp = 'Restaurant'} %>
-								<% if (temp == 'temp23') { temp = 'Upcoming Movies'} %>
+								<% if (temp == 'temp18') { temp = 'Weather Portrait'} %>
+								<% if (temp == 'temp19') { temp = 'Currency Portrait'} %>
+								<% if (temp == 'temp20') { temp = 'Twitter Portrait'} %>
+								<% if (temp == 'temp22') { temp = 'Hugot Portrait'} %>
+								<% if (temp == 'temp23') { temp = 'Restaurant Portrait'} %>
+								<% if (temp == 'temp23') { temp = 'Upcoming Movies Portrait'} %>
 								<% if (temp == 'temp26') { temp = 'Instagram Post'} %>
 								<% if (temp == 'temp27') { temp = 'Facebook Post'} %>
 								<td><%= temp %></td>

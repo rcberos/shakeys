@@ -20,6 +20,9 @@ var site_data,
     rpi_location,
     template_list;
 
+var aircast_portrait = [3,60,61];
+var aircast_portrait_template = ['temp17','temp18','temp19','temp20','temp22','temp23','temp24','temp25'];
+
 var connection = mysql.createConnection({
   host     : 'maindb.com4k2xtorpw.ap-southeast-1.rds.amazonaws.com',
   user     : 'Gameplandigital',
@@ -109,32 +112,19 @@ app.route('/feedback')
 app.route('/templates-manager')
   .get((req,res) =>{
 
-      if (rpi_location) {
-        res.render('templates-manager',{rpi_location,moment:moment});
-      }else {
         connection.query("SELECT * FROM AircastRpiLocation; SELECT * FROM AircastRpiCampaign WHERE (Template != 'temp2' and Template !='temp4' and Template !='temp1'); SELECT * FROM AircastCampaignFiles",function(error,results,body){
           rpi_location = results[0];
           rpi_campaign = results[1];
           campaign_files = results[2];
           res.render('templates-manager',{rpi_location,moment:moment});
         }) //end of 1nd query
-
-      }
             
   })
 
 app.route("/templates-manager/:id")
   .get((req,res)=>{
       var RpiID =  req.params.id;
-      console.log(rpi_campaign);
 
-      if (rpi_location) {
-        rpi_location = rpi_location;
-      }else {
-        connection.query("SELECT * FROM AircastRpiLocation", function(error,results,body){
-          rpi_location = results;        
-        })
-      }
       
       if (rpi_location && rpi_campaign && campaign_files) {
         res.render('templates-item',{ID:RpiID,rpi_location,rpi_campaign,campaign_files,moment});
@@ -221,6 +211,171 @@ app.get('/add-template-one/:id/:campaign/:template/:status',function(req,res){
 
   });
 })
+
+app.get('/add-template-all/:campaign_id/:temp_name/:status',(req,res) => {
+
+  let campaign_id  = req.params.campaign_id;
+  let temp_name = req.params.temp_name;
+  let status = (req.params.status == 'true');
+  let all_aircast_sites, all_rpi_campaign;
+  let id_to_add_template = [];
+  let orientation;
+
+  console.log(typeof status);
+
+  if (aircast_portrait_template.indexOf(temp_name) != -1) {
+    orientation = 'portrait';
+  }else {
+    orientation = 'landscape';
+  }
+
+
+  connection.query("SELECT * FROM AircastRpiLocation; SELECT * FROM AircastRpiCampaign", function(error,results,body) {
+
+    all_aircast_sites = results[0];
+    all_rpi_campaign = results[1];
+
+        all_aircast_sites.forEach(function(item){
+          let hasTemplate = false;
+          let tv_orientation;
+
+          if (aircast_portrait.indexOf(item.RpiID) != -1) {
+            tv_orientation = 'portrait';
+          }else {
+            tv_orientation = 'landscape';
+          }
+
+          for (var i = 0; i < all_rpi_campaign.length; i++) {
+            if (item.RpiID == all_rpi_campaign[i].RpiID &&  all_rpi_campaign[i].Template  == temp_name && campaign_id == all_rpi_campaign[i].CampaignID) {
+              hasTemplate = true;
+              break;
+            }
+          }
+
+          if (!hasTemplate && orientation == tv_orientation) {
+            let temp = [item.RpiID,campaign_id,temp_name,1,status,1];
+            id_to_add_template.push(temp);
+          }
+
+        })
+
+          addTemplateToCampaign();
+
+
+      });
+
+         function addTemplateToCampaign(){
+            connection.query('INSERT INTO AircastRpiCampaign',[id_to_add_template],(error,results,body)=>{
+              if (results) {
+                res.send('success');
+              }
+            });
+        }
+
+
+
+  console.log('w/o param ' + campaign_id + ' - ' + temp_name + ' - ' + status);
+  res.send('w/o param ' + campaign_id + ' - ' + temp_name + ' - ' + status);
+
+});
+
+
+app.get('/add-template-all/:campaign_name/:temp_name/:status/:parameter',(req,res) => {
+
+  let campaign_name = req.params.campaign_name;
+  let temp_name = req.params.temp_name;
+  let status = (req.params.status == 'true');
+  let parameter = req.params.parameter;
+  let all_aircast_sites, all_rpi_campaign;
+  let id_to_add_template = [];
+  let orientation;
+  let recent_campaign_id_list;
+  let MyDate = new Date();
+  let new_date = MyDate.toMysqlFormat();
+
+  let campaign_list_toInsert = [];
+  let campaign_files_toInsert = [];
+  let aircast_rpi_campaign_toInsert = [];
+
+  if (aircast_portrait_template.indexOf(temp_name) != -1) {
+    orientation = 'portrait';
+  }else {
+    orientation = 'landscape';
+  }
+
+
+  connection.query("SELECT * FROM AircastRpiLocation; SELECT * FROM AircastRpiCampaign", function(error,results,body) {
+
+    all_aircast_sites = results[0];
+    all_rpi_campaign = results[1];
+
+        all_aircast_sites.forEach(function(item){
+          let hasTemplate = false;
+          let tv_orientation;
+
+          if (aircast_portrait.indexOf(item.RpiID) != -1) {
+            tv_orientation = 'portrait';
+          }else {
+            tv_orientation = 'landscape';
+          }
+
+          for (var i = 0; i < all_rpi_campaign.length; i++) {
+            if (item.RpiID == all_rpi_campaign[i].RpiID &&  all_rpi_campaign[i].Template  == temp_name) {
+              console.log(`match: ${item.RpiID} : item: ${all_rpi_campaign[i].Template}`);
+              hasTemplate = true;
+              break;
+            }
+          }
+
+          if (!hasTemplate && orientation == tv_orientation) {
+            id_to_add_template.push(item.RpiID);
+          }
+
+        })
+
+          // addCampaignParameter();
+
+      });
+
+         function addCampaignParameter(){
+
+            for (var i = 0; i < id_to_add_template.length; i++) {
+                var x = [campaign_name,temp_name,new_date,new_date,1,1,1,1];
+                campaign_list_toInsert.push(x);
+
+            }
+
+            connection.query('INSERT INTO AircastCampaign (CampaignName,Template,StartDate,EndDate,S3Uploaded,isApproved,UserID,Weight) VALUES ?',[campaign_list_toInsert],function(error,results,body){
+              if (results) {
+                addAircastCampaign();
+              }
+            });
+        }
+
+        function addAircastCampaign() {
+          connection.query("SELECT * FROM AircastCampaign WHERE Template = ? GROUP BY CampaignID LIMIT ?", [temp_name,id_to_add_template.length],function(error,results,body){
+              recent_campaign_id_list = results;
+              addCampaignFiles();
+          });
+
+        }
+
+        function addCampaignFiles(){
+          var ctr = 0;
+          recent_campaign_id_list.forEach(function(item){
+            let x = [item.CampaignID,'source',parameter];
+            let y = [id_to_add_template[ctr],item.CampaignID,temp_name,1,status,1];
+            campaign_files_toInsert.push(x);
+            aircast_rpi_campaign_toInsert.push(y);
+            ctr++;
+          })
+
+          res.send('success');
+        }
+
+        
+
+});
 
 app.get('/add-template-one/:id/:campaign/:template/:status/:parameter',function(req,res){
   let rpi_id = req.params.id;
@@ -316,16 +471,13 @@ app.route('/aircast-location')
 app.route('/add-template')
    .get((req,res) => {
 
-      if (rpi_location && aircast_campaign && template_list) {
-        res.render('add-template',{rpi_location,aircast_campaign,template_list});
-      }else {
+
         connection.query("SELECT * FROM AircastRpiLocation; SELECT * FROM AircastCampaign; SELECT * FROM AircastRpiCampaign WHERE (Template != 'temp2' and Template != 'temp4' and Template != 'temp1') GROUP BY Template", function(error,results,body){
-         rpi_location = results[0];
-         aircast_campaign = results[1];
-         template_list = results[2];
-         res.render('add-template',{rpi_location,aircast_campaign,template_list});
+           rpi_location = results[0];
+           aircast_campaign = results[1];
+           template_list = results[2];
+           res.render('add-template',{rpi_location,aircast_campaign,template_list});
         })
-      }
    })
 
 app.route('/show-campaigns')
@@ -345,20 +497,6 @@ app.route('/show-campaigns/:id')
   .get((req,res) => {
 
       var RpiID =  req.params.id;
-
-      // if (rpi_location && campaign_files && aircast_campaign && rpi_campaign_complete) {
-      //   res.render("campaign-item",{ID:RpiID,rpi_location,aircast_campaign,campaign_files,rpi_campaign_complete,moment});
-      // }else {
-      //   connection.query("SELECT * FROM AircastRpiLocation;SELECT * FROM AircastCampaign;SELECT * FROM AircastCampaignFiles;SELECT * FROM AircastRpiCampaign", function(error,results,body){
-      //       rpi_location = results[0];
-      //       aircast_campaign = results[1];
-      //       campaign_files = results[2];
-      //       rpi_campaign_complete = results[3];
-
-      //       res.render("campaign-item",{ID:RpiID,rpi_location,aircast_campaign,campaign_files,rpi_campaign_complete,moment});
-       
-      //  }); // end of 1st query   
-      // }
 
         connection.query("SELECT * FROM AircastRpiLocation;SELECT * FROM AircastCampaign;SELECT * FROM AircastCampaignFiles;SELECT * FROM AircastRpiCampaign", function(error,results,body){
             rpi_location = results[0];

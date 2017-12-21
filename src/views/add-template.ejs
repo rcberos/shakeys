@@ -3,14 +3,15 @@
 
 	<div class="container" >
 		<div class="row">
-			<button class="btn btn-info">Add template per tv</button>
-			<button class="btn btn-info">Add template to all</button>
+			<button class="btn btn-info" id="show-template-per-tv">Add template per tv</button>
+			<button class="btn btn-info" id="show-template-all">Add template to all</button>
 		</div>
 		
 	<div id="template-per-tv" class="col-md-6 form-horizontal">
 		<div class="form-group">
 			<h3>Add template per tv</h3>	
 		</div>
+		<hr/>
 		<div class="form-group">
 			<p class="alert alert-info" id="add-template-message" style="display: none;"></p>
 		</div>
@@ -64,6 +65,62 @@
 	    	<button class="btn btn-primary" id="per-tv-submit">Add Template</button>
 		</div>
 	  </div>
+	  <hr/>
+	  <a href="/templates-manager" class="btn btn-primary">Go Back</a>
+	</div>
+
+
+
+
+	<div id="template-all" class="col-md-6 form-horizontal" style="display: none;">
+		<div class="form-group">
+			<h3>Add template to all tv</h3>	
+		</div>
+		<hr/>
+		<div class="form-group">
+			<p class="alert alert-info" id="add-template-message-all" style="display: none;"></p>
+		</div>
+	  <div class="form-group">
+	    <label class="col-sm-3 control-label">Template:</label>
+	    <div class="col-sm-9">
+	    	<select class="form-control" id="per-all-template" onchange="checkParamAll()">
+	    		<option disabled="disabled" selected="selected" >Select template to add</option>
+	    		<% template_list.forEach(function(item){ %>
+	    				<% for (var i = 0; i < aircast_campaign.length; i++) { %>
+							<% if (aircast_campaign[i].CampaignID == item.CampaignID) { %>
+								<option value="<%= aircast_campaign[i].Template %>*<%= aircast_campaign[i].CampaignName %>"><%= aircast_campaign[i].CampaignName %></option>
+								<% break; %>
+							<% } %>	
+	    				<% } %>
+	    			<% }) %>
+	    	</select>
+	    </div>
+	  </div>
+	  <div class="form-group" id="per-all-campaign-div" style="display: none;">
+	    <label class="col-sm-3 control-label" id="per-all-campaign-label">CampaignID:</label>
+	    <div class="col-sm-9">
+	      <input type="text" class="form-control" id="per-all-campaign" placeholder="enter campaign id from the database">
+	    </div>
+	  </div>
+	  <div class="form-group" id="per-all-parameter-div" style="display: none;">
+	    <label class="col-sm-3 control-label">Default Parameter:</label>
+	    <div class="col-sm-9">
+	    	<input type="text" class="form-control" id="per-all-parameter" > 
+	    </div>
+	  </div>
+	  <div class="form-group">
+	    <label class="col-sm-3 control-label">isEnable: </small></label>
+	    <div class="col-sm-9">
+	      <input type="checkbox" class="js-switch" id="per-all-status">
+	    </div>
+	  </div>
+	  <div class="form-group">
+	  	<div class="col-sm-9 col-md-offset-3">
+	    	<button class="btn btn-primary" id="per-all-submit">Add Template</button>
+		</div>
+	  </div>
+	 <hr/>	
+	  <a href="/templates-manager" class="btn btn-primary">Go Back</a>
 	</div>
 
 	</div>
@@ -71,6 +128,36 @@
 	<script type="text/javascript">
 
 		var hasParameter = false;
+		var hasParameterAll = false;
+
+		$("#show-template-per-tv").on("click",function(){
+
+			$("#show-template-per-tv").removeClass('btn-info').addClass('btn-success');
+			$("#show-template-all").removeClass('btn-success').addClass('btn-info');
+
+			$("#template-all").slideUp(300,function(){
+				$("#template-per-tv").slideDown(300);
+			})
+		});
+
+		$("#show-template-all").on("click",function(){
+
+			$("#show-template-all").removeClass('btn-info').addClass('btn-success');
+			$("#show-template-per-tv").removeClass('btn-success').addClass('btn-info');
+
+			$("#per-tv-campaign").val('');
+			$("#per-tv-parameter").val('');
+			$('#per-tv-id').prop('selectedIndex',0);
+			$('#per-tv-template').prop('selectedIndex',0);
+			$("#per-tv-parameter-div").hide();
+			$("#per-tv-campaign-div").hide();
+
+			$("#template-per-tv").slideUp(300,function(){
+				$("#template-all").slideDown(300);
+			})
+		});
+
+
 
 		function checkParam() {
 
@@ -95,6 +182,33 @@
 				$("#per-tv-campaign").val("");
 				$("#per-tv-campaign-div").show();
 				hasParameter = false;
+			}
+		}
+
+
+		function checkParamAll() {
+
+			console.log($("#per-all-template").val());
+			var temp = ($("#per-all-template").val()).split("*");
+			var perTvTemplate = temp[0];
+			var perTvTemplateText = temp[1];
+
+
+			if (perTvTemplate == 'temp26' || perTvTemplate == 'temp27') {
+				$("#per-all-parameter-div").show();
+				$("#per-all-campaign-label").text('Campaign Name: ');
+				$("#per-all-campaign").val(perTvTemplateText);
+				$("#per-all-campaign").attr('disabled',true);
+				$("#per-all-campaign-div").show();
+				hasParameterAll = true;
+			}else {
+				$("#per-all-parameter-div").hide();
+				$("#per-all-parameter").val('');
+				$("#per-all-campaign-label").text('Campaign ID: ');
+				$("#per-all-campaign").attr('disabled',false);
+				$("#per-all-campaign").val("");
+				$("#per-all-campaign-div").show();
+				hasParameterAll = false;
 			}
 		}
 
@@ -166,6 +280,70 @@
 
 			}
 		});
+
+
+		$("#per-all-submit").on('click',function(){
+
+			console.log('all');
+
+		var temp = $("#per-all-template").val();
+		var perAllTemplate;
+		
+			if (temp != null) {
+				temp = ($("#per-all-template").val()).split("*");
+				perAllTemplate = temp[0];
+			}
+		
+		var perAllCampaign = $("#per-all-campaign").val();
+		var perAllStatus = $("#per-all-status").is(":checked");
+		var perAllParameter = $("#per-all-parameter").val();
+
+		if (perAllCampaign == '') {
+			$("#add-template-message-all").removeClass('alert-success').addClass('alert-info');
+			$("#add-template-message-all").slideUp(300,function(){
+				$(this).html("Don't forget the Campaign ID");
+			}).slideDown();
+		}else if (perAllParameter == null) {
+			$("#add-template-message-all").removeClass('alert-success').addClass('alert-info');
+			$("#add-template-message-all").slideUp(300,function(){
+				$(this).html("Please select the template to add");
+			}).slideDown();
+		}else if (hasParameter && perAllParameter == '') {
+			$("#add-template-message-all").removeClass('alert-success').addClass('alert-info');
+			$("#add-template-message-all").slideUp(300,function(){
+				$(this).html("Don't forget to add the parameter");
+			}).slideDown();
+		}else {	
+				
+				$.ajax({
+					url: '/add-template-all/'+perAllCampaign+'/'+perAllTemplate+'/'+perAllStatus+'/'+perAllParameter,
+					success: function(data){
+						console.log('data',data);
+						if (data == 'success') {
+
+							$("#per-tv-parameter").val('');
+							$('#per-tv-template').prop('selectedIndex',0);
+							$("#per-tv-parameter-div").hide();
+							$("#per-tv-campaign-div").hide();
+							$("#add-template-message").slideUp(300,function(){
+								$(this).removeClass('alert-info').addClass('alert-success');
+								$(this).html("Successfully added");
+							}).slideDown();
+
+						}else {
+							$("#add-template-message").slideUp(300,function(){
+								$(this).html("Failed to add for unknown reason. Please try again.");
+							}).slideDown();
+						}
+
+					}	
+				});
+
+			}
+		});
+
+
+
 	</script>
 
 <% include ./partials/footer %>
