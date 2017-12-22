@@ -66,11 +66,15 @@
     $("#toggle-campaign").on("click",function(){
 
       if (varToggleCampaign) {
+        $("#toggle-campaign").html('Show all campaigns');
+        $("#show-stats").css("right","210px");
         $("td[data-hasData='false']").parent('tr').hide();
         varToggleCampaign = false;
       }else {
         $("td[data-hasData='false']").parent('tr').show();
         varToggleCampaign = true;
+        $("#toggle-campaign").html('Show only active campaigns');
+        $("#show-stats").css("right","260px");
       }
       
     })
