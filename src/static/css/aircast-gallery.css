@@ -1,0 +1,328 @@
+@import url(https://fonts.googleapis.com/css?family=Roboto+Slab:700);
+#close{
+  display: none;
+  top: 20px;
+  right: 10px;
+  position: absolute;
+  cursor: pointer;
+  text-decoration: unset;
+}
+#close:hover{
+  color: black;
+  transition: .3s;
+}
+#close:hover {
+    transform: scale(1.4);
+}
+
+.close-button {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    transition: .3s;
+    cursor: pointer;
+}
+.close-button:hover {
+    transform: scale(1.2);
+}
+
+.bg-div{
+  background: linear-gradient(rgba(0,0,0,.2),rgba(0,0,0,8)),url('../img/category/Bonjour-greenhills.jpg'), no-repeat;
+  background-repeat: no-repeat;
+  height: 100%;
+  width: 100%;
+  background-size: cover;
+  position: absolute;
+  height: 80vh;
+}
+.slider {
+  overflow: auto;
+  position: relative;
+  -ms-touch-action: pan-y;
+  touch-action: pan-y;
+}
+.header{
+  width: 100%;
+  height: auto; 
+  padding: 60px 40px 10px 40px;
+  top:0px;
+  left: 0px;
+  position: relative;
+}
+.header-wrapper{
+  position: absolute;
+}
+.content{
+  position: relative;
+  background-position: center;
+  background-size: cover;
+}
+.aircast-site{
+  margin-bottom: 20px;
+  margin-top: 30px;
+  color: rgb(255, 255, 255);
+  text-shadow: 2px 2px #464646;
+}
+h1{
+  font-family: Arial, Helvetica, sans-serif
+}
+a{
+    color:inherit;
+    font-style: unset;
+    text-decoration: none;
+}
+body{
+  background-color: black;
+  background-size: cover;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+body::-webkit-scrollbar{
+    width: 5px;}
+body::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    border-radius: 10px;
+    background-color: rgb(68, 68, 68);
+}
+body::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+    background-color: rgb(255, 255, 255);
+}
+.txt-category{
+  opacity: 0.5;
+  background-color: black;
+}
+.slick-prev:before {
+  font-size: 30px;
+}
+
+.slick-next:before {
+  font-size: 30px;
+}
+  .tiles {
+    top:30px;
+    height:210px;
+    margin-left: 40px;
+    margin-right: 40px;
+    text-align: center;
+  }
+  .tile {
+      cursor: pointer;
+    position: relative;
+    border-radius: 15px;
+    width: 200px;
+    height: 200px;
+    overflow: hidden;
+    margin: 8px;
+    display: inline-block;
+    outline: none;
+  }
+  .photo {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    transition: transform .5s ease-out;
+  }
+  .txt {
+    position: absolute;
+    z-index: 2;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    font-family: 'Roboto Slab', serif;
+    font-size: 9px;
+    line-height: 12px;
+    text-align: center;
+    background-color: rgba(0,0,0,.75);
+    cursor: pointer;
+  }
+  .x {
+    color: white;
+    font-size: 20px;
+    line-height: 20px;
+    opacity: 1;
+    position: relative;
+  }
+
+#category{
+    margin: 0;
+    margin-top: 0;
+    color: white;
+    text-align: center;
+}
+.wrap-brand-image{
+    width: 100%;
+    height: 100%;
+    margin: 0px;
+    overflow: hidden;
+}
+#count{
+    font-weight: 400;
+    font-size: 25px;
+}
+#gallery{
+    margin-top: 20px;
+    padding: 0 20px 10px 20px;
+    text-align: center;
+}
+.brand-image{   
+    width: 150px;
+    height: 150px;
+    border-radius: 20px;
+    margin: 0 10px;
+    display: inline-block;
+    vertical-align: middle;
+    margin-bottom: 10px;
+    transition: .3s;
+}
+.span-caption{
+    text-align: center;
+    border-radius: 20px;
+    width: 150px;
+    height: 150px;
+    position: absolute;
+    display: table;
+    background: #000000be;
+    color: white;
+    opacity: 0;
+    transition: opacity .3s;
+}
+.span-caption p{
+    display: table-cell;
+    vertical-align: middle;
+    padding: 10px 5px;
+}
+
+.brand-image:hover {
+  transform: scale(1.02);
+  box-shadow: 0 0 30px rgba(255,255,255,.8);
+}
+
+.brand-image:hover .span-caption{
+    opacity: 1;
+}
+.div-caption{
+    display: none;
+}
+
+.demo-gallery > ul {
+    margin-bottom: 0;
+}
+.demo-gallery > ul > li {
+    float: left;
+    margin-bottom: 15px;
+    margin-right: 20px;
+    width: 200px;
+}
+.demo-gallery > ul > li a {
+    border: 3px solid #FFF;
+    border-radius: 3px;
+    display: block;
+    overflow: hidden;
+    position: relative;
+    float: left;
+}
+.demo-gallery > ul > li a > img {
+    -webkit-transition: -webkit-transform 0.15s ease 0s;
+    -moz-transition: -moz-transform 0.15s ease 0s;
+    -o-transition: -o-transform 0.15s ease 0s;
+    transition: transform 0.15s ease 0s;
+    -webkit-transform: scale3d(1, 1, 1);
+    transform: scale3d(1, 1, 1);
+    height: 100%;
+    width: 100%;
+}
+.demo-gallery > ul > li a:hover > img {
+    -webkit-transform: scale3d(1.1, 1.1, 1.1);
+    transform: scale3d(1.1, 1.1, 1.1);
+}
+.demo-gallery > ul > li a:hover .demo-gallery-poster > img {
+    opacity: 1;
+}
+.demo-gallery > ul > li a .demo-gallery-poster {
+    background-color: rgba(0, 0, 0, 0.1);
+    bottom: 0;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    -webkit-transition: background-color 0.15s ease 0s;
+    -o-transition: background-color 0.15s ease 0s;
+    transition: background-color 0.15s ease 0s;
+}
+.demo-gallery > ul > li a .demo-gallery-poster > img {
+    left: 50%;
+    margin-left: -10px;
+    margin-top: -10px;
+    opacity: 0;
+    position: absolute;
+    top: 50%;
+    -webkit-transition: opacity 0.3s ease 0s;
+    -o-transition: opacity 0.3s ease 0s;
+    transition: opacity 0.3s ease 0s;
+}
+.demo-gallery > ul > li a:hover .demo-gallery-poster {
+    background-color: rgba(0, 0, 0, 0.5);
+}
+.demo-gallery .justified-gallery > a > img {
+    -webkit-transition: -webkit-transform 0.15s ease 0s;
+    -moz-transition: -moz-transform 0.15s ease 0s;
+    -o-transition: -o-transform 0.15s ease 0s;
+    transition: transform 0.15s ease 0s;
+    -webkit-transform: scale3d(1, 1, 1);
+    transform: scale3d(1, 1, 1);
+    height: 100%;
+    width: 100%;
+}
+.demo-gallery .justified-gallery > a:hover > img {
+    -webkit-transform: scale3d(1.1, 1.1, 1.1);
+    transform: scale3d(1.1, 1.1, 1.1);
+}
+.demo-gallery .justified-gallery > a:hover .demo-gallery-poster > img {
+    opacity: 1;
+}
+.demo-gallery .justified-gallery > a .demo-gallery-poster {
+    background-color: rgba(0, 0, 0, 0.1);
+    bottom: 0;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    -webkit-transition: background-color 0.15s ease 0s;
+    -o-transition: background-color 0.15s ease 0s;
+    transition: background-color 0.15s ease 0s;
+}
+.demo-gallery .justified-gallery > a .demo-gallery-poster > img {
+    left: 50%;
+    margin-left: -10px;
+    margin-top: -10px;
+    opacity: 0;
+    position: absolute;
+    top: 50%;
+    -webkit-transition: opacity 0.3s ease 0s;
+    -o-transition: opacity 0.3s ease 0s;
+    transition: opacity 0.3s ease 0s;
+}
+.demo-gallery .justified-gallery > a:hover .demo-gallery-poster {
+    background-color: rgba(0, 0, 0, 0.5);
+}
+.demo-gallery .video .demo-gallery-poster img {
+    height: 48px;
+    margin-left: -24px;
+    margin-top: -24px;
+    opacity: 0.8;
+    width: 48px;
+}
+.demo-gallery.dark > ul > li a {
+    border: 3px solid #04070a;
+}
+.home .demo-gallery {
+    padding-bottom: 80px;
+}

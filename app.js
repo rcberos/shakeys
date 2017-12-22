@@ -9,8 +9,6 @@ const express 	= require('express'),
 const server_port = process.env.PORT || this.SERVER_PORT || 5000;
 const env = process.env.NODE_ENV || 'development';
 
-
-
 var site_data,
     last_message,
     campaign_files,
@@ -455,6 +453,10 @@ app.get('/add-template-one/:id/:campaign/:template/:status/:parameter',function(
 
 })
 
+app.get('/aircast-gallery',(req,res)=>{
+  res.render('aircast-gallery');
+})
+
 app.route('/aircast-location')
    .get((req,res) => {
         if (rpi_location) {
@@ -483,13 +485,9 @@ app.route('/add-template')
 app.route('/show-campaigns')
   .get((req,res) => {
 
-      connection.query("SELECT * FROM AircastRpiLocation;SELECT * FROM AircastCampaign;SELECT * FROM AircastCampaignFiles;SELECT * FROM AircastRpiCampaign", function(error,results,body){
-          rpi_location = results[0];
-          aircast_campaign = results[1];
-          campaign_files = results[2];
-          rpi_campaign_complete = results[3];
-
-          res.render("show-campaigns",{rpi_location,aircast_campaign,campaign_files,rpi_campaign_complete,moment});
+      connection.query("SELECT * FROM AircastRpiLocation", function(error,results,body){
+          rpi_location = results;
+          res.render("show-campaigns",{rpi_location,moment});
        }); // end of 1st query      
   })
 

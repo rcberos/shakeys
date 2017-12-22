@@ -1,0 +1,251 @@
+<html>
+<title>Aircast Site Gallery</title>
+
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="vendor/slick/slick.css" />
+    <link rel="stylesheet" type="text/css" href="vendor/slick/slick-theme.css" />
+    <!-- <script src="data.js"></script> -->
+    <link href="css/aircast-gallery.css" rel="stylesheet"></link>
+    <!-- <script src="data.js"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.19.3/moment.min.js"></script>
+    <link href="https://cdn.rawgit.com/sachinchoolur/lightgallery.js/master/dist/css/lightgallery.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/picturefill/2.3.1/picturefill.min.js"></script>
+    <script src="https://cdn.rawgit.com/sachinchoolur/lightgallery.js/master/dist/js/lightgallery.js"></script>
+    <script src="https://cdn.rawgit.com/sachinchoolur/lg-pager.js/master/dist/lg-pager.js"></script>
+    <script src="https://cdn.rawgit.com/sachinchoolur/lg-autoplay.js/master/dist/lg-autoplay.js"></script>
+    <script src="https://cdn.rawgit.com/sachinchoolur/lg-fullscreen.js/master/dist/lg-fullscreen.js"></script>
+    <script src="https://cdn.rawgit.com/sachinchoolur/lg-zoom.js/master/dist/lg-zoom.js"></script>
+    <script src="https://cdn.rawgit.com/sachinchoolur/lg-hash.js/master/dist/lg-hash.js"></script>
+    <script src="https://cdn.rawgit.com/sachinchoolur/lg-share.js/master/dist/lg-share.js"></script>
+    <script src="vendor/gallery-library/lg-thumbnail.js"></script>
+</head>
+
+<body>
+    <div class="body">
+        <div class="bg-div">
+        </div>
+        <div class="header">
+            <a href="/aircast-gallery" id="close">
+                                <img src="img/close-icon.png">
+                            </a>
+            <div id="title" style="text-align:center;">
+                <h1 class="aircast-site">Aircast Sites<br>Partners</h1>
+            </div>
+            <div class="go-back"><a href="/"><img src="img/close-icon.png" class="close-button"></a></div>
+            <div class="tiles">
+                <div class="tile" data-scale="1.1" data-category="BPO" data-image="img/category/BPO.png">
+                </div>
+                <div class="tile" data-scale="1.1" data-category="Food Park" data-image="img/category/Food-Park.png">
+                </div>
+                <div class="tile" data-scale="1.1" data-category="Fitness Center" data-image="img/category/Fitness-Center.png">
+                </div>
+                <div class="tile" data-scale="1.1" data-category="Salon" data-image="img/category/salon.png">
+                </div>
+                <div class="tile" data-scale="1.1" data-category="Modern Trade Support" data-image="img/category/store.png">
+                </div>
+                <div class="tile" data-scale="1.1" data-category="University" data-image="img/category/school.png">
+                </div>
+                <div class="tile" data-scale="1.1" data-category="Bar and Restaurant" data-image="img/category/rest.png">
+                </div>
+            </div>
+        </div>
+
+        <div class="content">
+            <div id="category"></div>
+            <div id="lightgallery">
+                <div id="slickGallery">
+                    <div id="gallery">
+                    </div>
+                </div>
+                <div id="captions">
+                </div>
+            </div>
+        </div>
+
+</body>
+<script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
+<script src="vendor/slick/slick.min.js"></script>
+<script type="text/javascript">
+
+var data;
+
+$(document).ready(function() {
+
+    $.ajax({
+        url: '/api/rpi-location',
+        success: function(aircast_data){
+            data = aircast_data;
+        }   
+    });
+
+
+    $('#close').click(function() {
+        $('#title').css('display', 'initial');
+        document.getElementById('gallery').innerHTML = "";
+        document.getElementById('category').innerHTML = "";
+
+        $('#close').css('display', 'none');
+    });
+
+});
+
+
+$('.tile')
+    // tile mouse actions
+    .on('mouseover', function() {
+        $(this).children('.photo').css({ 'transform': 'scale(' + $(this).attr('data-scale') + ')' })
+    })
+    .on('mouseout', function() {
+        $(this).children('.photo').css({ 'transform': 'scale(1)' });
+    })
+    .on('mousemove', function(e) {
+        $(this).children('.photo').css({ 'transform-origin': ((e.pageX - $(this).offset().left) / $(this).width()) * 100 + '% ' + ((e.pageY - $(this).offset().top) / $(this).height()) * 100 + '%' });
+    })
+    // tiles set up
+    .each(function() {
+        $(this)
+            // add a photo container
+            .append('<a class="photo"></a>')
+            // some text just to show zoom level on current item in this example
+            .append('<div class="txt" data-category= "' + $(this).attr('data-category') + '"><div class="top-txt"></div><h1 class="x">' + $(this).attr('data-category') + '</h1></div>')
+            // set up a background image for each tile based on data-image attribute
+            .children('.photo').css({ 'background-image': 'url(' + $(this).attr('data-image') + ')' });
+    });
+
+
+var content = 0;
+$(document).keyup(function(e) {
+    if (e.keyCode == 27 && content == 1 && $('.lg-img-wrap').length == '0') {
+        window.location.replace('/aircast-gallery');
+        $(".go-back").show();
+    }
+})
+var curCat = '';
+
+$('.tile').click(function() {
+    $(".go-back").hide();
+    if (content != 1) {
+        curCat = $(this).attr('data-category');
+        $('body').css('background', 'black');
+        $('.bg-div').css('display', 'flex');
+        $('.header').css('background', 'linear-gradient(rgba(192,192,192,.99),rgba(0,0,0,.0))')
+            .css('height', '27vh')
+            .css('position', 'absolute')
+            .css('padding', 'unset');
+        $('.body').css('height', '100vh');
+        $('.content').css('height', 'auto')
+            .css('width', '100%')
+            .css('position', 'absolute')
+            .css('top', '190');
+        $('.tile').css('height', '100px').css('width', '100px')
+        $('.tiles').css('height', '100px');
+        $('.txt').css('height', '100%');
+        $('.x').css('font-size', '14px').css('font-weight', '400').css('top', '25%');
+        $('.tiles').slick({
+            autoplay: true,
+            dots: true,
+            infinite: true,
+            speed: 300,
+            slidesToShow: 5,
+            centerMode: true,
+            variableWidth: true
+        })
+        $('#close').css("display", "initial");
+
+        $('#title').css('display', 'none');
+        for (var i = 0; i < data.length; i++) {
+            if (data[i].Category == $(this).attr('data-category') && data[i].isDeployed != '0') {
+                cat++;
+                console.log(data[i].RpiID);
+                if (data[i].SiteImage != "") {
+                    document.getElementById('gallery').innerHTML += '<a class="wrap-brand-image" data-sub-html="#caption' + data[i].RpiID + '" href="' + data[i].SiteImage + '">' +
+                        '<img src="' + data[i].SiteImage + '" style="display:none"/>' +
+                        '<div class="brand-image" style=" background: url(\'' + data[i].SiteImage + '\'); background-position: center;background-repeat: no-repeat, repeat; background-size: cover" />' +
+                        '<div class="span-caption"><p>' +
+                        '<b>' + data[i].Room + '</b><br>' +
+                        '' + data[i].Area + '<br>' +
+                        'Foot Traffic: ' + data[i].FootTraffic +
+                        '</p></div>' +
+                        '</div>' +
+                        '</a> '
+                } else {
+                    document.getElementById('gallery').innerHTML += '<a class="wrap-brand-image" data-sub-html="#caption' + data[i].RpiID + '" href="' + 'img/placeholder-category.png' + '"><img src="' + 'img/placeholder-category.png' + '" style="display:none"/>' +
+
+                        '<div class="brand-image" style=" background: url(img/placeholder-category.png); background-position: center;background-repeat: no-repeat, repeat; background-size: cover" >' +
+                        '<div class="span-caption">' + '<p>' +
+                        '<b>' + data[i].Room + '</b><br>' +
+                        '' + data[i].Area + '<br>' +
+                        'Foot Traffic: ' + data[i].FootTraffic + '' + '</p>' +
+                        '</div>' +
+                        '</div>' +
+                        '</a> '
+                }
+                document.getElementById('captions').innerHTML += '<div class="div-caption" id="caption' + data[i].RpiID + '"><h1>' + data[i].Room + '</h1> Foot Traffic: ' + data[i].FootTraffic +
+                    '<br>' + data[i].Address +
+                    '</div>';
+            }
+
+        }
+        lightGallery(document.getElementById('gallery'), {
+            thumbnail: true
+        });
+    } else if ($(this).attr('data-category') != curCat) {
+        curCat = $(this).attr('data-category');
+        $('#gallery').css('opacity', '0');
+        $('.bg-div').animate({ opacity: 0 }, 'fast').css('background', "linear-gradient(rgba(0,0,0,.4),rgba(0,0,0,.99)),url('" + $(this).attr('data-image') + "')").css('background-repeat', 'no-repeat').css('background-size', 'cover').css('background-position', 'center')
+            .animate({ opacity: 1 }, 'slow');
+
+        document.getElementById('gallery').innerHTML = "";
+        var cat = 0;
+        for (var i = 0; i < data.length; i++) {
+            if (data[i].Category == $(this).attr('data-category') && data[i].isDeployed != '0') {
+                cat++;
+                console.log(data[i].RpiID);
+                if (data[i].SiteImage != "") {
+                    document.getElementById('gallery').innerHTML += '<a class="wrap-brand-image" data-sub-html="#caption' + data[i].RpiID + '" href="' + data[i].SiteImage + '">' +
+                        '<img src="' + data[i].SiteImage + '" style="display:none"/>' +
+                        '<div class="brand-image" style=" background: url(\'' + data[i].SiteImage + '\'); background-position: center;background-repeat: no-repeat, repeat; background-size: cover" />' +
+                        '<div class="span-caption"><p>' +
+                        '<b>' + data[i].Room + '</b><br>' +
+                        '' + data[i].Area + '<br>' +
+                        'Foot Traffic: ' + data[i].FootTraffic +
+                        '</p></div>' +
+                        '</div>' +
+                        '</a> '
+                } else {
+                    document.getElementById('gallery').innerHTML += '<a class="wrap-brand-image" data-sub-html="#caption' + data[i].RpiID + '" href="' + 'img/placeholder-category.png' + '"><img src="' + 'img/placeholder-category.png' + '" style="display:none"/>' +
+                        '<div class="brand-image" style=" background: url(img/placeholder-category.png); background-position: center;background-repeat: no-repeat, repeat; background-size: cover" >' +
+                        '<div class="span-caption">' + '<p>' +
+                        '<b>' + data[i].Room + '</b><br>' +
+                        '' + data[i].Area + '<br>' +
+                        'Foot Traffic: ' + data[i].FootTraffic + '' + '</p>' +
+                        '</div>' +
+                        '</div>' +
+                        '</a> '
+                }
+                document.getElementById('captions').innerHTML += '<div class="div-caption" id="caption' + data[i].RpiID + '"><h1>' + data[i].Room + '</h1>Foot Traffic: ' + data[i].FootTraffic +
+                    '<br>' + data[i].Address +
+                    '</div>';
+            }
+
+        }
+        document.getElementById('category').innerHTML = "<h1>" + $(this).attr('data-category') + "<font id='count'  > (" + cat + ")</font></h1>"
+        lightGallery(document.getElementById('gallery'), {
+            thumbnail: true
+        });
+        $('.wrap-brand-image').hover(function() {
+            $(this).children('.hover-image').css('display', 'initial');
+        });
+        $('.wrap-brand-image').mouseout(function() {
+            $(this).children('.hover-image').css('display', 'none');
+        })
+        $('#gallery').animate({ opacity: '1' }, 1000);
+    }
+    content = 1;
+});
+</script>
+</div>
+
+</html>
