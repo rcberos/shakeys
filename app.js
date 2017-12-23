@@ -179,11 +179,8 @@ app.route('/delete-campaign/:rpiid/:campaign_id')
       let rpi_id = req.params.rpiid;
 
       connection.query("DELETE FROM AircastRpiCampaign WHERE RpiID = ? and CampaignID = ?",[rpi_id,campaign_id],(error,results,body) => {
-        if (results) {
-          res.send('success');
-        }else{
-          res.send('failed');
-        }
+        if (error) throw error;
+        res.send('success');
       });
    })
 
