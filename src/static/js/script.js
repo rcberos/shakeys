@@ -49,8 +49,10 @@
 
 
     $("#show-stats").on("click",function(){
+      $("#show-stats").hide();
       $("#aircast-preview").hide();
       $("#aircast-preview-first").show(); 
+      $("#aircast-preview").html("");s
     });
 
     var $rows = $('#rpi-table tr');
@@ -103,6 +105,7 @@
     function previewCampaign(data) {
 
       $("#aircast-preview").show();
+      $("#show-stats").show();
       $("#aircast-preview-first").hide(); 
       var link = $(data).attr("data-link");
       var type = $(data).attr("data-type");
