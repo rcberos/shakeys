@@ -147,18 +147,10 @@ app.route("/update-campaign/:id/:param")
       connection.query("UPDATE AircastCampaignFiles SET FileName = ? WHERE CampaignID = ?",[new_param,id],function(error,results,body){
         console.log(results);
         if (results) {
-          if (results.changedRows == 0) {
-            console.log('query failed');
-            res.send('failed');
-          }else {
-            console.log('query success');
             res.send('success');
+          }else {
+            res.send('failed');
           }
-          rpi_location = '', rpi_campaign = '';
-        }else {
-           res.send('failed');
-        }
-        
       });
 
    })
@@ -173,15 +165,9 @@ app.route("/toggle-campaign/:rpiid/:campaign_id/:status")
       console.log(query);
 
       connection.query(query,function(error,results,body){
-        if(results) {
-          if (results.changedRows == 0) {
-            console.log('query failed');
-            res.send('failed');
-          }else {
-            console.log('query success');
+        console.log(results);
+        if (results) {
             res.send('success');
-          }
-          rpi_location = '', rpi_campaign = '';  
           }else {
             res.send('failed');
           }
@@ -197,16 +183,11 @@ app.get('/add-template-one/:id/:campaign/:template/:status',function(req,res){
 
 
   connection.query("INSERT INTO AircastRpiCampaign (RpiID, CampaignID, Template, isReady, isEnabled, isPriority) VALUES (?,?,?,?,?,?)",[rpi_id,campaign_id,template_name,1,status,1],(error,results,body) => {
-      if(results) {
-          if (results.affectedRows == 0) {
-            res.send('failed');
-          }else {
-            res.send('success');
-          }
+      if (results) {
+          res.send('success');
         }else {
           res.send('failed');
         }
-
   });
 })
 
