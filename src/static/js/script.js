@@ -122,6 +122,7 @@
               console.log(data);
                 if (data.success) {
                   toastr.success('Campaign id: ' + campaign_id+ ' successfully deleted.');
+                  $("#deleteCampaign-"+campaign_id).parent().parent().remove();
                 }else {
                   toastr.warning("Failed to delete. Please try again.");
                 }
