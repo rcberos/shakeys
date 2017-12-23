@@ -132,7 +132,7 @@
       })
 
 
-      $("#deleteCampaign-"+campaign_id).parent().parent().hide();
+      $("#deleteCampaign-"+campaign_id).parent().parent().remove();
       
     }
 
