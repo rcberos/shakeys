@@ -33,7 +33,7 @@
         url: '/toggle-campaign/'+rpid+'/'+campaign_id+'/'+status,
             success: function (data) {
               console.log(data);
-                if (data == 'success') {
+                if (data.success) {
                   toastr.success("Updated");
                 }else {
                   toastr.warning("Failed to update. Please try again.");
@@ -86,7 +86,7 @@
     		url: '/update-campaign/'+campaign_id+'/'+new_param,
             success: function (data) {
            		console.log(data);
-                if (data == 'success') {
+                if (data.success) {
                 	toastr.success("Updated");
                 }else {
                 	toastr.warning("Failed to update. Please try again.");
@@ -120,7 +120,7 @@
         url: '/delete-campaign/'+rpid+'/'+campaign_id,
             success: function (data) {
               console.log(data);
-                if (data == 'success') {
+                if (data.success) {
                   toastr.success('Campaign id: ' + campaign_id+ ' successfully deleted.');
                 }else {
                   toastr.warning("Failed to delete. Please try again.");

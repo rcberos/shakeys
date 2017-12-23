@@ -146,11 +146,12 @@ app.route("/update-campaign/:id/:param")
 
       connection.query("UPDATE AircastCampaignFiles SET FileName = ? WHERE CampaignID = ?",[new_param,id],function(error,results,body){
         console.log(results);
-        if (results) {
-            res.send('success');
-          }else {
-            res.send('failed');
-          }
+        if (error) throw error;
+        if (results){
+          res.send({success: true});  
+        }else {
+          res.send({success: false});
+        }
       });
 
    })
@@ -165,11 +166,12 @@ app.route("/toggle-campaign/:rpiid/:campaign_id/:status")
       console.log(query);
 
       connection.query(query,function(error,results,body){
-        if (results) {
-            res.send('success');
-          }else {
-            res.send('failed');
-          }
+        if (error) throw error;
+        if (results){
+          res.send({success: true});  
+        }else {
+          res.send({success: false});
+        }
       });
    })
 
@@ -180,7 +182,12 @@ app.route('/delete-campaign/:rpiid/:campaign_id')
 
       connection.query("DELETE FROM AircastRpiCampaign WHERE RpiID = ? and CampaignID = ?",[rpi_id,campaign_id],(error,results,body) => {
         if (error) throw error;
-        res.send('success');
+        if (results){
+          res.send({success: true});  
+        }else {
+          res.send({success: false});
+        }
+        
       });
    })
 
@@ -192,11 +199,13 @@ app.get('/add-template-one/:id/:campaign/:template/:status',function(req,res){
 
 
   connection.query("INSERT INTO AircastRpiCampaign (RpiID, CampaignID, Template, isReady, isEnabled, isPriority) VALUES (?,?,?,?,?,?)",[rpi_id,campaign_id,template_name,1,status,1],(error,results,body) => {
-      if (results) {
-          res.send('success');
+        if (error) throw error;
+        if (results){
+          res.send({success: true});  
         }else {
-          res.send('failed');
+          res.send({success: false});
         }
+        
   });
 })
 
@@ -254,9 +263,13 @@ app.get('/add-template-all/:campaign_id/:temp_name/:status',(req,res) => {
 
          function addTemplateToCampaign(){
             connection.query('INSERT INTO AircastRpiCampaign',[id_to_add_template],(error,results,body)=>{
-              if (results) {
-                res.send('success');
-              }
+                if (error) throw error;
+                if (results){
+                  res.send({success: true});  
+                }else {
+                  res.send({success: false});
+                }
+                
             });
         }
 
@@ -358,7 +371,8 @@ app.get('/add-template-all/:campaign_name/:temp_name/:status/:parameter',(req,re
             ctr++;
           })
 
-          res.send('success');
+          res.send({success: true});  
+        
         }
 
         
@@ -416,12 +430,12 @@ app.get('/add-template-one/:id/:campaign/:template/:status/:parameter',function(
                         checkQuery();
                       }
                     }else {
-                      res.send('failed');
+                      res.send({success: false});
                     }
                 });
               }
             }else {
-              res.send('failed');
+              res.send({success: false});
             }
 
       });
@@ -435,9 +449,9 @@ app.get('/add-template-one/:id/:campaign/:template/:status/:parameter',function(
   function checkQuery(){
     console.log('checking data', request1 + request2);
     if (request1 && request2) {
-      res.send('success');
+      res.send({success: true});
     }else {
-      res.send('failed');
+      res.send({success: false});
     }
   }
 
