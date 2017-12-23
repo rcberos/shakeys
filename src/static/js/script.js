@@ -10,7 +10,7 @@
       "debug": false,
       "newestOnTop": true,
       "progressBar": true,
-      "positionClass": "toast-top-right",
+      "positionClass": "toast-bottom-right",
       "preventDuplicates": false,
       "onclick": null,
       "showDuration": "300",
@@ -26,9 +26,7 @@
     function toggleCampaign(campaign_id) {
       var status = $("#campaign-"+campaign_id).is(":checked");
       var rpid = $("#tv_id").text();
-      console.log(rpid);
-      console.log(status);
-      console.log(campaign_id);
+      $("#campaign-"+campaign_id).parent().attr('data-hasData',status);
 
       $.ajax({
         type: 'POST',  // http method
@@ -52,7 +50,7 @@
       $("#show-stats").hide();
       $("#aircast-preview").hide();
       $("#aircast-preview-first").show(); 
-      $("#aircast-preview").html("");s
+      $("#aircast-preview").html("");
     });
 
     var $rows = $('#rpi-table tr');
@@ -101,6 +99,42 @@
     }
 
 
+    function confirmCampaignDelete(data){
+      var campaign_id_to_delete = $(data).attr('id').split("-");
+      var status = $("#campaign-"+campaign_id_to_delete[1]).parent().attr('data-hasData');
+
+      if (status == 'true') {
+        toastr.warning('Campaign is currently active. Disable it first to delete the campaign.');
+      }else {
+        $(data).html('<img src="/img/trash-confirm.png" onclick="deleteItem('+campaign_id_to_delete[1]+')">');
+        $(data).parent().parent().css('background-color','#dfdfdf');  
+      }
+      
+    }
+
+    function deleteItem(campaign_id) {
+      var rpid = $("#tv_id").text();
+      
+      $.ajax({
+        type: 'POST',  // http method
+        url: '/delete-campaign/'+rpid+'/'+campaign_id,
+            success: function (data) {
+              console.log(data);
+                if (data == 'success') {
+                  toastr.success('Campaign id: ' + campaign_id+ ' successfully deleted.');
+                }else {
+                  toastr.warning("Failed to delete. Please try again.");
+                }
+            },
+            error: function (data) {
+                    toastr.warning("Failed to delete. Please check your internet connection.");
+                }
+      })
+
+
+      $("#deleteCampaign-"+campaign_id).parent().parent().hide();
+      
+    }
 
     function previewCampaign(data) {
 

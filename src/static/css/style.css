@@ -41,6 +41,15 @@ table a:hover {
    right: 260px;
 }
 
+.glyphicon-trash {
+  color: #cb4343;
+}
+#delete-campaign {
+   position: fixed; 
+   top: 80px; 
+   right: 260px;
+}
+
  #aircast-preview-first {
     position: fixed;
     right: 20px;

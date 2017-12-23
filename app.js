@@ -121,7 +121,7 @@ app.route('/templates-manager')
 
 app.route("/templates-manager/:id")
   .get((req,res)=>{
-      var RpiID =  req.params.id;
+      let RpiID =  req.params.id;
 
       
       if (rpi_location && rpi_campaign && campaign_files) {
@@ -141,8 +141,8 @@ app.route("/templates-manager/:id")
 
 app.route("/update-campaign/:id/:param")
    .post((req,res) => {
-      var id = req.params.id;
-      var new_param = req.params.param;
+      let id = req.params.id;
+      let new_param = req.params.param;
 
       connection.query("UPDATE AircastCampaignFiles SET FileName = ? WHERE CampaignID = ?",[new_param,id],function(error,results,body){
         console.log(results);
@@ -157,15 +157,14 @@ app.route("/update-campaign/:id/:param")
 
 app.route("/toggle-campaign/:rpiid/:campaign_id/:status")
    .post((req,res) => {
-      var status = req.params.status;
-      var campaign_id = req.params.campaign_id;
-      var rpi_id = req.params.rpiid;
+      let status = req.params.status;
+      let campaign_id = req.params.campaign_id;
+      let rpi_id = req.params.rpiid;
 
-      var query = 'UPDATE AircastRpiCampaign SET isEnabled = '+status+' WHERE CampaignID = '+campaign_id+' and RpiID = '+rpi_id;
+      let query = 'UPDATE AircastRpiCampaign SET isEnabled = '+status+' WHERE CampaignID = '+campaign_id+' and RpiID = '+rpi_id;
       console.log(query);
 
       connection.query(query,function(error,results,body){
-        console.log(results);
         if (results) {
             res.send('success');
           }else {
@@ -174,6 +173,19 @@ app.route("/toggle-campaign/:rpiid/:campaign_id/:status")
       });
    })
 
+app.route('/delete-campaign/:rpiid/:campaign_id')
+   .post((req,res) => {
+      let campaign_id = req.params.campaign_id;
+      let rpi_id = req.params.rpiid;
+
+      connection.query("DELETE FROM AircastRpiCampaign WHERE RpiID = ? and CampaignID = ?",[rpi_id,campaign_id],(error,results,body) => {
+        if (results) {
+          res.send('success');
+        }else{
+          res.send('failed');
+        }
+      });
+   })
 
 app.get('/add-template-one/:id/:campaign/:template/:status',function(req,res){
   let rpi_id = req.params.id;

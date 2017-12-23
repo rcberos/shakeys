@@ -85,7 +85,13 @@
 									<% } %>
 								<% } %>
 
-								<% campaign_count++; %>									
+								<% campaign_count++; %>
+								<% if (temp != 'Template') { %>
+									<td class="td-enable"><button id="deleteCampaign-<%= campaign.CampaignID %>" onclick="confirmCampaignDelete(this)"><img style="width: 100%;" class="trash-image" src="/img/trash.png"></button></td>
+								<% }else { %>
+									<td class="td-enable"><button disabled="disabled" id="deleteCampaign-<%= campaign.CampaignID %>" onclick="confirmCampaignDelete(this)"><img style="width: 100%;" class="trash-image" src="/img/trash-disabled.png" style="color: grey;"></button></td>								
+								<% } %>
+									
 								<% if (campaign.isEnabled == 0) { %>
 									<td data-hasData="false"><input type="checkbox" id="campaign-<%= campaign.CampaignID %>" onchange="toggleCampaign(<%= campaign.CampaignID %>)" class="js-switch"></td>
 								<% } else { %>
