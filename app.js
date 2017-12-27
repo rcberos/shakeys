@@ -473,6 +473,7 @@ app.get('/aircast-gallery',(req,res)=>{
 
 app.route('/aircast-location')
    .get((req,res) => {
+
         if (rpi_location) {
           res.render("aircast-location",{rpi_location});    
         }else {
@@ -523,12 +524,31 @@ app.route('/show-campaigns/:id')
     
   })
 
+
+app.get('/aircast-issue-tracker',(req,res) => {
+
+    if (rpi_location) {
+      res.render("aircast-issue",{rpi_location});    
+    }else {
+      connection.query("SELECT * FROM AircastRpiLocation", (error,results,body) => {
+        rpi_location = results;   
+        res.render("aircast-issue",{rpi_location});       
+      })
+    }
+
+  
+});
+
 app.route("/api/rpi-location")
    .get((req,res) => {
       connection.query("SELECT * FROM AircastRpiLocation",(error,results,body)=>{
         res.json(results);
       });
    })
+
+app.get('*',(req,res)=> {
+  res.send('<h1>Page Not Found.</h1>');
+});
 
 
 app.listen(server_port, function() {
