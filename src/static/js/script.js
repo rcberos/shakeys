@@ -63,6 +63,16 @@
         }).hide();
     });
 
+    var $rows = $('#table-contacts tr');
+    $('#search').keyup(function() {
+        var val = $.trim($(this).val()).replace(/ +/g, ' ').toLowerCase();
+        
+        $rows.show().filter(function() {
+            var text = $(this).text().replace(/\s+/g, ' ').toLowerCase();
+            return !~text.indexOf(val);
+        }).hide();
+    });
+
     $("#toggle-campaign").on("click",function(){
 
       if (varToggleCampaign) {
@@ -70,7 +80,7 @@
         $("#show-stats").css("right","210px");
         $("td[data-hasData='false']").parent('tr').hide();
         varToggleCampaign = false;
-      }else {
+      }else { 
         $("td[data-hasData='false']").parent('tr').show();
         varToggleCampaign = true;
         $("#toggle-campaign").html('Show only active campaigns');
@@ -78,6 +88,87 @@
       }
       
     })
+
+    function checkboxAddToNUmberList(item) {
+
+
+      if ( $('.site-to-send-message li:contains("'+$(item).attr('data-name')+'")').length ) {
+         $('.site-to-send-message li:contains("'+$(item).attr('data-name')+'")').remove();
+      }else {
+        $('.site-to-send-message').append('<li data-num='+$(item).attr('data-number')+'>'+$(item).attr('data-name')+'</li>');  
+      }
+
+
+    }
+
+
+    function sendMessage() {
+      var messg = $("#text-message").val(); 
+      var listItems = $(".site-to-send-message li");
+      var numList = [];
+
+      if (messg == '') {
+       swal(
+          'Oops...',
+          'Don\'t forget to add your message',
+          'info'
+        )
+
+      }
+      else if (listItems.length == 0) {
+        swal(
+          'Oops...',
+          'You forgot to add the list of numbers to send the message',
+          'info'
+        )
+      }else {
+          
+          listItems.each(function(idx, li) {
+              var numbers_of_sites_to_send = $(li).attr('data-num');
+              numList.push('63'+numbers_of_sites_to_send);
+          });
+
+          sendMes(numList,messg);
+
+
+      }
+
+      function sendMes(num_list,mess) {
+        $.ajax({ 
+            type: "POST",
+            url: "http://ec2-54-169-234-246.ap-southeast-1.compute.amazonaws.com/api/v0/message-per-site.php",
+            data: {numbers:num_list,message:mess}, 
+            dataType: 'json',
+            success: function(item){
+              console.log(item);
+              console.log('done');
+            },
+            error: function(err) {
+              console.log(err);
+            }
+        });
+
+        swal({
+          title: 'Sending Your Messages',
+          text: 'this will only take a few seconds',
+          timer: 5000,
+          onOpen: () => {
+            swal.showLoading()
+          }
+        }).then((result) => {
+          if (result.dismiss === 'timer') {
+                  $("#text-message").val('');  
+                  swal(
+                    'Message Sent!',
+                    '',
+                    'success'
+                  )
+          }
+        })
+      }
+      
+
+    }
 
     function updateParameter(campaign_id) {
     	var new_param = $("#param-"+campaign_id).val();

@@ -26,8 +26,12 @@
 			</div>
 		</div>
 		<div class="col-md-6">
-			<div id="site_preview">
-				<table class="table table-hover table-striped table-bordered">
+			<div class="inner-addon right-addon">
+			    <i class="glyphicon glyphicon-search icon-search" ></i>
+			    <input type="text" class="form-control input-lg"  id="search" placeholder="Search..." />
+			</div><br/>
+			<div class="site_preview">
+				<table class="table table-hover table-striped table-bordered" id="table-contacts">
 				<tr>
 					<th>Site Name</th>
 					<th>Number</th>
@@ -37,7 +41,7 @@
 					<tr>
 						<td><%= item.Room %></td>
 						<td><%= item.ContactPersonName %></td>
-						<td><a href="tel:+63<%= item.ContactPerson %>">0<%= item.ContactPerson %></a></td>
+						<td><a href="tel:+63<%= item.MobileNumber %>">0<%= item.MobileNumber %></a></td>
 					</tr>
 				 <% }) %>
 				</table>

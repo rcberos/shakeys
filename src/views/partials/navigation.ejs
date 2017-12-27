@@ -13,8 +13,13 @@
         <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
                 <li><a href="/">Home</a></li>
-                <li><a href="/textblast">Textblast</a></li>
-                <li><a href="/feedback">Feedback</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Textblast <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="/textblast">Text All Sites</a></li>
+                        <li><a href="/textblast-per-site">Text Selected Sites</a></li>
+                  </ul>
+                </li>
                 <li><a href="/templates-manager">Template Manager</a></li>
                 <li><a href="/show-campaigns">Show All Campaigns</a></li>
                 <li><a href="/aircast-location">Aircast Location</a></li>

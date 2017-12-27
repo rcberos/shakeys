@@ -60,6 +60,13 @@ table a:hover {
   margin: 0 0 0 5px;
 }
 
+.site-to-send-message {
+  margin-top: 20px;
+}
+.site-to-send-message li {
+  margin-bottom: 5px;
+}
+
 #aircast-preview-first .quick-stats {
 
   text-align: left;
@@ -71,12 +78,27 @@ table a:hover {
   margin: 15px 0 15px 0;   
 }
 
+.number-to-send {
+  margin-right: 20px !important; 
+  transform: scale(2);
+}
 
+li.dropdown:hover > .dropdown-menu {
+    display: block;
+}
 
-#site_preview {
+textarea {
+    resize: none;
+}
+
+.site_preview {
 	height: 300px;
 	overflow-y: scroll !important;
 	margin-bottom: 30px;
+}
+
+.site_preview2 {
+  height: 400px;
 }
 
 /* enable absolute positioning */
