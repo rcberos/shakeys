@@ -1,0 +1,28 @@
+<% include ./partials/header %>
+<% include ./partials/navigation %>
+	
+	<div class="container">
+		<h1>Aircast Site Report</h1>
+	</div>
+
+
+
+
+	<script type="text/javascript">
+
+		$.ajax({
+			url: 'http://ec2-54-169-234-246.ap-southeast-1.compute.amazonaws.com/api/v0/aircast_tv_monitoring.php?RpiID=38&StartDate=1512086400&EndDate=1512172800',
+			success: function(data) {
+				console.log(data);
+				console.log(data.Logs.length);
+				console.log(data.Logs[0].Date);
+
+
+			},
+			error: function(err) {
+				console.log(err);
+			}
+		})
+	</script>
+
+<% include ./partials/footer %>

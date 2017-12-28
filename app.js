@@ -536,7 +536,10 @@ app.get('/aircast-issue-tracker',(req,res) => {
       })
     }
 
-  
+});
+
+app.get('/aircast-site-report',(req,res) => {
+      res.render("aircast-site-report");        
 });
 
 app.route("/api/rpi-location")
