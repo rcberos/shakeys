@@ -10,8 +10,11 @@
 
 	<script type="text/javascript">
 
+		var rpi_id = 3;
+		var start_date = 1514419201;
+		var end_date = 1514432701;
 		$.ajax({
-			url: 'http://ec2-54-169-234-246.ap-southeast-1.compute.amazonaws.com/api/v0/aircast_tv_monitoring.php?RpiID=38&StartDate=1512086400&EndDate=1512172800',
+			url: 'http://ec2-54-169-234-246.ap-southeast-1.compute.amazonaws.com/api/v0/aircast_tv_monitoring.php?RpiID='+rpi_id+'&StartDate='+start_date+'&EndDate='+end_date,
 			success: function(data) {
 				console.log(data);
 				console.log(data.Logs.length);
