@@ -7,6 +7,12 @@ body {
     text-align: center;
 }
 
+#report-graph {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+}
+
 .aircast-frame {
   width: 300px;
 }
