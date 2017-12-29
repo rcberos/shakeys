@@ -102,7 +102,7 @@ app.route("/textblast")
       var date_sent = moment().format('ddd, MMM DD, YYYY | hh:mm a');
       last_message.message = message;
       last_message.created_at = date_sent;
-      
+        
       request('http://ec2-54-169-234-246.ap-southeast-1.compute.amazonaws.com/api/v0/send-message-blast.php?message='+message,function(error,response,body){
           res.render("send-message",{results:site_data,success:"success",message_data:last_message});
       })
