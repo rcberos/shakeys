@@ -2,17 +2,13 @@
 <% include ./partials/navigation %>
 
 	<div class="container">
-		<h1 class="margin-bottom-20 margin-top-0"><a class="glyphicon glyphicon-plus add" id="add-aircast-issue"></a> Aircast Issue Tracker</h1>
+		<h1 class="margin-bottom-20 margin-top-0"><a style="cursor:pointer;" id="Add" data-toggle="modal" data-target="#myModal" class="glyphicon glyphicon-plus add" id="add-aircast-issue"></a> Aircast Issue Tracker</h1>
 		<div class="row">
 			<div class="col-md-6">
 				<div class="inner-addon right-addon">
 					<i class="glyphicon glyphicon-search icon-search" ></i>
 				    <input type="text" class="form-control input-lg"  id="search" placeholder="Search..." />
 				</div>
-			</div>
-			<div class="col-md-6">
-				<button class="btn btn-success">SAVE</button>
-				<button class="btn btn-primary">EDIT</button>
 			</div>
 		</div>
 		<div class="row">
@@ -24,14 +20,171 @@
 				<th>Status</th>
 				<th>Remarks</th>
 				<th>Date of Resolution</th>
+				<tbody id="tbody"></tbody>
 			</table>
 		</div>
-	</div>
-
-	<script type="text/javascript">
-		$("#add-aircast-issue").on('click',function(){
-			$("#table-aircast-issue").append('<tr><td><input type="text" class="form-control"></td><td><input type="text" class="form-control radius-0 "></td><td><input type="text" class="form-control radius-0 "></td><td><input type="text" class="form-control radius-0 "></td><td><input type="text" class="form-control radius-0 "></td><td><input type="text" class="form-control radius-0 "></td><td><input type="text" class="form-control radius-0 "></td></tr>');
+		<div class="modal fade" id="myModal" role="dialog">
+			<div class="modal-dialog">
+			  <div class="modal-content">
+				<div class="modal-header">
+				  <h4 class="modal-title">Modal Header</h4>
+				</div>
+				<div class="modal-body">
+						<div>
+							<label>Date Detected</label><input value="" id="dateDetected" type="text" class="form-control" disabled>
+							<label>Site Name</label>
+							<select id='siteName' class="form-control">
+								<option> </option>
+							</select>
+							<label>Issue</label><textarea id="issue"  class="form-control"></textarea>
+							<label>Date of Resolution</label><input id="dateResolution" type="date" class="form-control">
+						</div>
+						<div>
+								<label>Status</label>
+								<select id="status" class="form-control">
+									<option> </option>
+									<option value="Resolved">Resolve</option>
+									<option value="Unresolved">Not Resolve</option>
+								</select>
+								<label>Resolution</label><textarea id="resolution" class="form-control" style="height:90px"></textarea>
+								<label>Remarks</label><textarea id="remarks" class="form-control"></textarea>
+							</div>
+				</div>
+				<div class="modal-footer">
+					<button class="btn btn-success" id="save-issue" >SAVE</button>
+				  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				</div>
+			  </div>
+			  
+			</div>
+		  </div>
+	
+		<div class="modal fade" id="myModalEdit" role="dialog">
+				<div class="modal-dialog">
+					<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title">Modal Header</h4>
+					</div>
+					<div class="modal-body">
+							<div>
+								<label>Date Detected</label><input disabled value="" id="dateDetectedEdit" type="text" class="form-control" >
+								<label>Site Name</label>
+								<select id='siteNameEdit' class="form-control">
+									<option> </option>
+								</select>
+								<label>Issue</label><textarea id="issueEdit"  class="form-control"></textarea>
+								<label>Date of Resolution</label><input id="dateResolutionEdit" type="date" class="form-control">
+							</div>
+							<div>
+									<label>Status</label>
+									<select id="statusEdit" class="form-control">
+										<option> </option>
+										<option value="Resolved">Resolve</option>
+										<option value="Unresolved">Not Resolve</option>
+									</select>
+									<label>Resolution</label><textarea id="resolutionEdit" class="form-control" style="height:90px"></textarea>
+									<label>Remarks</label><textarea id="remarksEdit" class="form-control"></textarea>
+								</div>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-success" id="save-issue" >SAVE</button>
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					</div>
+					</div>
+					
+				</div>
+				</div>
+	
+		</div>
+<script>
+		let rows = '';
+		let data1;
+		$.ajax({
+			type: 'GET',
+			url: "/select-issue",
+			success: function (data){
+				console.log(data);
+				data1=data;
+				for(var counter=0;data.length>counter;counter++){
+					rows += 
+						'<tr id="'+counter+'" class="row-clickable">'+
+							'<td class="dateDetected">'+moment(data[counter].date_detected).format('YYYY-MM-DD')+'</td>'+
+							'<td class="siteName">'+data[counter].site_name+'</td>'+
+							'<td class="issue">'+data[counter].issue+'</td>'+
+							'<td class="resolution">'+data[counter].resolution+'</td>'+
+							'<td class="status">'+data[counter].status+'</td>'+
+							'<td class="remarks">'+data[counter].remarks+'</td>'+
+							'<td class="dateResolution">'+moment(data[counter].date_of_resolution).format('YYYY-MM-DD')+'</td>'+
+						'</tr>';
+				}document.getElementById('tbody').innerHTML = rows;
+				$('.row-clickable').css('cursor','pointer')
+				.on('click',function(){
+					$('#dateDetectedEdit').val($(this).children('.dateDetected').html());
+					$('#siteNameEdit').val($(this).children('.siteName').html());
+					$('#issueEdit').val($(this).children('.issue').html());
+					$('#resolutionEdit').val($(this).children('.resolution').html());
+					$('#statusEdit').val($(this).children('.status').html());
+					$('#remarksEdit').val($(this).children('.remarks').html());
+					$('#dateResolutionEdit').val($(this).children('.dateResolution').html());
+					$('#myModalEdit').modal('toggle')
+				})
+			},error: function(err){
+				console.log(err);
+			}
+		})
+		let option ='' ;
+		$.ajax({ 
+            type: "GET",
+            url: "/api/rpi-location",
+            success: function(item){
+              console.log(item);
+			  console.log('done');
+				for(var counter=0;item.length>counter;counter++){
+					option += '<option value="'+item[counter].Room+'">'+item[counter].Room+'</option>';
+				}
+		$('#siteName').append(option+'');
+		$('#siteNameEdit').append(option+'');
+            },
+            error: function(err) {
+              console.log(err);
+            }
 		});
+		$('#dateDetected').val(moment().format('YYYY-MM-DD'));
+
+		$("#save-issue").on('click',function(){
+			if(
+				$('#siteName').val()!='' && 
+				$('#issue').val()!='' && 
+				$('#dateResolution').val()!='' && 
+				$('#status').val()!='' && 
+				$('#resolution').val()!='' && 
+				$('#remarks').val()!='' && 
+				$('#dateDetected').val()!='')
+			{
+				var datas = {
+					date_detected:  $('#dateDetected').val(),
+					site_name : 		$('#siteName').val(),
+					issue: 					$('#issue').val(),
+					date_resolution:$('#dateResolution').val(),
+					status:					$('#status').val(),
+					resolution:			$('#resolution').val(),
+					remarks: 				$('#remarks').val()
+				};
+				$.ajax({
+					method: 'POST',
+					url: '/save-issue',
+					data: datas,
+					success: function(data){
+						alert(data);
+						$('#myModal').modal('toggle');
+					}
+				})
+			}
+			else{
+				alert('Complete the form');
+			}
+		})
+
 	</script>
 
 <% include ./partials/footer %>

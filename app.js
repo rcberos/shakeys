@@ -549,6 +549,54 @@ app.route("/api/rpi-location")
       });
    })
 
+app.route("/api/rpi-location")
+  .get((req,res) => {
+    connection.query("SELECT * FROM AircastRpiLocation",(error,results,body)=>{
+      res.json(results);
+    });
+  })
+
+app.route('/save-issue')
+  .post((req,res) =>{
+    const sql = "INSERT INTO  `gp_digital`.`aircast_issue` ("+
+    " `id` ,"+
+    " `date_detected` ,"+
+    " `site_name` ,"+
+    " `issue` ,"+
+    " `date_of_resolution` ,"+
+    " `status` ,"+
+    " `resolution` ,"+
+    " `remarks` ,"+
+    " `timestamp`"+
+    " )"+
+    "  VALUES ("+
+    " NULL ,  ?,  ?,  ?,  ?,  ?,  ?,  ?, CURRENT_TIMESTAMP );";
+    let dateDetected  = req.body.date_detected;
+    let siteName      = req.body.site_name;
+    let issue         = req.body.issue;
+    let dateResolved  = req.body.date_resolution;
+    let status        = req.body.status;
+    let resolution    = req.body.resolution;
+    let remarks       = req.body.remarks
+    connection.query(sql,[
+      dateDetected,
+      siteName,
+      issue,
+      moment(dateResolved).format('YYYY-MM-DD'),
+      status,
+      resolution,
+      remarks
+    ],(error,results,body) => {
+      console.log(results);
+    });
+  });
+  app.route('/select-issue')
+    .get((req,res)=>{
+      connection.query("SELECT * FROM  `aircast_issue`;",(error,results,body)=>{
+        res.json(results);
+      });
+    });
+
 app.get('*',(req,res)=> {
   res.send('<h1>Page Not Found.</h1>');
 });
