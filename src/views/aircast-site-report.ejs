@@ -1,19 +1,51 @@
 <% include ./partials/header %>
 <% include ./partials/navigation %>
 	
+	<button onclick="updatePieChart()">update</button>
 	<div class="container">
 		<h1 class="margin-bottom-30">Aircast Site Daily Report</h1>
 		<div id="report-graph"></div>
 	</div>
 
+	<div id="showModal" class="modal fade" role="dialog">
+	  <div class="modal-dialog">
+
+	    <!-- Modal content-->
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h4 class="modal-title">Modal Header</h4>
+	      </div>
+	      <div class="modal-body">
+	      	<div class="row">
+	      		<div class="col-md-9">
+	      			<div class="container">
+	      				<div id="label-container"></div>
+	      				<ul id="status-overview"></ul>	
+	      			</div>
+	      			
+	      		</div>
+	      		<div class="col-md-3">
+	      			<div id="status-details"></div>
+	      		</div>	
+	      	</div>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	      </div>
+	    </div>
+
+	  </div>
+	</div>
 
 
 
 	<script type="text/javascript">
 
-		var hgs_rpiid  = []
-
+		var hgs_rpiid  = [];
+		var myPieChart = [];
+		var counter = 0;
 		var aircast_sites_data;
+		var rpi_id_logs_list = [];
 
 		if (!aircast_sites_data) {
 
@@ -27,7 +59,7 @@
 			});
 		}
 
-		function getLogsData(rpi_id){
+		function getLogsData(rpi_id,toUpdate){
 
 			var aircast_tv_data = {};
 			aircast_tv_data.rpi_id = rpi_id;
@@ -47,7 +79,12 @@
 			$.ajax({
 				url: 'http://ec2-54-169-234-246.ap-southeast-1.compute.amazonaws.com/api/v0/aircast_tv_monitoring.php?RpiID='+rpi_id+'&StartDate='+start_date+'&EndDate='+end_date,
 				success: function(data) {
-					removeDuplication(data,aircast_tv_data);
+
+					if (toUpdate) {
+						rpi_id_logs_list = [];
+					}
+
+					removeDuplication(data,aircast_tv_data,toUpdate);
 
 				},
 				error: function(err) {
@@ -57,7 +94,8 @@
 
 		}
 
-		function removeDuplication(data,aircast_tv_data) {
+
+		function removeDuplication(data,aircast_tv_data,toUpdate) {
 
 			var arr = [];
 
@@ -70,11 +108,11 @@
 					arr.push(item_to_push);
 				}
 			}
-				calculateUptime(data,arr,aircast_tv_data);
+				calculateUptime(data,arr,aircast_tv_data,toUpdate);
 		}
 
 
-		function calculateUptime(data,arr,aircast_tv_data){
+		function calculateUptime(data,arr,aircast_tv_data,toUpdate){
 
 			aircast_tv_data.openTime = data.OpenTime;
 			aircast_tv_data.closeTime = data.CloseTime;
@@ -91,17 +129,19 @@
 			var storeClosingHour = parseInt(data.CloseTime.split(':')[0]);
 			var computed_hours_of_operation = storeClosingHour - storeOpenHour;
 			var hoursActive = [];
-			var time_store_opens = 'never opened';
-
 			var current_time = time_now.split(':');
+			var time_store_opens = 'never opened';
+			var expected_time_to_render = (storeClosingHour * 60) - ((parseInt(current_time[0])*60) + parseInt(current_time[1]));
+
+
 			
-			console.log(aircast_tv_data.aircast_name);
-			console.log(store_opening_hour);
-			console.log(store_closing_hour);
-			console.log(storeOpenHour);
-			console.log(storeClosingHour);
-			console.log(computed_hours_of_operation);
-			console.log('current time: ' , time_now.split(':'));
+			console.log('Site name: ' + aircast_tv_data.aircast_name);
+			console.log('Store Opening Hours: ' + store_opening_hour);
+			console.log('Store Closing Hours: ' + store_closing_hour);
+			console.log('Store Closing Hour: ', (storeClosingHour * 60) - (parseInt(current_time[0])*60) + parseInt(current_time[1]));
+
+			console.log('Computed hour of operations: ' + computed_hours_of_operation);
+			console.log('Current time now: ' , time_now.split(':'));
 
 			for (var i = 0; i < arr.length; i++) {
 
@@ -115,11 +155,11 @@
 			for (var i = 0; i < arr.length; i++) {
 				if (parseInt(arr[i].split(':')[0]) >= storeOpenHour) {
 					hoursActive.push(arr[i].split(':')[0]);
-					// console.log(arr[i]);
+					console.log(arr[i].split(':')[0]);
 				}
 			}
 
-			console.log(aircast_tv_data);
+			// console.log(aircast_tv_data);
 
 
 			var minutes_tv_should_open = Math.abs(storeClosingHour - storeOpenHour) * 60;
@@ -127,10 +167,19 @@
 			var minutes_tv_is_down = getTheDowntime(time_store_opens,store_opening_hour);
 			var minutes_tv_to_render = minutes_tv_should_open - (minutes_tv_is_up + minutes_tv_is_down);
 
-			console.log('must open: ' +minutes_tv_should_open);
-			console.log('open time: ' +minutes_tv_is_up);
-			console.log('down time: ' +minutes_tv_is_down);
-			console.log('remaining time: ' +minutes_tv_to_render);
+			if (expected_time_to_render != minutes_tv_to_render) {
+				var temp = Math.abs(minutes_tv_to_render - expected_time_to_render);
+				minutes_tv_is_down+=temp;
+				minutes_tv_to_render = expected_time_to_render;
+
+			}
+
+
+
+			console.log('Minutes TV Should be open: ' +minutes_tv_should_open);
+			console.log('Current TV Opentime: ' +minutes_tv_is_up);
+			console.log('Current TV Downtime: ' +minutes_tv_is_down);
+			console.log('Remaining Time to Render: ' +minutes_tv_to_render);
 			
 			var aircast_percentage = {
 				must_uptime: minutes_tv_should_open,
@@ -140,76 +189,122 @@
 			}
 
 
-			var idealUptime = (Math.abs((parseInt(current_time[0]) - storeOpenHour)) * 60) + parseInt(current_time[1])+1;
-			var uptime = hoursActive.length;
-			var downtime  = idealUptime - uptime;
+			// var idealUptime = (Math.abs((parseInt(current_time[0]) - storeOpenHour)) * 60) + parseInt(current_time[1])+1;
+			// var uptime = hoursActive.length;
+			// var downtime  = idealUptime - uptime;
 
-			console.log(idealUptime + ':' + uptime+':'+downtime);
+			// console.log('Ideal uptime: ' + idealUptime);
+			// console.log((parseInt(current_time[0])*60) + parseInt(current_time[1]));
 
-			addGraphToDom(aircast_tv_data,aircast_percentage,time_store_opens);
+			if (toUpdate) {
+				updateChart(aircast_tv_data,aircast_percentage);
+
+			}else {
+				var t = [aircast_tv_data.rpi_id,data];
+				rpi_id_logs_list.push(t);
+				addGraphToDom(aircast_tv_data,aircast_percentage,time_store_opens);	
+
+			}
+
+			
 
 		}
 
 
 		function getTheDowntime(time_store_opens,store_opening_hour){
 
+			console.log('Time Store Opens: ' + time_store_opens);
 			var hour = parseInt(time_store_opens.split(':')[0])*60;
 			var mins = parseInt(time_store_opens.split(':')[1]);
 			var storeOpensHour = parseInt(store_opening_hour.split(':')[0])*60;
 			var storeOpensMins = parseInt(store_opening_hour.split(':')[1]);
 
-				console.log(hour);
-				console.log(mins);
-				console.log(storeOpensHour);
-				console.log(storeOpensMins);
+				console.log('Time Store Opens - Hours: ' + hour);
+				console.log('Time Store Opens - minutes: ' +mins);
+				console.log('Store opening Hours:' + storeOpensHour);
+				console.log('Store Opening Minutes:' + storeOpensMins);
 
 			var time_left = (parseInt(time_store_opens.split(':')[0])*60) + parseInt(time_store_opens.split(':')[1]) - (parseInt(store_opening_hour.split(':')[0])*60) + parseInt(store_opening_hour.split(':')[1]);
 
 			console.log('time-left: ', time_left);
-			console.log(Math.floor(time_left/60)*60);
+			console.log((Math.floor(time_left/60))*60);
 			console.log(60 - ((time_left/60) % 1) * 60);
 
+			var hour_passed = (Math.floor(time_left/60))*60;
+			var minutes_passed_temp  = ((time_left/60) % 1) * 60;
+			var minutes_passed  = Math.floor(60 - ((time_left/60) % 1) * 60);
 
-			console.log('time-left: ', time_left);
+			console.log('hour passed: ' + hour_passed);
+			console.log('minutes passed temp: ' + minutes_passed_temp);
+			console.log('minutes passed: ' + minutes_passed);
 
-			if (time_left == 0) {
-				return (Math.floor(time_left/60)*60) + (((time_left/60) % 1) * 60);
-			}else {
 
-				if (time_left > 60) {
-					return time_left;
-				}else if (time_left > 30) {
-					return (Math.floor(time_left/60)*60) + (60 - ((time_left/60) % 1) * 60);
-				}else {
-					(Math.floor(time_left/60)*60) + (60 - ((time_left/60) % 1) * 60)
-				}
+			return time_left;
+
+			// if (minutes_passed_temp >= 30 ) {
+			// 	return hour_passed + minutes_passed;	
+			// }else {
+			// 	return hour_passed + minutes_passed;
+			// }
+
+			
+
+			// if (time_left == 0) {
+			// 	return (Math.floor(time_left/60)*60) + (((time_left/60) % 1) * 60);
+			// }else {
+
+			// 	if (time_left > 60) {
+			// 		return time_left;
+			// 	}else if (time_left > 30) {
+			// 		return (Math.floor(time_left/60)*60) + (60 - ((time_left/60) % 1) * 60);
+			// 	}else {
+			// 		(Math.floor(time_left/60)*60) + (60 - ((time_left/60) % 1) * 60)
+			// 	}
 
 								
-			}
+			// }
 
 
 		}
 
+
 		function addGraphToDom(aircast_tv_data,aircast_percentage,store_opens){
 
 			var today = moment().format('YYYY-MM-DD');
+			var time_now = moment().format('kk:mm:ss');
+
 			var div = document.createElement("div");
 			div.className +="col-md-3 ";
 			div.className +="margin-bottom-30";
 
 			var div1 = document.createElement("div");
 			var lbl = document.createElement('label');
-			lbl.innerHTML = aircast_tv_data.aircast_name + '<br/><small>Operation Hours: <br/>' + moment(today+' '+aircast_tv_data.openTime).format('hh a')+' - '+ moment(today+' '+aircast_tv_data.closeTime).format('hh a') +'</small><br/><small>(aircast opened at: ' +store_opens+')</small><br/>';
+			lbl.id = 'data-label-'+aircast_tv_data.rpi_id;
+			lbl.innerHTML = '<h4>'+aircast_tv_data.aircast_name +'</h4><small>Operation Hours: <br/>' + moment(today+' '+aircast_tv_data.openTime).format('hh a')+' - '+ moment(today+' '+aircast_tv_data.closeTime).format('hh a') +'</small><br/><small>(aircast opened at: ' +store_opens+')</small><br/>';
 			div1.appendChild(lbl);
+			var span = document.createElement('div');
+			span.innerHTML = '<button onclick="viewStats('+aircast_tv_data.rpi_id+')">View Logs';
+			div1.appendChild(span);
 
 			var div2 = document.createElement("div");
-			var canvas = document.createElement('canvas');
-			canvas.id = "data-"+aircast_tv_data.rpi_id;
-			canvas.width = 100;
-			canvas.height = 100;
-			div2.appendChild(canvas);
 
+			if (time_now.split(':')[0] >= aircast_tv_data.closeTime.split(':')[0]) {
+				var img = document.createElement("IMG");
+			    img.setAttribute("src", "/img/close-store.png");
+			    img.setAttribute("width", "200");
+			    img.setAttribute("class", "margin-top-20");
+			    div2.appendChild(img);
+			}else {
+
+				var canvas = document.createElement('canvas');
+				canvas.id = "data-"+aircast_tv_data.rpi_id;
+				canvas.width = 100;
+				canvas.height = 100;
+				div2.appendChild(canvas);
+
+			}
 			
+
 			div.appendChild(div1);
 			div.appendChild(div2);
 
@@ -217,48 +312,163 @@
 			body.appendChild(div);
 
 
-			var d = 'data-'+aircast_tv_data.rpi_id;
-			var ctx = document.getElementById(d).getContext('2d');
+			if (time_now.split(':')[0] < aircast_tv_data.closeTime.split(':')[0]) {
+
+				var d = 'data-'+aircast_tv_data.rpi_id;
+				var ctx = document.getElementById(d).getContext('2d');
 
 
-			data = {
-			    datasets: [{
-			        data: [aircast_percentage.uptime, aircast_percentage.downtime, aircast_percentage.remaining_time],
-			         backgroundColor: [
-		                'rgba(50, 255, 50, 1)',
-		                'rgba(255,50, 50, 1)',
-		                'rgba(168,168,168,1)'
-		            ],
-		            borderWidth: 1
-			    }],
+				data = {
+				    datasets: [{
+				        data: [aircast_percentage.uptime, aircast_percentage.downtime, aircast_percentage.remaining_time],
+				         backgroundColor: [
+			                'rgba(50, 255, 50, 1)',
+			                'rgba(255,50, 50, 1)',
+			                'rgba(168,168,168,1)'
+			            ],
+			            borderWidth: 1
+				    }],
 
-			    // These labels appear in the legend and in the tooltips when hovering different arcs
-			    labels: [
-			        'Minutes of Uptime',
-			        'Minutes of Downtime',
-			        'Remaining time'
+				    // These labels appear in the legend and in the tooltips when hovering different arcs
+				    labels: [
+				        'Minutes of Uptime',
+				        'Minutes of Downtime',
+				        'Remaining time'
 
-			    ], 
-			    backgroundColor: [
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(54, 162, 235, 0.2)',
-            ],
-		};
+				    ], 
+				    backgroundColor: [
+	                'rgba(255, 99, 132, 0.2)',
+	                'rgba(54, 162, 235, 0.2)',
+	            ],
+			};
 
-		options = {
-			legend: {
-			    display: false,
+			options = {
+				legend: {
+				    display: false,
+				}
 			}
+
+
+				myPieChart[counter] = new Chart(ctx,{
+				    type: 'pie',
+				    data: data,
+				    options: options
+				});
+
+				counter++;
+
+
+			}
+
+
+
+
+
 		}
 
+		function updatePieChart() {
+			console.log('pressed');
+			aircast_sites_data.forEach(function(item) {
 
-			var myPieChart = new Chart(ctx,{
-			    type: 'pie',
-			    data: data,
-			    options: options
+				if (item.isDeployed == 1) {
+					getLogsData(item.RpiID,true);	
+				}
+
+
+				// if (item.RpiID == 24 || item.RpiID == 30 || item.RpiID == 33 || item.RpiID == 31) {
+				// 	getLogsData(item.RpiID,false);	
+				// }
+				
+			})
+		}
+
+		function updateChart(aircast_tv_data,aircast_percentage) {
+			console.log('coming from the update');
+			console.log(aircast_tv_data);
+			console.log(aircast_percentage);
+
+			myPieChart.forEach(function(item){
+
+				if (item.canvas.id == 'data-'+aircast_tv_data.rpi_id) {
+					console.log(item);
+					console.log(item.canvas.id);
+					console.log(item.config.data.datasets[0]);
+					//item.config.data.datasets[0].data[aircast_percentage.uptime, aircast_percentage.downtime, aircast_percentage.remaining_time];
+					item.config.data.datasets[0].data[0] = aircast_percentage.uptime;
+					item.config.data.datasets[0].data[1] = aircast_percentage.downtime;
+					item.config.data.datasets[0].data[2] = aircast_percentage.remaining_time;
+					//item.config.data.datasets[0].data[100, 150, 300];
+					item.update();
+				}
 			});
+		}
+
+
+		function viewStats(rpi_id) {
+			
+			var today = moment().format('YYYY-MM-DD');
+			var start_date = moment(today+ ' 00:00:00').unix();
+			var end_date = moment(today+ ' 23:59:59').unix();
+
+			$('#showModal').modal('show');
+			$("#status-overview").html('');
+
+			for (var i = 0; i < rpi_id_logs_list.length; i++) {
+
+				if (rpi_id_logs_list[i][0] == rpi_id) {
+
+					var data = rpi_id_logs_list[i][1];
+					var str = '';
+					var arr = [];
+					var storeOpenHour = parseInt(data.OpenTime.split(':')[0]);
+					var final_list = [];
+					
+					for (var i = data.Logs.length-1; i > 0 ; i--) {
+
+
+						var item_hour = data.Logs[i].Date.split(" ")[1].split(':')[0];
+						var item_minutes = data.Logs[i].Date.split(" ")[1].split(':')[1];
+
+						var item_to_push = item_hour+':'+item_minutes;
+
+						if (arr.indexOf(item_to_push) == -1) {
+							arr.push(item_to_push);
+							str+=item_to_push+'<br/>';
+						}
+					}
+
+					for (var i = 0; i < arr.length; i++) {
+						if (parseInt(arr[i].split(':')[0]) >= storeOpenHour) {
+							final_list.push(arr[i].split(':')[0]);
+						}
+					}
+
+					var counts = {};
+					final_list.forEach(function(x) { counts[x] = (counts[x] || 0)+1; });
+
+					$(".modal-title").html($('#data-label-'+rpi_id+' h4').html());
+					$("#label-container").html(($("#data-label-"+rpi_id).html()));
+
+					for (var key in counts) {
+					    if (counts.hasOwnProperty(key)) {
+					    	$("#status-overview").append('<li>'+key + ' <span class="badge">'+counts[key]+'</span></li>')
+					        console.log(key + " -> " + counts[key]);
+					    }
+					}
+
+					console.log(counts);
+					//console.log(arr);
+					$("#status-details").html(str);	
+					break;
+
+
+				}
+
+			}
 
 		}
+
+
 
 
 		function init() {
@@ -270,8 +480,8 @@
 				}
 
 
-				// if (item.RpiID == 3 || item.RpiID == 23 || item.RpiID == 31 || item.RpiID == 24) {
-				// 	getLogsData(item.RpiID);	
+				// if (item.RpiID == 24 || item.RpiID == 30 || item.RpiID == 33 || item.RpiID == 31) {
+				// 	getLogsData(item.RpiID,false);	
 				// }
 				
 			})
