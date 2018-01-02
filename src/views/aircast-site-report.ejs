@@ -288,7 +288,7 @@
 
 			var div2 = document.createElement("div");
 
-			if (time_now.split(':')[0] >= aircast_tv_data.closeTime.split(':')[0]) {
+			if (time_now.split(':')[0] >= aircast_tv_data.closeTime.split(':')[0] && time_now.split(':')[0] <= aircast_tv_data.openTime.split(':')[0]) {
 				var img = document.createElement("IMG");
 			    img.setAttribute("src", "/img/close-store.png");
 			    img.setAttribute("width", "200");
@@ -312,7 +312,9 @@
 			body.appendChild(div);
 
 
-			if (time_now.split(':')[0] < aircast_tv_data.closeTime.split(':')[0]) {
+			if (time_now.split(':')[0] >= aircast_tv_data.closeTime.split(':')[0] && time_now.split(':')[0] <= aircast_tv_data.openTime.split(':')[0]) {
+
+			}else{
 
 				var d = 'data-'+aircast_tv_data.rpi_id;
 				var ctx = document.getElementById(d).getContext('2d');
@@ -359,10 +361,6 @@
 
 
 			}
-
-
-
-
 
 		}
 
