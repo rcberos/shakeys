@@ -87,11 +87,6 @@
 						<td>15 Days</td>
 						<td><ul class="site-list 15-days"></ul></td>
 					</tr>
-					<tr>
-						<td>16+ Days</td>
-						<td><ul class="site-list 16-days"></ul></td>
-					</tr>
-
 				</table>
 			</div>			
 		</div>
@@ -166,7 +161,6 @@
 				}else if (days_inactive == 15) {
 					$(".15-days").append('<li><strong>'+item.Room+'</strong> <span class="small">('+site_last_active_formatted+')</span></li>');
 				}else if (days_inactive >= 16) {
-					$(".16-days").append('<li><strong>'+item.Room+'</strong> <span class="small">('+site_last_active_formatted+')</span></li>');
 					$(".quarantine-list ol").append('<li><strong>'+item.Room+' ('+days_inactive+' days)</strong> <br/><span class="small">('+site_last_active_formatted+')</span></li>');
 				}
 
