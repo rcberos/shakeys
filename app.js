@@ -596,7 +596,35 @@ app.route('/save-issue')
         res.json(results);
       });
     });
-
+  app.route('save-edit-issue')
+    .get((req,res)=>{
+      const sql = "UPDATE  `gp_digital`.`aircast_issue` SET "+
+                    " `site_name` =  ? ,"+
+                    " `issue` =  ? ,"+
+                    " `resolution` =  ? ,"+
+                    " `status` =  ? ,"+
+                    " `remarks` =  ? ,"+
+                  " `date_of_resolution` =  ? WHERE  `aircast_issue`.`id` = ? ;";
+      //let dateDetected;
+      let siteName;
+      let issue;
+      let resolution;
+      let status;
+      let remarks;
+      let dateResolution;
+      let id;
+      connection.query(sql,[
+       // dateDetected,
+        siteName,
+        issue,
+        moment(dateResolution).format('YYYY-MM-DD'),
+        status,
+        resolution,
+        remarks
+      ],(error,results,body) => {
+        console.log(results);
+      });
+    });
 app.get('*',(req,res)=> {
   res.send('<h1>Page Not Found.</h1>');
 });
