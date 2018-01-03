@@ -1,6 +1,6 @@
 <% include ./partials/header %>
 <% include ./partials/navigation %>
-
+<script src="http://tablesorter.com/addons/pager/jquery.tablesorter.pager.js"></script>
 	<div class="container">
 		<h1 class="margin-bottom-20 margin-top-0"><a style="cursor:pointer;" id="Add" data-toggle="modal" data-target="#myModal" class="glyphicon glyphicon-plus add" id="add-aircast-issue"></a> Aircast Issue Tracker</h1>
 		<div class="row">
@@ -98,6 +98,7 @@
 	
 		</div>
 <script>
+
 		let rows = "";
 		let data1;
 		$.ajax({
@@ -179,7 +180,7 @@
 					url: '/save-issue',
 					data: datas,
 					success: function(data){
-						alert(data);
+						// alert(data);
 						$('#myModal').modal('toggle');
 					}
 				})
@@ -217,7 +218,7 @@
 						$('#dateResolutionEdit').val($(this).children('.dateResolution').html());
 						$('#myModalEdit').modal('toggle')
 					//$('#myModalEdit').children('#issue-id').val()
-						alert($(this).attr('id'));
+						// alert($(this).attr('id'));
 					})
 			},error: function(err){
 				console.log(err);
@@ -241,11 +242,89 @@
 	$('#save-edit-issue').on('click',function(){
 		// alert('edit save clicked');
 		// $('#myModalEdit').modal('toggle');
-		
+		// alert($('#issue-id').val());
 		//update database
+		var datas = {
+					//date_detected:  $('#dateDetectedEdit').val(),
+					issue_id: 				$('#issue-id').val(),
+					site_name : 			$('#siteNameEdit').val(),
+					issue: 					$('#issueEdit').val(),
+					date_resolution:		$('#dateResolutionEdit').val(),
+					status:					$('#statusEdit').val(),
+					resolution:				$('#resolutionEdit').val(),
+					remarks: 				$('#remarksEdit').val()
+				};
+				$.ajax({
+					method: 'POST',
+					url: '/edit-issue',
+					data: datas,
+					success: function(data){
+						// alert(data);
+						$('#myModalEdit').modal('toggle');
+					}, error: function(jqXHR, exception) {
+						// alert('adsasddassdaf');
+						if (jqXHR.status === 0) {
+							alert('Not connect.\n Verify Network.');
+						} else if (jqXHR.status == 404) {
+							alert('Requested page not found. [404]');
+						} else if (jqXHR.status == 500) {
+							alert('Internal Server Error [500].');
+						} else if (exception === 'parsererror') {
+							alert('Requested JSON parse failed.');
+						} else if (exception === 'timeout') {
+							alert('Time out error.');
+						} else if (exception === 'abort') {
+							alert('Ajax request aborted.');
+						} else {
+							alert('Uncaught Error.\n' + jqXHR.responseText);
+						}
+					}
+				});
 		//refresh table
+		document.getElementById('tbody').innerHTML = '';
+				rows="";
+				$.ajax({
+					type: 'GET',
+					url: "/select-issue",
+						success: function (data){
+						console.log(data);
+						data1=data;
+						for(var counter=0 ; data.length>counter ; counter++){
+							rows += 
+							'<tr id="'+data[counter].id+'" class="row-clickable">'+
+								'<td class="dateDetected">'+moment(data[counter].date_detected).format('YYYY-MM-DD')+'</td>'+
+								'<td class="siteName">'+data[counter].site_name+'</td>'+
+								'<td class="issue">'+data[counter].issue+'</td>'+
+								'<td class="resolution">'+data[counter].resolution+'</td>'+
+								'<td class="status">'+data[counter].status+'</td>'+
+								'<td class="remarks">'+data[counter].remarks+'</td>'+
+								'<td class="dateResolution">'+moment(data[counter].date_of_resolution).format('YYYY-MM-DD')+'</td>'+
+							'</tr>';
+						}
+						document.getElementById('tbody').innerHTML = rows;
+						$('.row-clickable').css('cursor','pointer')
+						.on('click',function(){
+						$('#dateDetectedEdit').val($(this).children('.dateDetected').html());
+						$('#siteNameEdit').val($(this).children('.siteName').html());
+						$('#issueEdit').val($(this).children('.issue').html());
+						$('#resolutionEdit').val($(this).children('.resolution').html());
+						$('#statusEdit').val($(this).children('.status').html());
+						$('#remarksEdit').val($(this).children('.remarks').html());
+						$('#dateResolutionEdit').val($(this).children('.dateResolution').html());
+						$('#myModalEdit').modal('toggle')
+					//$('#myModalEdit').children('#issue-id').val()
+						// alert($(this).attr('id'));
+					})
+			},error: function(err){
+				console.log(err);
+			}
+		})
 		//toggle modal
+		$('#myModalEdit').modal('toggle');
 	});
+	$('.table')
+    .tablesorter({widthFixed: true, widgets: ['zebra']}) 
+    .tablesorterPager({container: $("#pager")}); 
 	</script>
 
 <% include ./partials/footer %>

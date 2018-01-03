@@ -602,8 +602,8 @@ app.route('/save-issue')
         res.json(results);
       });
     });
-  app.route('save-edit-issue')
-    .get((req,res)=>{
+  app.route('/edit-issue')
+    .post((req,res) => {
       const sql = "UPDATE  `gp_digital`.`aircast_issue` SET "+
                     " `site_name` =  ? ,"+
                     " `issue` =  ? ,"+
@@ -612,24 +612,26 @@ app.route('/save-issue')
                     " `remarks` =  ? ,"+
                   " `date_of_resolution` =  ? WHERE  `aircast_issue`.`id` = ? ;";
       //let dateDetected;
-      let siteName;
-      let issue;
-      let resolution;
-      let status;
-      let remarks;
-      let dateResolution;
-      let id;
+      let siteName        = req.body.site_name;
+      let issue           = req.body.issue;
+      let resolution      = req.body.resolution;
+      let status          = req.body.status;
+      let remarks         = req.body.remarks;
+      let dateResolution  = req.body.date_resolution;
+      let id              = req.body.issue_id;
       connection.query(sql,[
        // dateDetected,
         siteName,
         issue,
-        moment(dateResolution).format('YYYY-MM-DD'),
-        status,
         resolution,
-        remarks
+        status,
+        remarks,
+        moment(dateResolution).format('YYYY-MM-DD'),
+        id
       ],(error,results,body) => {
         console.log(results);
       });
+      // console.log('sadgashjdgajshgdjashgdjahsgdjashgda');
     });
 app.get('*',(req,res)=> {
   res.send('<h1>Page Not Found.</h1>');
