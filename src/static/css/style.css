@@ -421,3 +421,12 @@ textarea {
   height: 250px;
   overflow-y: scroll; 
 }
+
+#status-overview li {
+  list-style: none;
+
+}
+
+#status-overview li span {
+  font-size: 10px;
+}

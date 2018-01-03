@@ -13,14 +13,14 @@
 	    <!-- Modal content-->
 	    <div class="modal-content">
 	      <div class="modal-header">
-	        <h4 class="modal-title">Modal Header</h4>
+	        <h4 class="modal-title">Aircast Logs</h4>
 	      </div>
 	      <div class="modal-body">
 	      	<div class="row">
 	      		<div class="col-md-9">
 	      			<div class="container">
 	      				<div id="label-container"></div>
-	      				<ul id="status-overview"></ul>	
+	      				<ul id="status-overview" class="margin-top-10"></ul>	
 	      			</div>
 	      			
 	      		</div>
@@ -46,6 +46,8 @@
 		var counter = 0;
 		var aircast_sites_data;
 		var rpi_id_logs_list = [];
+		var time_store_really_opens;
+		var time_store_opens = 'never opened';
 
 		if (!aircast_sites_data) {
 
@@ -130,7 +132,8 @@
 			var computed_hours_of_operation = storeClosingHour - storeOpenHour;
 			var hoursActive = [];
 			var current_time = time_now.split(':');
-			var time_store_opens = 'never opened';
+
+			
 			var expected_time_to_render = (storeClosingHour * 60) - ((parseInt(current_time[0])*60) + parseInt(current_time[1]));
 
 
@@ -144,9 +147,11 @@
 			console.log('Current time now: ' , time_now.split(':'));
 
 			for (var i = 0; i < arr.length; i++) {
-
+					time_store_really_opens = arr[0];
 					if (parseInt(arr[i].split(':')[0]) >= storeOpenHour) {
 						time_store_opens = arr[i];
+						console.log('hey, time store opens: ', time_store_opens);
+						console.log('hey, time store opens: ', time_store_really_opens);
 						break;
 					}	
 			}
@@ -206,40 +211,47 @@
 
 			}
 
-			
-
+		
 		}
 
 
 		function getTheDowntime(time_store_opens,store_opening_hour){
 
-			console.log('Time Store Opens: ' + time_store_opens);
-			var hour = parseInt(time_store_opens.split(':')[0])*60;
-			var mins = parseInt(time_store_opens.split(':')[1]);
-			var storeOpensHour = parseInt(store_opening_hour.split(':')[0])*60;
-			var storeOpensMins = parseInt(store_opening_hour.split(':')[1]);
 
-				console.log('Time Store Opens - Hours: ' + hour);
-				console.log('Time Store Opens - minutes: ' +mins);
-				console.log('Store opening Hours:' + storeOpensHour);
-				console.log('Store Opening Minutes:' + storeOpensMins);
+			if (time_store_opens != 'never opened') {
+				console.log('Time Store Opens: ' + time_store_opens);
+				var hour = parseInt(time_store_opens.split(':')[0])*60;
+				var mins = parseInt(time_store_opens.split(':')[1]);
+				var storeOpensHour = parseInt(store_opening_hour.split(':')[0])*60;
+				var storeOpensMins = parseInt(store_opening_hour.split(':')[1]);
 
-			var time_left = (parseInt(time_store_opens.split(':')[0])*60) + parseInt(time_store_opens.split(':')[1]) - (parseInt(store_opening_hour.split(':')[0])*60) + parseInt(store_opening_hour.split(':')[1]);
+					console.log('Time Store Opens - Hours: ' + hour);
+					console.log('Time Store Opens - minutes: ' +mins);
+					console.log('Store opening Hours:' + storeOpensHour);
+					console.log('Store Opening Minutes:' + storeOpensMins);
 
-			console.log('time-left: ', time_left);
-			console.log((Math.floor(time_left/60))*60);
-			console.log(60 - ((time_left/60) % 1) * 60);
+				var time_left = (parseInt(time_store_opens.split(':')[0])*60) + parseInt(time_store_opens.split(':')[1]) - (parseInt(store_opening_hour.split(':')[0])*60) + parseInt(store_opening_hour.split(':')[1]);
 
-			var hour_passed = (Math.floor(time_left/60))*60;
-			var minutes_passed_temp  = ((time_left/60) % 1) * 60;
-			var minutes_passed  = Math.floor(60 - ((time_left/60) % 1) * 60);
+				console.log('time-left: ', time_left);
+				console.log((Math.floor(time_left/60))*60);
+				console.log(60 - ((time_left/60) % 1) * 60);
 
-			console.log('hour passed: ' + hour_passed);
-			console.log('minutes passed temp: ' + minutes_passed_temp);
-			console.log('minutes passed: ' + minutes_passed);
+				var hour_passed = (Math.floor(time_left/60))*60;
+				var minutes_passed_temp  = ((time_left/60) % 1) * 60;
+				var minutes_passed  = Math.floor(60 - ((time_left/60) % 1) * 60);
+
+				console.log('hour passed: ' + hour_passed);
+				console.log('minutes passed temp: ' + minutes_passed_temp);
+				console.log('minutes passed: ' + minutes_passed);
 
 
-			return time_left;
+				return time_left;	
+							
+			} else {
+				return time_store_opens;
+			}
+
+
 
 			// if (minutes_passed_temp >= 30 ) {
 			// 	return hour_passed + minutes_passed;	
@@ -268,10 +280,14 @@
 		}
 
 
-		function addGraphToDom(aircast_tv_data,aircast_percentage,store_opens){
+		function addGraphToDom(aircast_tv_data,aircast_percentage,time_store_opens){
 
 			var today = moment().format('YYYY-MM-DD');
 			var time_now = moment().format('kk:mm:ss');
+
+			var current_time_now = parseInt(time_now.split(":")[0])*60 + parseInt(time_now.split(":")[1]); // 650
+			var site_opening_hour = parseInt(aircast_tv_data.openTime.split(':')[0]) * 60 + parseInt(aircast_tv_data.openTime.split(':')[1]); // 600
+			var site_closing_hour = parseInt(aircast_tv_data.closeTime.split(':')[0]) * 60 + parseInt(aircast_tv_data.closeTime.split(':')[1]); // 1320
 
 			var div = document.createElement("div");
 			div.className +="col-md-3 ";
@@ -280,22 +296,35 @@
 			var div1 = document.createElement("div");
 			var lbl = document.createElement('label');
 			lbl.id = 'data-label-'+aircast_tv_data.rpi_id;
-			lbl.innerHTML = '<h4>'+aircast_tv_data.aircast_name +'</h4><small>Operation Hours: <br/>' + moment(today+' '+aircast_tv_data.openTime).format('hh a')+' - '+ moment(today+' '+aircast_tv_data.closeTime).format('hh a') +'</small><br/><small>(aircast opened at: ' +store_opens+')</small><br/>';
+			lbl.innerHTML = '<h4>'+aircast_tv_data.aircast_name +'</h4><small>Operation Hours: <br/>' + moment(today+' '+aircast_tv_data.openTime).format('hh a')+' - '+ moment(today+' '+aircast_tv_data.closeTime).format('hh a') +'</small><br/><small>(aircast opened at: ' +time_store_really_opens+')</small><br/>';
 			div1.appendChild(lbl);
 			var span = document.createElement('div');
 			span.innerHTML = '<button onclick="viewStats('+aircast_tv_data.rpi_id+')">View Logs';
 			div1.appendChild(span);
 
+			time_store_really_opens ='';
+
 			var div2 = document.createElement("div");
 
-			if (time_now.split(':')[0] >= aircast_tv_data.closeTime.split(':')[0] && time_now.split(':')[0] <= aircast_tv_data.openTime.split(':')[0]) {
+			if (time_store_opens == 'never opened') {
 				var img = document.createElement("IMG");
-			    img.setAttribute("src", "/img/close-store.png");
+			    img.setAttribute("src", "/img/site-down.png");
+			    img.setAttribute("width", "200");
+			    img.setAttribute("class", "margin-top-20");
+			    div2.appendChild(img);
+			} else if (time_store_really_opens && current_time_now < site_opening_hour) {
+				var img = document.createElement("IMG");
+			    img.setAttribute("src", "/img/closed-but-open.png");
+			    img.setAttribute("width", "200");
+			    img.setAttribute("class", "margin-top-20");
+			    div2.appendChild(img);
+			} else if (current_time_now < site_opening_hour || current_time_now > site_closing_hour) {
+				var img = document.createElement("IMG");
+			    img.setAttribute("src", "/img/out-of-operation.png");
 			    img.setAttribute("width", "200");
 			    img.setAttribute("class", "margin-top-20");
 			    div2.appendChild(img);
 			}else {
-
 				var canvas = document.createElement('canvas');
 				canvas.id = "data-"+aircast_tv_data.rpi_id;
 				canvas.width = 100;
@@ -312,7 +341,7 @@
 			body.appendChild(div);
 
 
-			if (time_now.split(':')[0] >= aircast_tv_data.closeTime.split(':')[0] && time_now.split(':')[0] <= aircast_tv_data.openTime.split(':')[0]) {
+			if (current_time_now < site_opening_hour || current_time_now > site_closing_hour) {
 
 			}else{
 
@@ -444,7 +473,7 @@
 					var counts = {};
 					final_list.forEach(function(x) { counts[x] = (counts[x] || 0)+1; });
 
-					$(".modal-title").html($('#data-label-'+rpi_id+' h4').html());
+					// $(".modal-title").html($('#data-label-'+rpi_id+' h4').html());
 					$("#label-container").html(($("#data-label-"+rpi_id).html()));
 
 					for (var key in counts) {
