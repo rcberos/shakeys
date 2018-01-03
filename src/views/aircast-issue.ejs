@@ -25,15 +25,15 @@
 		</div>
 		<div class="modal fade" id="myModal" role="dialog">
 			<div class="modal-dialog">
-			  <div class="modal-content">
+			  <div class="modal-content custom-modal-content">
 				<div class="modal-header">
 				  <h4 class="modal-title">Modal Header</h4>
 				</div>
-				<div class="modal-body">
+				<div class="modal-body custom-modal-body">
 						<div>
 							<label>Date Detected</label><input value="" id="dateDetected" type="text" class="form-control" disabled>
 							<label>Site Name</label>
-							<select id='siteName' class="form-control">
+							<select id="siteName" class="form-control">
 								<option> </option>
 							</select>
 							<label>Issue</label><textarea id="issue"  class="form-control"></textarea>
@@ -61,21 +61,22 @@
 	
 		<div class="modal fade" id="myModalEdit" role="dialog">
 				<div class="modal-dialog">
-					<div class="modal-content">
+					<div class="modal-content custom-modal-content">
 					<div class="modal-header">
 						<h4 class="modal-title">Modal Header</h4>
 					</div>
-					<div class="modal-body">
+					<div class="modal-body custom-modal-body">
 							<div>
 								<label>Date Detected</label><input disabled value="" id="dateDetectedEdit" type="text" class="form-control" >
 								<label>Site Name</label>
-								<select id='siteNameEdit' class="form-control">
+								<select id="siteNameEdit" class="form-control">
 									<option> </option>
 								</select>
 								<label>Issue</label><textarea id="issueEdit"  class="form-control"></textarea>
 								<label>Date of Resolution</label><input id="dateResolutionEdit" type="date" class="form-control">
 							</div>
 							<div>
+									<input type="hidden" id="issue-id" value="">
 									<label>Status</label>
 									<select id="statusEdit" class="form-control">
 										<option> </option>
@@ -87,7 +88,7 @@
 								</div>
 					</div>
 					<div class="modal-footer">
-						<button class="btn btn-success" id="save-issue" >SAVE</button>
+						<button class="btn btn-success" id="save-edit-issue" >SAVE</button>
 						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 					</div>
 					</div>
@@ -97,7 +98,7 @@
 	
 		</div>
 <script>
-		let rows = '';
+		let rows = "";
 		let data1;
 		$.ajax({
 			type: 'GET',
@@ -105,9 +106,9 @@
 			success: function (data){
 				console.log(data);
 				data1=data;
-				for(var counter=0;data.length>counter;counter++){
+				for(var counter=0 ; data.length>counter ; counter++){
 					rows += 
-						'<tr id="'+counter+'" class="row-clickable">'+
+						'<tr id="'+data[counter].id+'" class="row-clickable">'+
 							'<td class="dateDetected">'+moment(data[counter].date_detected).format('YYYY-MM-DD')+'</td>'+
 							'<td class="siteName">'+data[counter].site_name+'</td>'+
 							'<td class="issue">'+data[counter].issue+'</td>'+
@@ -119,6 +120,8 @@
 				}document.getElementById('tbody').innerHTML = rows;
 				$('.row-clickable').css('cursor','pointer')
 				.on('click',function(){
+					var p = $(this)
+					$('#issue-id').val($(this).attr('id')+"");
 					$('#dateDetectedEdit').val($(this).children('.dateDetected').html());
 					$('#siteNameEdit').val($(this).children('.siteName').html());
 					$('#issueEdit').val($(this).children('.issue').html());
@@ -127,6 +130,7 @@
 					$('#remarksEdit').val($(this).children('.remarks').html());
 					$('#dateResolutionEdit').val($(this).children('.dateResolution').html());
 					$('#myModalEdit').modal('toggle')
+					// $('#myModalEdit').children('#issue-id').val()
 				})
 			},error: function(err){
 				console.log(err);
@@ -179,12 +183,69 @@
 						$('#myModal').modal('toggle');
 					}
 				})
+				$('#myModal').modal('toggle');
+				//add row
+				document.getElementById('tbody').innerHTML = '';
+				rows="";
+				$.ajax({
+					type: 'GET',
+					url: "/select-issue",
+						success: function (data){
+						console.log(data);
+						data1=data;
+						for(var counter=0 ; data.length>counter ; counter++){
+							rows += 
+							'<tr id="'+data[counter].id+'" class="row-clickable">'+
+								'<td class="dateDetected">'+moment(data[counter].date_detected).format('YYYY-MM-DD')+'</td>'+
+								'<td class="siteName">'+data[counter].site_name+'</td>'+
+								'<td class="issue">'+data[counter].issue+'</td>'+
+								'<td class="resolution">'+data[counter].resolution+'</td>'+
+								'<td class="status">'+data[counter].status+'</td>'+
+								'<td class="remarks">'+data[counter].remarks+'</td>'+
+								'<td class="dateResolution">'+moment(data[counter].date_of_resolution).format('YYYY-MM-DD')+'</td>'+
+							'</tr>';
+						}
+						document.getElementById('tbody').innerHTML = rows;
+						$('.row-clickable').css('cursor','pointer')
+						.on('click',function(){
+						$('#dateDetectedEdit').val($(this).children('.dateDetected').html());
+						$('#siteNameEdit').val($(this).children('.siteName').html());
+						$('#issueEdit').val($(this).children('.issue').html());
+						$('#resolutionEdit').val($(this).children('.resolution').html());
+						$('#statusEdit').val($(this).children('.status').html());
+						$('#remarksEdit').val($(this).children('.remarks').html());
+						$('#dateResolutionEdit').val($(this).children('.dateResolution').html());
+						$('#myModalEdit').modal('toggle')
+					//$('#myModalEdit').children('#issue-id').val()
+						alert($(this).attr('id'));
+					})
+			},error: function(err){
+				console.log(err);
+			}
+		})
+						
+				//clear modal's inputs
+			$('.custom-modal-body').find('#siteName').val("");
+			$('.custom-modal-body').find('#issue').val("");
+			$('.custom-modal-body').find('#dateResolution').val("");
+			$('.custom-modal-body').find('#status').val("");
+			$('.custom-modal-body').find('#resolution').val("");
+			$('.custom-modal-body').find('#remarks').val("");
 			}
 			else{
 				alert('Complete the form');
 			}
 		})
 
+	
+	$('#save-edit-issue').on('click',function(){
+		// alert('edit save clicked');
+		// $('#myModalEdit').modal('toggle');
+		
+		//update database
+		//refresh table
+		//toggle modal
+	});
 	</script>
 
 <% include ./partials/footer %>

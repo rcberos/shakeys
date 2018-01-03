@@ -400,18 +400,18 @@ textarea {
   vertical-align: middle;
   height: 51PX;
 }
-.modal-content{
+.custom-modal-content{
   width: auto;
 }
 
-.modal-body{
+.custom-modal-body{
   display: flex;
   flex-flow: row;
   justify-content: space-around;
   width: 600px;
 }
 
-.modal-body div{
+.custom-modal-body div{
   width:100%;
   margin: 0px 5px;
 }*/
