@@ -77,6 +77,7 @@
 			var today = moment().format('YYYY-MM-DD');
 			var start_date = moment(today+ ' 00:00:00').unix();
 			var end_date = moment(today+ ' 23:59:59').unix();
+			console.log('http://ec2-54-169-234-246.ap-southeast-1.compute.amazonaws.com/api/v0/aircast_tv_monitoring.php?RpiID='+rpi_id+'&StartDate='+start_date+'&EndDate='+end_date);
 
 			$.ajax({
 				url: 'http://ec2-54-169-234-246.ap-southeast-1.compute.amazonaws.com/api/v0/aircast_tv_monitoring.php?RpiID='+rpi_id+'&StartDate='+start_date+'&EndDate='+end_date,

@@ -1,0 +1,190 @@
+<% include ./partials/header %>
+<% include ./partials/navigation %>
+
+
+<div class="loader-div">
+	<div class="loader">
+	  <div class="loader__bar"></div>
+	  <div class="loader__bar"></div>
+	  <div class="loader__bar"></div>
+	  <div class="loader__bar"></div>
+	  <div class="loader__bar"></div>
+	  <div class="loader__ball"></div>
+	  <h2>Loading. wait lang...<br><small>(it might take 2 mins, dont' refresh)</small></h2>
+	</div>
+</div>
+
+	<div class="container" id="aircast-quarantine">
+	
+
+		<h1 class="margin-bottom-30">Aircast Monitoring for Quarantine</h1>
+
+
+		<div class="col-md-7">
+			<div class="row">
+				<table class="table table-hover table-striped">
+					<tr>
+						<th>Days of Inactivity</th>
+						<th>Site Name</th>
+					</tr>
+					<tr>
+						<td>1 Day</td>
+						<td><ul class="site-list 1-day"></ul></td>
+					</tr>
+					<tr>
+						<td>2 Days</td>
+						<td><ul class="site-list 2-days"></ul></td>
+					</tr>
+					<tr>
+						<td>3 Days</td>
+						<td><ul class="site-list 3-days"></ul></td>
+					</tr>
+					<tr>
+						<td>4 Days</td>
+						<td><ul class="site-list 4-days"></ul></td>
+					</tr>
+					<tr>
+						<td>5 Days</td>
+						<td><ul class="site-list 5-days"></ul></td>
+					</tr>
+					<tr>
+						<td>6 Days</td>
+						<td><ul class="site-list 6-days"></ul></td>
+					</tr>
+					<tr>
+						<td>7 Days</td>
+						<td><ul class="site-list 7-days"></ul></td>
+					</tr>
+					<tr>
+						<td>8 Days</td>
+						<td><ul class="site-list 8-days"></ul></td>
+					</tr>
+					<tr>
+						<td>9 Days</td>
+						<td><ul class="site-list 9-days"></ul></td>
+					</tr>
+					<tr>
+						<td>10 Days</td>
+						<td><ul class="site-list 10-days"></ul></td>
+					</tr>
+					<tr>
+						<td>11 Days</td>
+						<td><ul class="site-list 11-days"></ul></td>
+					</tr>
+					<tr>
+						<td>12 Days</td>
+						<td><ul class="site-list 12-days"></ul></td>
+					</tr>
+					<tr>
+						<td>13 Days</td>
+						<td><ul class="site-list 13-days"></ul></td>
+					</tr>
+					<tr>
+						<td>14 Days</td>
+						<td><ul class="site-list 14-days"></ul></td>
+					</tr>
+					<tr>
+						<td>15 Days</td>
+						<td><ul class="site-list 15-days"></ul></td>
+					</tr>
+					<tr>
+						<td>16+ Days</td>
+						<td><ul class="site-list 16-days"></ul></td>
+					</tr>
+
+				</table>
+			</div>			
+		</div>
+		<div class="col-md-5">
+			<h2 class="margin-left-20">For Quarantine</h2>
+			<div class="quarantine-list">
+				<ol></ol>
+			</div>
+		</div>	
+
+
+
+	</div>
+
+
+	<script type="text/javascript">
+
+		var aircast_data = [];
+
+		
+
+		$.ajax({
+			url: 'http://gpdigital.crabdance.com/api/v0/aircast_status.php?location=all',
+			success: function(data){
+				aircast_data = data;
+				displayQuarantine(aircast_data);
+				$(".loader-div").fadeOut();
+			}
+		})
+
+
+
+		function displayQuarantine(aircast_data){
+
+			aircast_data.forEach(function(item){
+				
+				var time_now = moment(moment().format('YYYY-MM-DD kk:mm:ss'));
+				var site_last_active = moment(item.LastAlive);
+				var site_last_active_formatted = moment(item.LastAlive).format('LLL');
+				console.log(item.Room + ' : ' +Math.floor(((time_now.diff(site_last_active)/1000))/86400));
+
+				var days_inactive = Math.floor(((time_now.diff(site_last_active)/1000))/86400);
+
+				if (days_inactive == 1) {
+					$(".1-day").append('<li><strong>'+item.Room+'</strong> <span class="small">('+site_last_active_formatted+')</span></li>') 
+				} else if (days_inactive == 2) {
+					$(".2-days").append('<li><strong>'+item.Room+'</strong> <span class="small">('+site_last_active_formatted+')</span></li>')
+				}else if (days_inactive == 3) {
+					$(".3-days").append('<li><strong>'+item.Room+'</strong> <span class="small">('+site_last_active_formatted+')</span></li>');
+				}else if (days_inactive == 4) {
+					$(".4-days").append('<li><strong>'+item.Room+'</strong> <span class="small">('+site_last_active_formatted+')</span></li>');
+				}else if (days_inactive == 5) {
+					$(".5-days").append('<li><strong>'+item.Room+'</strong> <span class="small">('+site_last_active_formatted+')</span></li>');
+				}else if (days_inactive == 6) {
+					$(".6-days").append('<li><strong>'+item.Room+'</strong> <span class="small">('+site_last_active_formatted+')</span></li>');
+				}else if (days_inactive == 7) {
+					$(".7-days").append('<li><strong>'+item.Room+'</strong> <span class="small">('+site_last_active_formatted+')</span></li>');
+				}else if (days_inactive == 8) {
+					$(".8-days").append('<li><strong>'+item.Room+'</strong> <span class="small">('+site_last_active_formatted+')</span></li>');
+				}else if (days_inactive == 9) {
+					$(".9-days").append('<li><strong>'+item.Room+'</strong> <span class="small">('+site_last_active_formatted+')</span></li>');
+				}else if (days_inactive == 10) {
+					$(".10-days").append('<li><strong>'+item.Room+'</strong> <span class="small">('+site_last_active_formatted+')</span></li>');
+				}else if (days_inactive == 11) {
+					$(".11-days").append('<li><strong>'+item.Room+'</strong> <span class="small">('+site_last_active_formatted+')</span></li>');
+				}else if (days_inactive == 12) {
+					$(".12-days").append('<li><strong>'+item.Room+'</strong> <span class="small">('+site_last_active_formatted+')</span></li>');
+				}else if (days_inactive == 13) {
+					$(".13-days").append('<li><strong>'+item.Room+'</strong> <span class="small">('+site_last_active_formatted+')</span></li>');
+				}else if (days_inactive == 14) {
+					$(".14-days").append('<li><strong>'+item.Room+'</strong> <span class="small">('+site_last_active_formatted+')</span></li>');
+				}else if (days_inactive == 15) {
+					$(".15-days").append('<li><strong>'+item.Room+'</strong> <span class="small">('+site_last_active_formatted+')</span></li>');
+				}else if (days_inactive >= 16) {
+					$(".16-days").append('<li><strong>'+item.Room+'</strong> <span class="small">('+site_last_active_formatted+')</span></li>');
+					$(".quarantine-list ol").append('<li><strong>'+item.Room+' ('+days_inactive+' days)</strong> <br/><span class="small">('+site_last_active_formatted+')</span></li>');
+				}
+
+			});
+
+				$(".site-list").each(function(index,item){
+					if ($(item).children().length == 0) {
+						$(item).parent().parent().remove();
+					}
+					
+				});
+
+		}
+
+
+
+
+
+	</script>
+
+<% include ./partials/footer %>

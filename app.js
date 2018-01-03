@@ -506,6 +506,8 @@ app.route('/show-campaigns')
        }); // end of 1st query      
   })
 
+
+
 app.route('/show-campaigns/:id')
   .get((req,res) => {
 
@@ -524,6 +526,10 @@ app.route('/show-campaigns/:id')
     
   })
 
+app.route('/aircast-quarantine')
+  .get((req,res) => {
+    res.render('aircast-quarantine');
+  });
 
 app.get('/aircast-issue-tracker',(req,res) => {
 
