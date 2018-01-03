@@ -402,6 +402,18 @@ textarea {
   width:100%;
   margin: 0px 5px;
 }
+#head-container{
+  display: flex;
+  flex-flow: row;
+  justify-content: space-between;
+  align-content: center;
+  vertical-align: middle;
+}
+#add-issue{
+  margin-top: 70px;
+  bottom: 0;
+  right: 0;
+}
 /************************************
   Issue Tracker (END)
 *************************************/

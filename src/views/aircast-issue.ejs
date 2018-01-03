@@ -1,14 +1,21 @@
 <% include ./partials/header %>
 <% include ./partials/navigation %>
-<script src="http://tablesorter.com/addons/pager/jquery.tablesorter.pager.js"></script>
+<!-- <script src="http://tablesorter.com/addons/pager/jquery.tablesorter.pager.js"></script> -->
 	<div class="container">
-		<h1 class="margin-bottom-20 margin-top-0"><a style="cursor:pointer;" id="Add" data-toggle="modal" data-target="#myModal" class="glyphicon glyphicon-plus add" id="add-aircast-issue"></a> Aircast Issue Tracker</h1>
-		<div class="row">
-			<div class="col-md-6">
-				<div class="inner-addon right-addon">
-					<i class="glyphicon glyphicon-search icon-search" ></i>
-				    <input type="text" class="form-control input-lg"  id="search" placeholder="Search..." />
+		<div id="head-container">
+			<div id="h-left">
+				<h1 class="margin-bottom-20 margin-top-0"><a style="cursor:pointer;" id="Add" data-toggle="modal" data-target="#myModal" class="glyphicon glyphicon-plus add" id="add-aircast-issue"></a> Aircast Issue Tracker</h1>
+				<div class="row">
+					<div class="col-md-6">
+						<div class="inner-addon right-addon">
+							<i class="glyphicon glyphicon-search icon-search" ></i>
+							<input type="text" class="form-control input-lg"  id="search" placeholder="Search..." />
+						</div>
+					</div>
 				</div>
+			</div>
+			<div id="h-right">
+				<button class="btn btn-secondary" id="add-issue">+Add Issue</button>
 			</div>
 		</div>
 		<div class="row">
@@ -95,6 +102,30 @@
 					
 				</div>
 				</div>
+				<div class="modal fade" id="myModalIssue" role="dialog">
+						<div class="modal-dialog">
+							<div class="modal-content custom-modal-content">
+							<div class="modal-header">
+								<h4 class="modal-title">Modal Header</h4>
+							</div>
+
+										<div class="modal-body">
+											<div id="issue-form">
+
+											</div>
+											<div id="issue-list">
+
+											</div>
+										</div>
+							</div>
+							<div class="modal-footer">
+								<button class="btn btn-success" id="save-edit-issue" >SAVE</button>
+								<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+							</div>
+							</div>
+							
+						</div>
+						</div>
 	
 		</div>
 <script>
@@ -322,9 +353,7 @@
 		//toggle modal
 		$('#myModalEdit').modal('toggle');
 	});
-	$('.table')
-    .tablesorter({widthFixed: true, widgets: ['zebra']}) 
-    .tablesorterPager({container: $("#pager")}); 
+
 	</script>
 
 <% include ./partials/footer %>
