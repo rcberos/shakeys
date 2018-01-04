@@ -2,7 +2,7 @@
 <% include ./partials/navigation %>
 
 
-<div class="loader-div">
+<!-- <div class="loader-div">
 	<div class="loader">
 	  <div class="loader__bar"></div>
 	  <div class="loader__bar"></div>
@@ -12,7 +12,7 @@
 	  <div class="loader__ball"></div>
 	  <h2>Loading. wait lang...<br><small>(it might take 2 mins, don't refresh)</small></h2>
 	</div>
-</div>
+</div> -->
 
 	<div class="container" id="aircast-quarantine">
 	
@@ -109,11 +109,12 @@
 		
 
 		$.ajax({
-			url: 'http://gpdigital.crabdance.com/api/v0/aircast_status.php?location=all',
+			url: '/api/rpi-location',
 			success: function(data){
 				aircast_data = data;
+				console.log(data);
 				displayQuarantine(aircast_data);
-				$(".loader-div").fadeOut();
+				//$(".loader-div").fadeOut();
 			}
 		})
 
@@ -122,47 +123,53 @@
 		function displayQuarantine(aircast_data){
 
 			aircast_data.forEach(function(item){
-				
-				var time_now = moment(moment().format('YYYY-MM-DD kk:mm:ss'));
-				var site_last_active = moment(item.LastAlive);
-				var site_last_active_formatted = moment(item.LastAlive).format('LLL');
-				console.log(item.Room + ' : ' +Math.floor(((time_now.diff(site_last_active)/1000))/86400));
 
-				var days_inactive = Math.floor(((time_now.diff(site_last_active)/1000))/86400);
+				if (item.isDeployed) {
 
-				if (days_inactive == 1) {
-					$(".1-day").append('<li><strong>'+item.Room+'</strong> <span class="small">('+site_last_active_formatted+')</span></li>') 
-				} else if (days_inactive == 2) {
-					$(".2-days").append('<li><strong>'+item.Room+'</strong> <span class="small">('+site_last_active_formatted+')</span></li>')
-				}else if (days_inactive == 3) {
-					$(".3-days").append('<li><strong>'+item.Room+'</strong> <span class="small">('+site_last_active_formatted+')</span></li>');
-				}else if (days_inactive == 4) {
-					$(".4-days").append('<li><strong>'+item.Room+'</strong> <span class="small">('+site_last_active_formatted+')</span></li>');
-				}else if (days_inactive == 5) {
-					$(".5-days").append('<li><strong>'+item.Room+'</strong> <span class="small">('+site_last_active_formatted+')</span></li>');
-				}else if (days_inactive == 6) {
-					$(".6-days").append('<li><strong>'+item.Room+'</strong> <span class="small">('+site_last_active_formatted+')</span></li>');
-				}else if (days_inactive == 7) {
-					$(".7-days").append('<li><strong>'+item.Room+'</strong> <span class="small">('+site_last_active_formatted+')</span></li>');
-				}else if (days_inactive == 8) {
-					$(".8-days").append('<li><strong>'+item.Room+'</strong> <span class="small">('+site_last_active_formatted+')</span></li>');
-				}else if (days_inactive == 9) {
-					$(".9-days").append('<li><strong>'+item.Room+'</strong> <span class="small">('+site_last_active_formatted+')</span></li>');
-				}else if (days_inactive == 10) {
-					$(".10-days").append('<li><strong>'+item.Room+'</strong> <span class="small">('+site_last_active_formatted+')</span></li>');
-				}else if (days_inactive == 11) {
-					$(".11-days").append('<li><strong>'+item.Room+'</strong> <span class="small">('+site_last_active_formatted+')</span></li>');
-				}else if (days_inactive == 12) {
-					$(".12-days").append('<li><strong>'+item.Room+'</strong> <span class="small">('+site_last_active_formatted+')</span></li>');
-				}else if (days_inactive == 13) {
-					$(".13-days").append('<li><strong>'+item.Room+'</strong> <span class="small">('+site_last_active_formatted+')</span></li>');
-				}else if (days_inactive == 14) {
-					$(".14-days").append('<li><strong>'+item.Room+'</strong> <span class="small">('+site_last_active_formatted+')</span></li>');
-				}else if (days_inactive == 15) {
-					$(".15-days").append('<li><strong>'+item.Room+'</strong> <span class="small">('+site_last_active_formatted+')</span></li>');
-				}else if (days_inactive >= 16) {
-					$(".quarantine-list ol").append('<li><strong>'+item.Room+' ('+days_inactive+' days)</strong> <br/><span class="small">('+site_last_active_formatted+')</span></li>');
+					var time_now = moment(moment().format('YYYY-MM-DD kk:mm:ss'));
+					var site_last_active = moment(item.LastAlive);
+					var site_last_active_formatted = moment(item.LastAlive).format('LLL');
+					console.log(item.Room + ' : ' +Math.floor(((time_now.diff(site_last_active)/1000))/86400));
+
+					var days_inactive = Math.floor(((time_now.diff(site_last_active)/1000))/86400);
+
+					if (days_inactive == 1) {
+						$(".1-day").append('<li><strong>'+item.Room+'</strong> <span class="small">('+site_last_active_formatted+')</span></li>') 
+					} else if (days_inactive == 2) {
+						$(".2-days").append('<li><strong>'+item.Room+'</strong> <span class="small">('+site_last_active_formatted+')</span></li>')
+					}else if (days_inactive == 3) {
+						$(".3-days").append('<li><strong>'+item.Room+'</strong> <span class="small">('+site_last_active_formatted+')</span></li>');
+					}else if (days_inactive == 4) {
+						$(".4-days").append('<li><strong>'+item.Room+'</strong> <span class="small">('+site_last_active_formatted+')</span></li>');
+					}else if (days_inactive == 5) {
+						$(".5-days").append('<li><strong>'+item.Room+'</strong> <span class="small">('+site_last_active_formatted+')</span></li>');
+					}else if (days_inactive == 6) {
+						$(".6-days").append('<li><strong>'+item.Room+'</strong> <span class="small">('+site_last_active_formatted+')</span></li>');
+					}else if (days_inactive == 7) {
+						$(".7-days").append('<li><strong>'+item.Room+'</strong> <span class="small">('+site_last_active_formatted+')</span></li>');
+					}else if (days_inactive == 8) {
+						$(".8-days").append('<li><strong>'+item.Room+'</strong> <span class="small">('+site_last_active_formatted+')</span></li>');
+					}else if (days_inactive == 9) {
+						$(".9-days").append('<li><strong>'+item.Room+'</strong> <span class="small">('+site_last_active_formatted+')</span></li>');
+					}else if (days_inactive == 10) {
+						$(".10-days").append('<li><strong>'+item.Room+'</strong> <span class="small">('+site_last_active_formatted+')</span></li>');
+					}else if (days_inactive == 11) {
+						$(".11-days").append('<li><strong>'+item.Room+'</strong> <span class="small">('+site_last_active_formatted+')</span></li>');
+					}else if (days_inactive == 12) {
+						$(".12-days").append('<li><strong>'+item.Room+'</strong> <span class="small">('+site_last_active_formatted+')</span></li>');
+					}else if (days_inactive == 13) {
+						$(".13-days").append('<li><strong>'+item.Room+'</strong> <span class="small">('+site_last_active_formatted+')</span></li>');
+					}else if (days_inactive == 14) {
+						$(".14-days").append('<li><strong>'+item.Room+'</strong> <span class="small">('+site_last_active_formatted+')</span></li>');
+					}else if (days_inactive == 15) {
+						$(".15-days").append('<li><strong>'+item.Room+'</strong> <span class="small">('+site_last_active_formatted+')</span></li>');
+					}else if (days_inactive >= 16) {
+						$(".quarantine-list ol").append('<li><strong>'+item.Room+' ('+days_inactive+' days)</strong> <br/><span class="small">('+site_last_active_formatted+')</span></li>');
+					}
+
 				}
+				
+				
 
 			});
 
