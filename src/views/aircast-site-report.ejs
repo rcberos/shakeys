@@ -1,10 +1,55 @@
 <% include ./partials/header %>
 <% include ./partials/navigation %>
 	
-	<button onclick="updatePieChart()">update</button>
+	<!-- <button onclick="updatePieChart()">update</button> -->
+			
 	<div class="container">
-		<h1 class="margin-bottom-30">Aircast Site Daily Report</h1>
-		<div id="report-graph"></div>
+
+		<div class="report-details">
+			<h1 class="margin-bottom-30">Aircast Site Daily Report <span id="clock" class="clock">loading ...</span></h1>
+
+			<div class="row">
+				<div class="col-md-3">
+					<label>Search Site</label>
+					 <input type="text" class="form-control" placeholder="Search..." onkeyup="searchByName(this.value)" />
+				</div>
+				<div class="col-md-3">
+					<label>Select Date to display the data</label>
+					<input type="date" name="" class="form-control" onchange="console.log(this.value)">
+				</div>
+				<div class="col-md-3">
+					<label>Sort By Location</label>
+					<select class="form-control" id="select-by-group" onchange="showGroup(this.value)">
+						<option selected="" disabled="">select site location</option>
+						<option value="all">all sites</option>
+					</select>	
+				</div>
+				<div class="col-md-3">
+					<label>Change the graph</label>
+					<div>
+						<button class="btn btn-success" id="graph-pie" onclick="changeGraph('pie')">Individual</button>
+						<button class="btn btn-primary" id="graph-bar" onclick="changeGraph('bar')">Group</button>	
+					</div>
+				</div>
+
+			</div>
+		</div>
+		<div class="loader-div">
+			<div class="loader">
+			  <div class="loader__bar"></div>
+			  <div class="loader__bar"></div>
+			  <div class="loader__bar"></div>
+			  <div class="loader__bar"></div>
+			  <div class="loader__bar"></div>
+			  <div class="loader__ball"></div>
+			  <h2>Loading. wait lang...</h2>
+			</div>
+		</div>
+		<div class="row margin-top-20">
+				<div id="report-graph"></div>
+				<div id="report-group" style="display: none;"><h1>Hey, im the graph that will show you the by group report</h1></div>	
+		</div>
+		
 	</div>
 
 	<div id="showModal" class="modal fade" role="dialog">
@@ -16,13 +61,22 @@
 	      <div class="modal-body">
 	      	<div class="row">
 	      		<div class="col-md-9">
-	      			<div class="container">
+	      			<div>
 	      				<div id="label-container"></div>
-	      				<ul id="status-overview" class="margin-top-10"></ul>	
+	      				<div>
+	      				<table class="table table-hover table-striped table-bordered margin-top-10">
+	      					<tr>
+	      						<th>Hour</th>
+	      						<th>Minutes Active</th>
+	      					</tr>
+	      					<tbody id="status-overview"></tbody>
+	      				</table>
+	      				</div>	
 	      			</div>
 	      			
 	      		</div>
 	      		<div class="col-md-3">
+	      			<label>Complete Logs</label>
 	      			<div id="status-details"></div>
 	      		</div>	
 	      	</div>
@@ -45,7 +99,9 @@
 		var aircast_sites_data;
 		var rpi_id_logs_list = [];
 		var time_store_really_opens;
-		var time_store_opens = 'never opened';
+		var today = moment().format('YYYY-MM-DD');
+		var time_now = moment().format('kk:mm:ss');
+
 
 		if (!aircast_sites_data) {
 
@@ -53,12 +109,48 @@
 				url: '/api/rpi-location',
 				success: function(data) {
 					aircast_sites_data = data;
+
+					var locations = [];
+
+					aircast_sites_data.forEach(function(item){
+						
+						if (locations.indexOf(item.Location) == -1 && item.isDeployed == 1) {
+							locations.push(item.Location);
+						}
+
+					});
+
+					locations.forEach(function(item){
+						$('#select-by-group').append('<option value='+item+'>'+item+'</option>');
+					})
+					
 					console.log(data);
+					$(".loader-div").fadeOut();
 					init();
 				}
 			});
 		}
 
+		function changeGraph(graph_type) {
+
+			if (graph_type == 'pie') {
+
+				$("#graph-pie").removeClass('btn-primary').addClass('btn-success');
+				$("#graph-graph").removeClass('btn-success').addClass('btn-primary');
+				$("#report-group").fadeOut(300,function(){
+					$("#report-graph").fadeIn(300);
+				});
+			}else {
+				$("#graph-graph").removeClass('btn-primary').addClass('btn-success');
+				$("#graph-pie").removeClass('btn-success').addClass('btn-primary');
+				$("#report-graph").fadeOut(300,function(){
+					$("#report-group").fadeIn(300);
+				});
+			}
+		}
+
+
+		//get all the aircast tv data
 		function getLogsData(rpi_id,toUpdate){
 
 			var aircast_tv_data = {};
@@ -68,6 +160,8 @@
 			for (var i = 0; i < aircast_sites_data.length; i++) {
 				if (rpi_id == aircast_sites_data[i].RpiID) {
 					aircast_tv_data.aircast_name = aircast_sites_data[i].Room;
+					aircast_tv_data.LastAlive = aircast_sites_data[i].LastAlive;
+					aircast_tv_data.Location = aircast_sites_data[i].Location;
 					break;
 				}
 			}
@@ -75,7 +169,6 @@
 			var today = moment().format('YYYY-MM-DD');
 			var start_date = moment(today+ ' 00:00:00').unix();
 			var end_date = moment(today+ ' 23:59:59').unix();
-			console.log('http://ec2-54-169-234-246.ap-southeast-1.compute.amazonaws.com/api/v0/aircast_tv_monitoring.php?RpiID='+rpi_id+'&StartDate='+start_date+'&EndDate='+end_date);
 
 			$.ajax({
 				url: 'http://ec2-54-169-234-246.ap-southeast-1.compute.amazonaws.com/api/v0/aircast_tv_monitoring.php?RpiID='+rpi_id+'&StartDate='+start_date+'&EndDate='+end_date,
@@ -98,6 +191,8 @@
 
 		function removeDuplication(data,aircast_tv_data,toUpdate) {
 
+			console.log('first-data', data,aircast_tv_data,toUpdate);
+
 			var arr = [];
 
 			for (var i = data.Logs.length-1; i > 0 ; i--) {
@@ -115,35 +210,26 @@
 
 		function calculateUptime(data,arr,aircast_tv_data,toUpdate){
 
+			console.log('second-data', data,arr,aircast_tv_data,toUpdate);
+
 			aircast_tv_data.openTime = data.OpenTime;
 			aircast_tv_data.closeTime = data.CloseTime;
 
 			var uptime_count = 0;
 			var downtime_count = 0;
-
-			var today = moment().format('YYYY-MM-DD');
-			var time_now = moment().format('kk:mm:ss');
 			
 			var store_opening_hour = data.OpenTime;
 			var store_closing_hour = data.CloseTime;
 			var storeOpenHour = parseInt(data.OpenTime.split(':')[0]);
 			var storeClosingHour = parseInt(data.CloseTime.split(':')[0]);
-			var computed_hours_of_operation = storeClosingHour - storeOpenHour;
+			var computed_hours_of_operation = Math.abs(storeClosingHour - storeOpenHour);
+			var time_store_opens = 'never opened';
 			var hoursActive = [];
+			var hoursReallyActive = [];
 			var current_time = time_now.split(':');
 
 			
-			var expected_time_to_render = (storeClosingHour * 60) - ((parseInt(current_time[0])*60) + parseInt(current_time[1]));
-
-
 			
-			console.log('Site name: ' + aircast_tv_data.aircast_name);
-			console.log('Store Opening Hours: ' + store_opening_hour);
-			console.log('Store Closing Hours: ' + store_closing_hour);
-			console.log('Store Closing Hour: ', (storeClosingHour * 60) - (parseInt(current_time[0])*60) + parseInt(current_time[1]));
-
-			console.log('Computed hour of operations: ' + computed_hours_of_operation);
-			console.log('Current time now: ' , time_now.split(':'));
 
 			for (var i = 0; i < arr.length; i++) {
 					time_store_really_opens = arr[0];
@@ -157,48 +243,43 @@
 
 
 			for (var i = 0; i < arr.length; i++) {
-				if (parseInt(arr[i].split(':')[0]) >= storeOpenHour) {
+				hoursReallyActive.push(arr[i].split(':')[0]);
+				if (parseInt(arr[i].split(':')[0]) >= storeOpenHour && parseInt(arr[i].split(':')[0]) <= storeClosingHour) {
 					hoursActive.push(arr[i].split(':')[0]);
-					console.log(arr[i].split(':')[0]);
 				}
 			}
 
 			// console.log(aircast_tv_data);
 
-
+			var expected_time_to_render = (storeClosingHour * 60) - (((parseInt(current_time[0])*60) + parseInt(current_time[1])) + 1 );
 			var minutes_tv_should_open = Math.abs(storeClosingHour - storeOpenHour) * 60;
-			var minutes_tv_is_up = hoursActive.length;
-			var minutes_tv_is_down = getTheDowntime(time_store_opens,store_opening_hour);
-			var minutes_tv_to_render = minutes_tv_should_open - (minutes_tv_is_up + minutes_tv_is_down);
+			var minutes_tv_is_up = parseInt(hoursActive.length);
+			var minutes_tv_is_down = getTheDowntime(time_store_opens,store_opening_hour,store_closing_hour,hoursReallyActive.length);
+			var status_of_the_tv = getTheDowntime(time_store_opens,store_opening_hour,store_closing_hour,hoursReallyActive.length);
+			console.log('status_of_the_tv' , status_of_the_tv);
 
-			if (expected_time_to_render != minutes_tv_to_render) {
-				var temp = Math.abs(minutes_tv_to_render - expected_time_to_render);
-				minutes_tv_is_down+=temp;
-				minutes_tv_to_render = expected_time_to_render;
-
+			if (minutes_tv_is_down == 'never opened') {
+				minutes_tv_is_down = 0;
 			}
 
+			var minutes_tv_to_render = minutes_tv_should_open - (minutes_tv_is_up + minutes_tv_is_down);
 
+			if (expected_time_to_render != minutes_tv_to_render && status_of_the_tv != 'never opened' ) {
+				var temp = Math.abs(minutes_tv_to_render - expected_time_to_render);
+				console.log('temp: ' + temp);
+				minutes_tv_is_down+=temp;
+				minutes_tv_to_render = expected_time_to_render;
+			}
 
-			console.log('Minutes TV Should be open: ' +minutes_tv_should_open);
-			console.log('Current TV Opentime: ' +minutes_tv_is_up);
-			console.log('Current TV Downtime: ' +minutes_tv_is_down);
-			console.log('Remaining Time to Render: ' +minutes_tv_to_render);
 			
 			var aircast_percentage = {
 				must_uptime: minutes_tv_should_open,
 				uptime: minutes_tv_is_up,
 				downtime: minutes_tv_is_down,
-				remaining_time: minutes_tv_to_render
+				remaining_time: minutes_tv_to_render,
+				hoursReallyActive: hoursReallyActive.length
 			}
 
-
-			// var idealUptime = (Math.abs((parseInt(current_time[0]) - storeOpenHour)) * 60) + parseInt(current_time[1])+1;
-			// var uptime = hoursActive.length;
-			// var downtime  = idealUptime - uptime;
-
-			// console.log('Ideal uptime: ' + idealUptime);
-			// console.log((parseInt(current_time[0])*60) + parseInt(current_time[1]));
 
 			if (toUpdate) {
 				updateChart(aircast_tv_data,aircast_percentage);
@@ -214,128 +295,82 @@
 		}
 
 
-		function getTheDowntime(time_store_opens,store_opening_hour){
+		function getTheDowntime(time_store_opens,store_opening_hour, store_closing_hour,hoursReallyActive){
+
+
+			console.log('third-data', time_store_opens,store_opening_hour);
 
 
 			if (time_store_opens != 'never opened') {
-				console.log('Time Store Opens: ' + time_store_opens);
-				var hour = parseInt(time_store_opens.split(':')[0])*60;
-				var mins = parseInt(time_store_opens.split(':')[1]);
-				var storeOpensHour = parseInt(store_opening_hour.split(':')[0])*60;
-				var storeOpensMins = parseInt(store_opening_hour.split(':')[1]);
 
-					console.log('Time Store Opens - Hours: ' + hour);
-					console.log('Time Store Opens - minutes: ' +mins);
-					console.log('Store opening Hours:' + storeOpensHour);
-					console.log('Store Opening Minutes:' + storeOpensMins);
-
-				var time_left = (parseInt(time_store_opens.split(':')[0])*60) + parseInt(time_store_opens.split(':')[1]) - (parseInt(store_opening_hour.split(':')[0])*60) + parseInt(store_opening_hour.split(':')[1]);
-
-				console.log('time-left: ', time_left);
-				console.log((Math.floor(time_left/60))*60);
-				console.log(60 - ((time_left/60) % 1) * 60);
-
-				var hour_passed = (Math.floor(time_left/60))*60;
-				var minutes_passed_temp  = ((time_left/60) % 1) * 60;
-				var minutes_passed  = Math.floor(60 - ((time_left/60) % 1) * 60);
-
-				console.log('hour passed: ' + hour_passed);
-				console.log('minutes passed temp: ' + minutes_passed_temp);
-				console.log('minutes passed: ' + minutes_passed);
+					var hour = parseInt(time_store_opens.split(':')[0])*60; 
+					var mins = parseInt(time_store_opens.split(':')[1]);
+					var storeOpensHour = parseInt(store_opening_hour.split(':')[0])*60;
+					var storeOpensMins = parseInt(store_opening_hour.split(':')[1]);
 
 
-				return time_left;	
+					var time_left = (parseInt(time_store_opens.split(':')[0])*60) + parseInt(time_store_opens.split(':')[1]) - (parseInt(store_opening_hour.split(':')[0])*60) + parseInt(store_opening_hour.split(':')[1]);
+
+					time_left = Math.abs(time_left);
+					var hour_passed = (Math.floor(time_left/60))*60;
+					var minutes_passed_temp  = ((time_left/60) % 1) * 60;
+					var minutes_passed  = Math.floor(60 - ((time_left/60) % 1) * 60);
+
+					return time_left;	
 							
 			} else {
 				return time_store_opens;
 			}
-
-
-
-			// if (minutes_passed_temp >= 30 ) {
-			// 	return hour_passed + minutes_passed;	
-			// }else {
-			// 	return hour_passed + minutes_passed;
-			// }
-
-			
-
-			// if (time_left == 0) {
-			// 	return (Math.floor(time_left/60)*60) + (((time_left/60) % 1) * 60);
-			// }else {
-
-			// 	if (time_left > 60) {
-			// 		return time_left;
-			// 	}else if (time_left > 30) {
-			// 		return (Math.floor(time_left/60)*60) + (60 - ((time_left/60) % 1) * 60);
-			// 	}else {
-			// 		(Math.floor(time_left/60)*60) + (60 - ((time_left/60) % 1) * 60)
-			// 	}
-
-								
-			// }
-
 
 		}
 
 
 		function addGraphToDom(aircast_tv_data,aircast_percentage,time_store_opens){
 
-			var today = moment().format('YYYY-MM-DD');
-			var time_now = moment().format('kk:mm:ss');
+			
+
+			console.log('fourth-data', aircast_tv_data,aircast_percentage,time_store_opens);
 
 			var current_time_now = parseInt(time_now.split(":")[0])*60 + parseInt(time_now.split(":")[1]); // 650
 			var site_opening_hour = parseInt(aircast_tv_data.openTime.split(':')[0]) * 60 + parseInt(aircast_tv_data.openTime.split(':')[1]); // 600
 			var site_closing_hour = parseInt(aircast_tv_data.closeTime.split(':')[0]) * 60 + parseInt(aircast_tv_data.closeTime.split(':')[1]); // 1320
 
 			var div = document.createElement("div");
-			div.className +="col-md-3 ";
-			div.className +="margin-bottom-30";
+			div.setAttribute('data-name', aircast_tv_data.aircast_name);
+			div.setAttribute('data-location', aircast_tv_data.Location);
+			div.className +="item margin-10 margin-bottom-10 well";
 
-			if (time_store_really_opens == '') {
+			if (time_store_really_opens == '' || time_store_really_opens == undefined) {
 				time_store_really_opens = 'never opened';
+			}
+
+			var color = '';
+
+			if (aircast_percentage.hoursReallyActive != 0) {
+				color = 'green';
+			}else {
+				color = '';
 			}
 
 			var div1 = document.createElement("div");
 			var lbl = document.createElement('label');
 			lbl.id = 'data-label-'+aircast_tv_data.rpi_id;
-			lbl.innerHTML = '<h4>'+aircast_tv_data.aircast_name +'</h4><small>Operation Hours: <br/>' + moment(today+' '+aircast_tv_data.openTime).format('hh a')+' - '+ moment(today+' '+aircast_tv_data.closeTime).format('hh a') +'</small><br/><small>(aircast opened at: ' +time_store_really_opens+')</small><br/>';
+			lbl.innerHTML = '<h4>'+aircast_tv_data.aircast_name +'</h4><small>Operation Hours: <br/>' + moment(today+' '+aircast_tv_data.openTime).format('hh a')+' - '+ moment(today+' '+aircast_tv_data.closeTime).format('hh a') +'</small><br/><small>aircast opened at: ' +tConvert(time_store_really_opens)+'</small><br/><small>Last Activity: ' +moment(aircast_tv_data.LastAlive).format('LLL')+'</small><br/><small>Last Activity: '+moment(aircast_tv_data.LastAlive).fromNow() +'</small><br/><br/><small style="color: '+color+'">Hours of Uptime: '+convertMinsToHrsMins(aircast_percentage.hoursReallyActive) +' hour(s)</small><br/><small>Hours of Downtime: ' +convertMinsToHrsMins(aircast_percentage.downtime)+' hour(s)</small>';
 			div1.appendChild(lbl);
 			var span = document.createElement('div');
-			span.innerHTML = '<button onclick="viewStats('+aircast_tv_data.rpi_id+')">View Logs';
-			div1.appendChild(span);
+			span.innerHTML = '<button class="margin-bottom-10" onclick="viewStats('+aircast_tv_data.rpi_id+')">View Logs';
+			div1.appendChild(span); 
 
 			time_store_really_opens ='';
 
+
 			var div2 = document.createElement("div");
 
-			// if (time_store_opens == 'never opened') {
-			// 	var img = document.createElement("IMG");
-			//     img.setAttribute("src", "/img/site-down.png");
-			//     img.setAttribute("width", "200");
-			//     img.setAttribute("class", "margin-top-20");
-			//     div2.appendChild(img);
-			// } else if (time_store_really_opens && current_time_now < site_opening_hour) {
-			// 	var img = document.createElement("IMG");
-			//     img.setAttribute("src", "/img/closed-but-open.png");
-			//     img.setAttribute("width", "200");
-			//     img.setAttribute("class", "margin-top-20");
-			//     div2.appendChild(img);
-			// } else if (current_time_now < site_opening_hour || current_time_now > site_closing_hour) {
-			// 	var img = document.createElement("IMG");
-			//     img.setAttribute("src", "/img/out-of-operation.png");
-			//     img.setAttribute("width", "200");
-			//     img.setAttribute("class", "margin-top-20");
-			//     div2.appendChild(img);
-			// }else {
-				var canvas = document.createElement('canvas');
-				canvas.id = "data-"+aircast_tv_data.rpi_id;
-				canvas.width = 100;
-				canvas.height = 100;
-				div2.appendChild(canvas);
-
-			// }
-			
+			var canvas = document.createElement('canvas');
+			canvas.id = "data-"+aircast_tv_data.rpi_id;
+			canvas.width = 100;
+			canvas.height = 100;
+			div2.appendChild(canvas);
 
 			div.appendChild(div1);
 			div.appendChild(div2);
@@ -343,13 +378,12 @@
 			var body = document.getElementById("report-graph");
 			body.appendChild(div);
 
-
-			if (current_time_now < site_opening_hour || current_time_now > site_closing_hour) {
-
-			}else{
-
 				var d = 'data-'+aircast_tv_data.rpi_id;
 				var ctx = document.getElementById(d).getContext('2d');
+
+				if (aircast_percentage.remaining_time < 0) {
+					aircast_percentage.remaining_time = 0;
+				}
 
 
 				data = {
@@ -384,15 +418,12 @@
 
 
 				myPieChart[counter] = new Chart(ctx,{
-				    type: 'pie',
+				    type: 'doughnut',
 				    data: data,
 				    options: options
 				});
 
 				counter++;
-
-
-			}
 
 		}
 
@@ -413,21 +444,16 @@
 		}
 
 		function updateChart(aircast_tv_data,aircast_percentage) {
-			console.log('coming from the update');
-			console.log(aircast_tv_data);
-			console.log(aircast_percentage);
+
 
 			myPieChart.forEach(function(item){
 
 				if (item.canvas.id == 'data-'+aircast_tv_data.rpi_id) {
-					console.log(item);
-					console.log(item.canvas.id);
-					console.log(item.config.data.datasets[0]);
-					//item.config.data.datasets[0].data[aircast_percentage.uptime, aircast_percentage.downtime, aircast_percentage.remaining_time];
+
 					item.config.data.datasets[0].data[0] = aircast_percentage.uptime;
 					item.config.data.datasets[0].data[1] = aircast_percentage.downtime;
 					item.config.data.datasets[0].data[2] = aircast_percentage.remaining_time;
-					//item.config.data.datasets[0].data[100, 150, 300];
+
 					item.update();
 				}
 			});
@@ -453,7 +479,7 @@
 					var storeOpenHour = parseInt(data.OpenTime.split(':')[0]);
 					var final_list = [];
 					
-					for (var i = data.Logs.length-1; i > 0 ; i--) {
+					for (var i = data.Logs.length-1; i >= 0 ; i--) {
 
 
 						var item_hour = data.Logs[i].Date.split(" ")[1].split(':')[0];
@@ -468,26 +494,21 @@
 					}
 
 					for (var i = 0; i < arr.length; i++) {
-						if (parseInt(arr[i].split(':')[0]) >= storeOpenHour) {
+						if (parseInt(arr[i].split(':')[0])) {
 							final_list.push(arr[i].split(':')[0]);
 						}
 					}
 
 					var counts = {};
 					final_list.forEach(function(x) { counts[x] = (counts[x] || 0)+1; });
-
-					// $(".modal-title").html($('#data-label-'+rpi_id+' h4').html());
 					$("#label-container").html(($("#data-label-"+rpi_id).html()));
 
 					for (var key in counts) {
 					    if (counts.hasOwnProperty(key)) {
-					    	$("#status-overview").append('<li>'+key + ' <span class="badge">'+counts[key]+'</span></li>')
-					        console.log(key + " -> " + counts[key]);
+					    	$("#status-overview").append('<tr><td>'+convertTo12HourFormat(key) + '</td><td>'+counts[key]+' minutes</td></tr>')
 					    }
 					}
 
-					console.log(counts);
-					//console.log(arr);
 					$("#status-details").html(str);	
 					break;
 
@@ -506,17 +527,160 @@
 			aircast_sites_data.forEach(function(item) {
 
 				if (item.isDeployed == 1) {
-					getLogsData(item.RpiID);	
+					getLogsData(item.RpiID,false);	
 				}
 
+				// if (item.RpiID == 3 || item.RpiID == 49 || item.RpiID == 52 || item.RpiID == 51 || item.RpiID == 76) {
+				// 	getLogsData(item.RpiID,false);	
+				// }
 
-				// if (item.RpiID == 24 || item.RpiID == 30 || item.RpiID == 33 || item.RpiID == 31) {
+				// if (item.RpiID == 24 || item.RpiID == 30 || item.RpiID == 33 || item.RpiID == 31 || item.RpiID == 3) {
 				// 	getLogsData(item.RpiID,false);	
 				// }
 				
 			})
 
 		}
+
+
+		function searchByName(keyword){
+
+				$("#report-graph").children("div.item").each(function(){
+
+					    // If the item does not contain the text phrase hide it
+					    dataResult = $(this).is('[data-name*="'+keyword+'"]');
+					    textResult = $(this).text().search(new RegExp(keyword, "i")) < 0;
+
+					    if (textResult && !dataResult) {
+					        $(this).closest(".item").fadeOut(700); // Hide the item if there are no matches
+
+					    } else {
+					        $(this).closest(".item").fadeIn(700); // Show the item if there are matches
+					    }
+					});
+		}
+
+
+		function showGroup(site_location) {
+
+
+				if (site_location == 'all') {
+
+					$("#report-graph").children("div.item").fadeIn(700);
+
+				}else {
+
+					$("#report-graph").children("div.item").each(function(){
+
+					    // If the item does not contain the text phrase hide it
+					    dataResult = $(this).is('[data-location*="'+site_location+'"]');
+					    textResult = $(this).text().search(new RegExp(site_location, "i")) < 0;
+
+					    if (textResult && !dataResult) {
+					        $(this).closest(".item").fadeOut(700); // Hide the item if there are no matches
+
+					    } else {
+					        $(this).closest(".item").fadeIn(700); // Show the item if there are matches
+					    }
+					});
+
+				}
+
+				
+
+
+				// $("#report-graph>div").fadeOut(300,function(){
+				// 	$("#report-graph").find("[data-location='" + site_location + "']").fadeIn(300);	
+				// });
+					
+		}
+
+
+
+		function convertTo12HourFormat(hour) {
+
+			if (parseInt(hour) > 12 ) {
+				return parseInt(hour) - 12 + ' pm';
+			}else {
+				return hour + ' am';
+			}
+		}
+
+
+		function convertMinsToHrsMins(minutes) {
+		  var h = Math.floor(minutes / 60);
+		  var m = minutes % 60;
+		  h = h < 10 ? '0' + h : h;
+		  m = m < 10 ? '0' + m : m;
+		  return h + ':' + m;
+		}
+
+
+		function tConvert (time) {
+			// console.log(time);
+			if (time != 'never opened' && time != 'never openedNaN' && time != undefined) {
+					// Check correct time format and split into components
+				  time = time.toString ().match (/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/) || [time];
+
+				  if (time.length > 1) { // If time format correct
+				    time = time.slice (1);  // Remove full string match value
+				    time[5] = +time[0] < 12 ? ' AM' : ' PM'; // Set AM/PM
+				    time[0] = +time[0] % 12 || 12; // Adjust hours
+				  }
+				  return time.join (''); // return adjusted time or original string
+			}else {
+				return time;
+			}
+
+
+		}
+
+
+
+		function clock() {
+
+			  //Save the times in variables
+
+			  var today = new Date();
+
+			  var hours = today.getHours();
+			  var minutes = today.getMinutes();
+			  var seconds = today.getSeconds();
+
+			  //Set the AM or PM time
+
+			  if (hours >= 12) {
+			    meridiem = " PM";
+			  } else {
+			    meridiem = " AM";
+			  }
+
+			  //convert hours to 12 hour format and put 0 in front
+			  if (hours > 12) {
+			    hours = hours - 12;
+			  } else if (hours === 0) {
+			    hours = 12;
+			  }
+
+			  //Put 0 in front of single digit minutes and seconds
+
+			  if (minutes < 10) {
+			    minutes = "0" + minutes;
+			  } else {
+			    minutes = minutes;
+			  }
+
+			  if (seconds < 10) {
+			    seconds = "0" + seconds;
+			  } else {
+			    seconds = seconds;
+			  }
+
+			  document.getElementById("clock").innerHTML = (hours + ":" + minutes + ":" + seconds + meridiem);
+
+		}
+
+		setInterval('clock()', 1000);
 
 
 

@@ -17,6 +17,10 @@ body {
   width: 300px;
 }
 
+.margin-10 {
+  margin: 10px;
+}
+
 .margin-top-0 {
   margin-top: 0;
 }
@@ -438,7 +442,6 @@ textarea {
 
 .loader-div  {
   height: 100%;
-  background: #000000;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -447,10 +450,11 @@ textarea {
     right: 0;
     top: 0;
     bottom: 0;
-    z-index: 9;
+    z-index: -1;
 }
 
 .loader h2 {
+    color: black !important;
     width: 600px;
     position: relative;
     top: 100px;
@@ -465,6 +469,7 @@ textarea {
   height: 100px;
 }
 .loader__bar {
+
   position: absolute;
   bottom: 0;
   width: 10px;
@@ -474,31 +479,37 @@ textarea {
   box-shadow: 1px 1px 0 rgba(0, 0, 0, .2);
 }
 .loader__bar:nth-child(1) {
+  background: #2ec132;
   left: 0px;
   transform: scale(1, 0.2);
   animation: barUp1 4s infinite;
 }
 .loader__bar:nth-child(2) {
+  background: #2ec132;
   left: 15px;
   transform: scale(1, 0.4);
   animation: barUp2 4s infinite;
 }
 .loader__bar:nth-child(3) {
+  background: #2ec132;
   left: 30px;
   transform: scale(1, 0.6);
   animation: barUp3 4s infinite;
 }
 .loader__bar:nth-child(4) {
+  background: #2ec132;
   left: 45px;
   transform: scale(1, 0.8);
   animation: barUp4 4s infinite;
 }
 .loader__bar:nth-child(5) {
+  background: #2ec132;
   left: 60px;
   transform: scale(1, 1);
   animation: barUp5 4s infinite;
 }
 .loader__ball {
+  background: #41cb12 !important;
   position: absolute;
   bottom: 10px;
   left: 0;
@@ -653,7 +664,7 @@ textarea {
   overflow-y: scroll; 
 }
 
-#status-overview li {
+/*#status-overview li {
   list-style: none;
 
 }
@@ -661,7 +672,7 @@ textarea {
 #status-overview li span {
   font-size: 10px;
 }
-
+*/
 #aircast-quarantine ul li {
   list-style: none;
 }
@@ -673,4 +684,13 @@ textarea {
 
 .quarantine-list ol li strong {
   color: red;
+}
+
+.clock {
+    font-size: 20px;
+    background: azure;
+    padding: 3px 40px;
+    border: 2px dashed black;
+    box-shadow: 2px 2px 10px rgba(0,0,0,.2);
+    margin-left: 20px;
 }
