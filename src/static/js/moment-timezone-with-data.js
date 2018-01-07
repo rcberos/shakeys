@@ -1100,6 +1100,7 @@
 			"Asia/Kuala_Lumpur|Asia/Singapore",
 			"Asia/Kuala_Lumpur|Singapore",
 			"Asia/Macau|Asia/Macao",
+			"Asia/Manila",
 			"Asia/Makassar|Asia/Ujung_Pandang",
 			"Asia/Nicosia|Europe/Nicosia",
 			"Asia/Qatar|Asia/Bahrain",
