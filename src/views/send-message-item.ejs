@@ -30,9 +30,9 @@
 				</tr>
 				<% site_data.forEach(function(item){ %>
 					<tr>
-						<td><input type="checkbox" class="number-to-send" data-name="<%= item.Room %>" data-number="<%= item.MobileNumber %>" onchange="checkboxAddToNUmberList(this)"> <%= item.Room %></td>
+						<td><input type="checkbox" class="number-to-send" data-name="<%= item.Room %>" data-number="<%= item.ContactPerson %>" onchange="checkboxAddToNUmberList(this)"> <%= item.Room %></td>
 						<td><%= item.ContactPersonName %></td>
-						<td><a href="tel:+63<%= item.MobileNumber %>">0<%= item.MobileNumber %></a></td>
+						<td><a href="tel:+63<%= item.MobileNumber %>">0<%= item.ContactPerson %></a></td>
 					</tr>
 				 <% }) %>
 				</table>

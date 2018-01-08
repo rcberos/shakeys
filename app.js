@@ -77,7 +77,7 @@ app.get("/", (req,res) => {
 
 app.get("/textblast-per-site",(req,res) => {
 
-     connection.query("SELECT Room,MobileNumber,ContactPersonName FROM AircastRpiLocation WHERE MobileNumber != 0", function(error,results,fields){
+     connection.query("SELECT Room,ContactPerson,ContactPersonName FROM AircastRpiLocation WHERE ContactPerson != 0", function(error,results,fields){
         site_data = results;
         res.render("send-message-item",{site_data});  
       });
@@ -88,7 +88,7 @@ app.get("/textblast-per-site",(req,res) => {
 app.route("/textblast")
    .get((req,res) => {
 
-   		connection.query("SELECT Room,MobileNumber,ContactPersonName FROM AircastRpiLocation WHERE MobileNumber != 0", function(error,results,fields){
+   		connection.query("SELECT Room,ContactPerson,ContactPersonName FROM AircastRpiLocation WHERE ContactPerson != 0", function(error,results,fields){
   			site_data = results;
         connection.query("SELECT message,created_at FROM aircast_notification_blast ORDER BY id DESC LIMIT 1",function(error2,results2,fields2){
           last_message = results2[0];
