@@ -583,7 +583,7 @@ app.route('/save-issue')
     let dateResolved  = req.body.date_resolution;
     let status        = req.body.status;
     let resolution    = req.body.resolution;
-    let remarks       = req.body.remarks
+    let remarks       = req.body.remarks;
     connection.query(sql,[
       dateDetected,
       siteName,
@@ -594,15 +594,16 @@ app.route('/save-issue')
       remarks
     ],(error,results,body) => {
       console.log(results);
+      res.send({success: true});  
     });
   });
-  app.route('/select-issue')
+app.route('/select-issue')
     .get((req,res)=>{
       connection.query("SELECT * FROM  `aircast_issue`;",(error,results,body)=>{
         res.json(results);
       });
     });
-  app.route('/edit-issue')
+app.route('/edit-issue')
     .post((req,res) => {
       const sql = "UPDATE  `gp_digital`.`aircast_issue` SET "+
                     " `site_name` =  ? ,"+
@@ -633,6 +634,40 @@ app.route('/save-issue')
       });
       // console.log('sadgashjdgajshgdjashgdjahsgdjashgda');
     });
+app.route('/issues')
+      .get((req,res)=>{
+        const sql = "SELECT * "+
+                    "FROM  `aircast_issue_list` ";
+        connection.query(sql,(error,result,body)=>{
+          console.log(result);
+          res.json(result);
+        })
+      });
+app.route('/issue-add')
+  .post((req,res)=>{
+    const sql = "INSERT INTO  `gp_digital`.`aircast_issue_list` ("+
+                " `id` ,"+
+                " `Name`"+
+                " )"+
+                " VALUES ("+
+                " NULL ,  ?"+
+                " );";
+    let name = req.body.name;
+    connection.query(sql,[name],(error,result,body)=>{
+      // resolve.json(result);
+      console.log(result);
+      res.send({success: true});  
+    })
+  });
+app.route('/del-issue')
+  .post((req,res)=>{
+    const sql = "DELETE FROM `gp_digital`.`aircast_issue_list` WHERE `aircast_issue_list`.`Name` = ?";
+    let name = req.body.name;
+    connection.query(sql,[name],(error,results,body)=>{
+      console.log(results);
+      res.send({success: true});
+    })
+  })
 app.get('*',(req,res)=> {
   res.send('<h1>Page Not Found.</h1>');
 });

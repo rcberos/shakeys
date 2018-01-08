@@ -19,14 +19,18 @@
 			</div>
 		</div>
 		<div class="row">
-			<table class="table table-hover table-striped margin-top-30" id="table-aircast-issue">
-				<th>Date Detected</th>
-				<th>Site Name</th>
-				<th>Issue</th>
-				<th>Resolution</th>
-				<th>Status</th>
-				<th>Remarks</th>
-				<th>Date of Resolution</th>
+			<table class="table table-hover margin-top-30" id="table-aircast-issue">
+				<thead>
+					<tr>
+						<th>Date Detected</th>
+						<th>Site Name</th>
+						<th>Issue</th>
+						<th>Resolution</th>
+						<th>Status</th>
+						<th>Remarks</th>
+						<th>Date of Resolution</th>
+					</tr>
+				</thead>
 				<tbody id="tbody"></tbody>
 			</table>
 		</div>
@@ -43,7 +47,10 @@
 							<select id="siteName" class="form-control">
 								<option> </option>
 							</select>
-							<label>Issue</label><textarea id="issue"  class="form-control"></textarea>
+							<!-- <label>Issue</label><textarea id="issue"  class="form-control"></textarea> -->
+							<label>Issue</label><select id="issue" class="form-control">
+									<option></option>
+								</select>
 							<label>Date of Resolution</label><input id="dateResolution" type="date" class="form-control">
 						</div>
 						<div>
@@ -79,7 +86,10 @@
 								<select id="siteNameEdit" class="form-control">
 									<option> </option>
 								</select>
-								<label>Issue</label><textarea id="issueEdit"  class="form-control"></textarea>
+								<!-- <label>Issue</label><textarea id="issueEdit"  class="form-control"></textarea> -->
+								<label>Issue</label><select id="issueEdit" class="form-control">
+									<option></option>
+								</select>
 								<label>Date of Resolution</label><input id="dateResolutionEdit" type="date" class="form-control">
 							</div>
 							<div>
@@ -109,18 +119,17 @@
 								<h4 class="modal-title">Modal Header</h4>
 							</div>
 
-										<div class="modal-body">
+										<div class="modal-body issue-list">
 											<div id="issue-form">
-
+												<input type="text" class="form-control" placeholder="Issue Name" id="issue-name"><br>
+												<button class="btn btn-primary" id="add-issue-btn">Add Issue</button>
 											</div>
 											<div id="issue-list">
+												<table id="issue-table-list" class="table">
 
+												</table>
 											</div>
 										</div>
-							</div>
-							<div class="modal-footer">
-								<button class="btn btn-success" id="save-edit-issue" >SAVE</button>
-								<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 							</div>
 							</div>
 							
@@ -129,17 +138,334 @@
 	
 		</div>
 <script>
-
-		let rows = "";
-		let data1;
+$.ajax({
+		type:'get',
+		url: '/issues',
+		success: function (data){
+			document.getElementById('issueEdit').innerHTML = "<option> </option>"
+			for(var counter =0 ;data.length>counter;counter++){
+				$('#issueEdit').append(
+					"<option value='"+data[counter].Name+"'>"+
+						data[counter].Name+
+					"</option>"
+				);
+			}
+		},error: function (jqXHR,exception){
+			// alert('adsasddassdaf');
+			if (jqXHR.status === 0) {
+				alert('Not connect.\n Verify Network.');
+			} else if (jqXHR.status == 404) {
+				alert('Requested page not found. [404]');
+			} else if (jqXHR.status == 500) {
+				alert('Internal Server Error [500].');
+			} else if (exception === 'parsererror') {
+				alert('Requested JSON parse failed.');
+			} else if (exception === 'timeout') {
+				alert('Time out error.');
+			} else if (exception === 'abort') {
+				alert('Ajax request aborted.');
+			} else {
+				alert('Uncaught Error.\n' + jqXHR.responseText);
+			}
+		}
+});
+$('#Add').on('click',function(){
+	$.ajax({
+		type:'get',
+		url: '/issues',
+		success: function (data){
+			document.getElementById('issue').innerHTML = "<option></option>"
+			for(var counter =0 ;data.length>counter;counter++){
+				$('#issue').append(
+					"<option value='"+data[counter].Name+"'>"+
+						data[counter].Name+
+					"</option>"
+				);
+			}
+		},error: function (jqXHR,exception){
+			// alert('adsasddassdaf');
+			if (jqXHR.status === 0) {
+				alert('Not connect.\n Verify Network.');
+			} else if (jqXHR.status == 404) {
+				alert('Requested page not found. [404]');
+			} else if (jqXHR.status == 500) {
+				alert('Internal Server Error [500].');
+			} else if (exception === 'parsererror') {
+				alert('Requested JSON parse failed.');
+			} else if (exception === 'timeout') {
+				alert('Time out error.');
+			} else if (exception === 'abort') {
+				alert('Ajax request aborted.');
+			} else {
+				alert('Uncaught Error.\n' + jqXHR.responseText);
+			}
+		}
+	});
+})
+	// $.ajax({
+	// 	type:'POST',
+	// 	url: '/issues',
+	// 	success: function (data){
+	// 		for(var counter =0 ;data.length>counter;counter++){
+	// 			$('#issue-table-list').append(
+	// 				"<tr>"+
+	// 					"<td>"+data[counter].Name+"</td>"+	
+	// 				"</tr>"
+	// 			);
+	// 		}
+	// 	},error: function (e){
+	// 		alert('error');
+	// 	}
+	// });
+$('#add-issue-btn').on('click',function(){
+// alert($('#issue-name').val());
+	$.ajax({
+		type: 'POST',
+		url: '/issue-add',
+		data: {name:$('#issue-name').val()},
+		success: function(d){
+		// alert('success');
+			$('#issue-table-list').append(
+			"<tr>"+
+				"<td class='issue-name-list'>"+$('#issue-name').val()+"</td>"+
+				"<td><a class='del-issuelist'>&#10006;</a></td>"+
+			"</tr>"
+			);
+			$('#issue-name').val("");
+			$('.del-issuelist').on('click',function(){
+				// alert($(this).parent().parent().children('.issue-name-list').html())
+				// alert('working');
+				$.ajax({
+					type:'post',
+					data:{name:$(this).parent().parent().children('.issue-name-list').html()},
+					url:'/del-issue',
+					success: function(){
+					},error: function(jqXHR,exception){
+						if (jqXHR.status === 0) {
+							alert('Not connect.\n Verify Network.');
+						} else if (jqXHR.status == 404) {
+							alert('Requested page not found. [404]');
+						} else if (jqXHR.status == 500) {
+							alert('Internal Server Error [500].');
+						} else if (exception === 'parsererror') {
+							alert('Requested JSON parse failed.');
+						} else if (exception === 'timeout') {
+							alert('Time out error.');
+						} else if (exception === 'abort') {
+							alert('Ajax request aborted.');
+						} else {
+							alert('Uncaught Error.\n' + jqXHR.responseText);
+					}
+					}
+				});
+				$(this).parent().parent().remove();
+			});
+			// $('#issue-table-list')
+			// document.getElementById('issue-table-list').innerHTML = "<option></option>"
+			// 	console.log(d);
+			// 	$.ajax({
+			// 		type: 'GET', 
+			// 		url: '/issues',
+			// 		success: function (data){
+			// 			console.log(data);
+			// 			document.getElementById('issue-table-list').innerHTML = "";
+			// 			for(var counter =0 ;data.length>counter;counter++){
+			// 				$('#issue-table-list').append(
+			// 					"<tr>"+
+			// 						"<td>"+data[counter].Name+"</td>"+	
+			// 					"</tr>"
+			// 				);
+			// 			}
+			// 			// alert('su');
+			// 		},error: function (x){
+			// 			alert('error');
+			// 		}
+			// });
+		},error: function(e){
+			console.log(e);
+			alert('error');
+		}
+	})
+	$.ajax({
+		type:'get',
+		url: '/issues',
+		success: function (data){
+		document.getElementById('issueEdit').innerHTML = "<option></option>"
+		for(var counter =0 ;data.length>counter;counter++){
+			$('#issueEdit').append(
+				"<option value='"+data[counter].Name+"'>"+
+					data[counter].Name+
+				"</option>"
+				);
+			}
+		},error: function (jqXHR,exception){
+			// alert('adsasddassdaf');
+			if (jqXHR.status === 0) {
+				alert('Not connect.\n Verify Network.');
+			} else if (jqXHR.status == 404) {
+				alert('Requested page not found. [404]');
+			} else if (jqXHR.status == 500) {
+				alert('Internal Server Error [500].');
+			} else if (exception === 'parsererror') {
+				alert('Requested JSON parse failed.');
+			} else if (exception === 'timeout') {
+				alert('Time out error.');
+			} else if (exception === 'abort') {
+				alert('Ajax request aborted.');
+			} else {
+				alert('Uncaught Error.\n' + jqXHR.responseText);
+			}
+		}
+	});
+});
+	$('#add-issue').on('click',function(){
+		// alert('asdasdas');
 		$.ajax({
 			type: 'GET',
-			url: "/select-issue",
-			success: function (data){
-				console.log(data);
-				data1=data;
-				for(var counter=0 ; data.length>counter ; counter++){
-					rows += 
+			url: '/issues',
+			success: function (d){
+				console.log(d);
+				document.getElementById('issue-table-list').innerHTML = "";
+				for(var counter =0 ;d.length>counter;counter++){
+					$('#issue-table-list').append(
+					"<tr>"+
+						"<td class='issue-name-list'>"+d[counter].Name+"</td>"+	
+						"<td><a class='del-issuelist'>&#10006;</a></td>"+
+					"</tr>"
+				);
+				}
+				$('.del-issuelist').on('click',function(){
+					// alert($(this).parent().parent().children('.issue-name-list').html())
+					// alert('working');
+					$.ajax({
+						type:'post',
+						data:{name:$(this).parent().parent().children('.issue-name-list').html()},
+						url:'/del-issue',
+						success: function(){
+						},error: function(jqXHR,exception){
+							// alert('adsasddassdaf');
+							if (jqXHR.status === 0) {
+								alert('Not connect.\n Verify Network.');
+							} else if (jqXHR.status == 404) {
+								alert('Requested page not found. [404]');
+							} else if (jqXHR.status == 500) {
+								alert('Internal Server Error [500].');
+							} else if (exception === 'parsererror') {
+								alert('Requested JSON parse failed.');
+							} else if (exception === 'timeout') {
+								alert('Time out error.');
+							} else if (exception === 'abort') {
+								alert('Ajax request aborted.');
+							} else {
+								alert('Uncaught Error.\n' + jqXHR.responseText);
+							}
+						}
+					})
+					$(this).parent().parent().remove();
+				});
+				// alert('su');
+			},error: function (x){
+				alert('error');
+			}
+		});
+		$('#myModalIssue').modal('toggle');
+});
+let rows = "";
+let data1;
+$.ajax({
+	type: 'GET',
+	url: "/select-issue",
+	success: function (data){
+		console.log(data);
+		data1=data;
+		for(var counter=0 ; data.length>counter ; counter++){
+			rows += 
+				'<tr id="'+data[counter].id+'" class="row-clickable">'+
+					'<td class="dateDetected">'+moment(data[counter].date_detected).format('YYYY-MM-DD')+'</td>'+
+					'<td class="siteName">'+data[counter].site_name+'</td>'+
+					'<td class="issue">'+data[counter].issue+'</td>'+
+					'<td class="resolution">'+data[counter].resolution+'</td>'+
+					'<td class="status">'+data[counter].status+'</td>'+
+					'<td class="remarks">'+data[counter].remarks+'</td>'+
+					'<td class="dateResolution">'+moment(data[counter].date_of_resolution).format('YYYY-MM-DD')+'</td>'+
+				'</tr>';
+			}
+		document.getElementById('tbody').innerHTML = rows;
+		$('.row-clickable').css('cursor','pointer')
+			.on('click',function(){
+				var p = $(this)
+				$('#issue-id').val($(this).attr('id')+"");
+				$('#dateDetectedEdit').val($(this).children('.dateDetected').html());
+				$('#siteNameEdit').val($(this).children('.siteName').html());
+				$('#issueEdit').val($(this).children('.issue').html());
+				$('#resolutionEdit').val($(this).children('.resolution').html());
+				$('#statusEdit').val($(this).children('.status').html());
+				$('#remarksEdit').val($(this).children('.remarks').html());
+				$('#dateResolutionEdit').val($(this).children('.dateResolution').html());
+				$('#myModalEdit').modal('toggle')
+				// $('#myModalEdit').children('#issue-id').val()
+		})
+	},error: function(err){
+		console.log(err);
+	}
+})
+let option ='' ;
+$.ajax({ 
+    type: "GET",
+    url: "/api/rpi-location",
+    success: function(item){
+        console.log(item);
+		console.log('done');
+			for(var counter=0;item.length>counter;counter++){
+				option += '<option value="'+item[counter].Room+'">'+item[counter].Room+'</option>';
+			}
+		$('#siteName').append(option+'');
+		$('#siteNameEdit').append(option+'');
+    },error: function(err) {
+        console.log(err);
+    }
+});
+$('#dateDetected').val(moment().format('YYYY-MM-DD'));
+$("#save-issue").on('click',function(){
+	if(
+		$('#siteName').val()!='' && 
+		$('#issue').val()!='' && 
+		$('#dateResolution').val()!='' && 
+		$('#status').val()!='' && 
+		$('#resolution').val()!='' && 
+		$('#remarks').val()!='' && 
+		$('#dateDetected').val()!='')
+		{
+			var datas = {
+				date_detected:  $('#dateDetected').val(),
+				site_name : 		$('#siteName').val(),
+				issue: 					$('#issue').val(),
+				date_resolution:$('#dateResolution').val(),
+				status:					$('#status').val(),
+				resolution:			$('#resolution').val(),
+				remarks: 				$('#remarks').val()
+			};
+			$.ajax({
+				method: 'POST',
+				url: '/save-issue',
+				data: datas,
+				success: function(data){
+					// alert(data);
+					$('#myModal').modal('toggle');
+				}
+			})
+			// $('#myModal').modal('toggle');
+			//add row
+			document.getElementById('tbody').innerHTML = '';
+			rows="";
+			$.ajax({
+				type: 'GET',
+				url: "/select-issue",
+				success: function (data){
+					console.log(data);
+					data1=data;
+					for(var counter=0 ; data.length>counter ; counter++){
+						rows += 
 						'<tr id="'+data[counter].id+'" class="row-clickable">'+
 							'<td class="dateDetected">'+moment(data[counter].date_detected).format('YYYY-MM-DD')+'</td>'+
 							'<td class="siteName">'+data[counter].site_name+'</td>'+
@@ -149,114 +475,57 @@
 							'<td class="remarks">'+data[counter].remarks+'</td>'+
 							'<td class="dateResolution">'+moment(data[counter].date_of_resolution).format('YYYY-MM-DD')+'</td>'+
 						'</tr>';
-				}document.getElementById('tbody').innerHTML = rows;
-				$('.row-clickable').css('cursor','pointer')
-				.on('click',function(){
-					var p = $(this)
-					$('#issue-id').val($(this).attr('id')+"");
-					$('#dateDetectedEdit').val($(this).children('.dateDetected').html());
-					$('#siteNameEdit').val($(this).children('.siteName').html());
-					$('#issueEdit').val($(this).children('.issue').html());
-					$('#resolutionEdit').val($(this).children('.resolution').html());
-					$('#statusEdit').val($(this).children('.status').html());
-					$('#remarksEdit').val($(this).children('.remarks').html());
-					$('#dateResolutionEdit').val($(this).children('.dateResolution').html());
-					$('#myModalEdit').modal('toggle')
-					// $('#myModalEdit').children('#issue-id').val()
-				})
-			},error: function(err){
-				console.log(err);
-			}
-		})
-		let option ='' ;
-		$.ajax({ 
-            type: "GET",
-            url: "/api/rpi-location",
-            success: function(item){
-              console.log(item);
-			  console.log('done');
-				for(var counter=0;item.length>counter;counter++){
-					option += '<option value="'+item[counter].Room+'">'+item[counter].Room+'</option>';
-				}
-		$('#siteName').append(option+'');
-		$('#siteNameEdit').append(option+'');
-            },
-            error: function(err) {
-              console.log(err);
-            }
-		});
-		$('#dateDetected').val(moment().format('YYYY-MM-DD'));
-
-		$("#save-issue").on('click',function(){
-			if(
-				$('#siteName').val()!='' && 
-				$('#issue').val()!='' && 
-				$('#dateResolution').val()!='' && 
-				$('#status').val()!='' && 
-				$('#resolution').val()!='' && 
-				$('#remarks').val()!='' && 
-				$('#dateDetected').val()!='')
-			{
-				var datas = {
-					date_detected:  $('#dateDetected').val(),
-					site_name : 		$('#siteName').val(),
-					issue: 					$('#issue').val(),
-					date_resolution:$('#dateResolution').val(),
-					status:					$('#status').val(),
-					resolution:			$('#resolution').val(),
-					remarks: 				$('#remarks').val()
-				};
-				$.ajax({
-					method: 'POST',
-					url: '/save-issue',
-					data: datas,
-					success: function(data){
-						// alert(data);
-						$('#myModal').modal('toggle');
 					}
-				})
-				$('#myModal').modal('toggle');
-				//add row
-				document.getElementById('tbody').innerHTML = '';
-				rows="";
-				$.ajax({
-					type: 'GET',
-					url: "/select-issue",
-						success: function (data){
-						console.log(data);
-						data1=data;
-						for(var counter=0 ; data.length>counter ; counter++){
-							rows += 
-							'<tr id="'+data[counter].id+'" class="row-clickable">'+
-								'<td class="dateDetected">'+moment(data[counter].date_detected).format('YYYY-MM-DD')+'</td>'+
-								'<td class="siteName">'+data[counter].site_name+'</td>'+
-								'<td class="issue">'+data[counter].issue+'</td>'+
-								'<td class="resolution">'+data[counter].resolution+'</td>'+
-								'<td class="status">'+data[counter].status+'</td>'+
-								'<td class="remarks">'+data[counter].remarks+'</td>'+
-								'<td class="dateResolution">'+moment(data[counter].date_of_resolution).format('YYYY-MM-DD')+'</td>'+
-							'</tr>';
-						}
-						document.getElementById('tbody').innerHTML = rows;
-						$('.row-clickable').css('cursor','pointer')
+					document.getElementById('tbody').innerHTML = rows;
+					$('.row-clickable').css('cursor','pointer')
 						.on('click',function(){
-						$('#dateDetectedEdit').val($(this).children('.dateDetected').html());
-						$('#siteNameEdit').val($(this).children('.siteName').html());
-						$('#issueEdit').val($(this).children('.issue').html());
-						$('#resolutionEdit').val($(this).children('.resolution').html());
-						$('#statusEdit').val($(this).children('.status').html());
-						$('#remarksEdit').val($(this).children('.remarks').html());
-						$('#dateResolutionEdit').val($(this).children('.dateResolution').html());
-						$('#myModalEdit').modal('toggle')
+					// $.ajax({
+					// 	type:'get',
+					// 	url: '/issues',
+					// 	success: function (data){
+					// 		document.getElementById('issueEdit').innerHTML = "<option></option>"
+					// 		for(var counter =0 ;data.length>counter;counter++){
+					// 			$('#issueEdit').append(
+					// 				"<option value='"+data[counter].Name+"'>"+
+					// 					data[counter].Name+
+					// 				"</option>"
+					// 			);
+					// 		}
+					// 	},error: function (jqXHR,exception){
+					// 		// alert('adsasddassdaf');
+					// 		if (jqXHR.status === 0) {
+					// 			alert('Not connect.\n Verify Network.');
+					// 		} else if (jqXHR.status == 404) {
+					// 			alert('Requested page not found. [404]');
+					// 		} else if (jqXHR.status == 500) {
+					// 			alert('Internal Server Error [500].');
+					// 		} else if (exception === 'parsererror') {
+					// 			alert('Requested JSON parse failed.');
+					// 		} else if (exception === 'timeout') {
+					// 			alert('Time out error.');
+					// 		} else if (exception === 'abort') {
+					// 			alert('Ajax request aborted.');
+					// 		} else {
+					// 			alert('Uncaught Error.\n' + jqXHR.responseText);
+					// 		}
+					// 	}
+					// });
+							$('#dateDetectedEdit').val($(this).children('.dateDetected').html());
+							$('#siteNameEdit').val($(this).children('.siteName').html());
+							$('#issueEdit').val($(this).children('.issue').html());
+							$('#resolutionEdit').val($(this).children('.resolution').html());
+							$('#statusEdit').val($(this).children('.status').html());
+							$('#remarksEdit').val($(this).children('.remarks').html());
+							$('#dateResolutionEdit').val($(this).children('.dateResolution').html());
+							$('#myModalEdit').modal('toggle')
 					//$('#myModalEdit').children('#issue-id').val()
 						// alert($(this).attr('id'));
-					})
-			},error: function(err){
-				console.log(err);
-			}
-		})
-						
-				//clear modal's inputs
+						})
+					},error: function(err){
+						console.log(err);
+					}
+			})
+			//clear modal's inputs
 			$('.custom-modal-body').find('#siteName').val("");
 			$('.custom-modal-body').find('#issue').val("");
 			$('.custom-modal-body').find('#dateResolution').val("");
@@ -267,32 +536,87 @@
 			else{
 				alert('Complete the form');
 			}
-		})
-
-	
-	$('#save-edit-issue').on('click',function(){
-		// alert('edit save clicked');
-		// $('#myModalEdit').modal('toggle');
-		// alert($('#issue-id').val());
-		//update database
-		var datas = {
-					//date_detected:  $('#dateDetectedEdit').val(),
-					issue_id: 				$('#issue-id').val(),
-					site_name : 			$('#siteNameEdit').val(),
-					issue: 					$('#issueEdit').val(),
-					date_resolution:		$('#dateResolutionEdit').val(),
-					status:					$('#statusEdit').val(),
-					resolution:				$('#resolutionEdit').val(),
-					remarks: 				$('#remarksEdit').val()
-				};
+});
+$('#save-edit-issue').on('click',function(){
+	// alert('edit save clicked');
+	// $('#myModalEdit').modal('toggle');
+	// alert($('#issue-id').val());
+	//update database
+	var datas = {
+		//date_detected:  $('#dateDetectedEdit').val(),
+		issue_id: 				$('#issue-id').val(),
+		site_name : 			$('#siteNameEdit').val(),
+		issue: 					$('#issueEdit').val(),
+		date_resolution:		$('#dateResolutionEdit').val(),
+		status:					$('#statusEdit').val(),
+		resolution:				$('#resolutionEdit').val(),
+		remarks: 				$('#remarksEdit').val()
+	};
+	$.ajax({
+		method: 'POST',
+		url: '/edit-issue',
+		data: datas,
+		success: function(data){
+			// alert(data);
+			$('#myModalEdit').modal('toggle');
+		}, error: function(jqXHR, exception) {
+			// alert('adsasddassdaf');
+			if (jqXHR.status === 0) {
+				alert('Not connect.\n Verify Network.');
+			} else if (jqXHR.status == 404) {
+				alert('Requested page not found. [404]');
+			} else if (jqXHR.status == 500) {
+				alert('Internal Server Error [500].');
+			} else if (exception === 'parsererror') {
+				alert('Requested JSON parse failed.');
+			} else if (exception === 'timeout') {
+				alert('Time out error.');
+			} else if (exception === 'abort') {
+				alert('Ajax request aborted.');
+			} else {
+				alert('Uncaught Error.\n' + jqXHR.responseText);
+			}
+		}
+	});
+	//refresh table
+	document.getElementById('tbody').innerHTML = '';
+	rows="";
+	$.ajax({
+		type: 'GET',
+		url: "/select-issue",
+		success: function (data){
+		console.log(data);
+		data1=data;
+		for(var counter=0 ; data.length>counter ; counter++){
+			rows += 
+			'<tr id="'+data[counter].id+'" class="row-clickable">'+
+				'<td class="dateDetected">'+moment(data[counter].date_detected).format('YYYY-MM-DD')+'</td>'+
+				'<td class="siteName">'+data[counter].site_name+'</td>'+
+				'<td class="issue">'+data[counter].issue+'</td>'+
+				'<td class="resolution">'+data[counter].resolution+'</td>'+
+				'<td class="status">'+data[counter].status+'</td>'+
+				'<td class="remarks">'+data[counter].remarks+'</td>'+
+				'<td class="dateResolution">'+moment(data[counter].date_of_resolution).format('YYYY-MM-DD')+'</td>'+
+			'</tr>';
+		}
+		document.getElementById('tbody').innerHTML = rows;
+		$('.row-clickable').css('cursor','pointer')
+			.on('click',function(){
+				$('#dateDetectedEdit').val($(this).children('.dateDetected').html());
+				$('#siteNameEdit').val($(this).children('.siteName').html());
 				$.ajax({
-					method: 'POST',
-					url: '/edit-issue',
-					data: datas,
-					success: function(data){
-						// alert(data);
-						$('#myModalEdit').modal('toggle');
-					}, error: function(jqXHR, exception) {
+					type:'get',
+					url: '/issues',
+					success: function (data){
+						document.getElementById('issueEdit').innerHTML = "<option> </option>"
+						for(var counter =0 ;data.length>counter;counter++){
+							$('#issueEdit').append(
+								"<option value='"+data[counter].Name+"'>"+
+									data[counter].Name+
+								"</option>"
+							);
+						}
+					},error: function (jqXHR,exception){
 						// alert('adsasddassdaf');
 						if (jqXHR.status === 0) {
 							alert('Not connect.\n Verify Network.');
@@ -311,48 +635,22 @@
 						}
 					}
 				});
-		//refresh table
-		document.getElementById('tbody').innerHTML = '';
-				rows="";
-				$.ajax({
-					type: 'GET',
-					url: "/select-issue",
-						success: function (data){
-						console.log(data);
-						data1=data;
-						for(var counter=0 ; data.length>counter ; counter++){
-							rows += 
-							'<tr id="'+data[counter].id+'" class="row-clickable">'+
-								'<td class="dateDetected">'+moment(data[counter].date_detected).format('YYYY-MM-DD')+'</td>'+
-								'<td class="siteName">'+data[counter].site_name+'</td>'+
-								'<td class="issue">'+data[counter].issue+'</td>'+
-								'<td class="resolution">'+data[counter].resolution+'</td>'+
-								'<td class="status">'+data[counter].status+'</td>'+
-								'<td class="remarks">'+data[counter].remarks+'</td>'+
-								'<td class="dateResolution">'+moment(data[counter].date_of_resolution).format('YYYY-MM-DD')+'</td>'+
-							'</tr>';
-						}
-						document.getElementById('tbody').innerHTML = rows;
-						$('.row-clickable').css('cursor','pointer')
-						.on('click',function(){
-						$('#dateDetectedEdit').val($(this).children('.dateDetected').html());
-						$('#siteNameEdit').val($(this).children('.siteName').html());
-						$('#issueEdit').val($(this).children('.issue').html());
-						$('#resolutionEdit').val($(this).children('.resolution').html());
-						$('#statusEdit').val($(this).children('.status').html());
-						$('#remarksEdit').val($(this).children('.remarks').html());
-						$('#dateResolutionEdit').val($(this).children('.dateResolution').html());
-						$('#myModalEdit').modal('toggle')
-					//$('#myModalEdit').children('#issue-id').val()
-						// alert($(this).attr('id'));
-					})
-			},error: function(err){
-				console.log(err);
-			}
-		})
-		//toggle modal
-		$('#myModalEdit').modal('toggle');
-	});
+				$('#issueEdit').val($(this).children('.issue').html());
+				$('#resolutionEdit').val($(this).children('.resolution').html());
+				$('#statusEdit').val($(this).children('.status').html());
+				$('#remarksEdit').val($(this).children('.remarks').html());
+				$('#dateResolutionEdit').val($(this).children('.dateResolution').html());
+				$('#myModalEdit').modal('toggle')
+				//$('#myModalEdit').children('#issue-id').val()
+				// alert($(this).attr('id'));
+			})
+		},error: function(err){
+			console.log(err);
+		}
+	})
+	//toggle modal
+	$('#myModalEdit').modal('toggle');
+});
 
 	</script>
 

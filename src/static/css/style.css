@@ -431,6 +431,25 @@ textarea {
   bottom: 0;
   right: 0;
 }
+#issue-form{
+  width: 50%;
+}
+#issue-list{
+  margin-left: 10px;
+  width: 50%;
+  max-height: 400px;
+  overflow-y: scroll;
+}
+.issue-list{
+  display: flex;
+  flex-flow: row;
+  justify-content: space-between;
+  align-content: center;
+  vertical-align: middle;
+}
+.del-issuelist{
+  cursor: pointer;
+}
 /************************************
   Issue Tracker (END)
 *************************************/
