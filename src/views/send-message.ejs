@@ -4,21 +4,14 @@
 <div class="container">
 	<div class="row">
 		<div class="col-md-6">
-			<form method="POST" action="/textblast">
-				<div class="form-group">
-					
-					<% if (locals.success) { %>
-						<h1>Message sent</h1>
-					 <%} %>
-
-					<h3>Send message to all our sites partners</h3>
-					<!-- <label>Message</label> -->
-					<textarea rows="5" class="form-control" name="message" placeholder="Type your message here..."></textarea>	
-				</div>
-				<div class="form-group">
-					<input type="submit" class="btn btn-primary" value="Send Message">	
-				</div>
-			</form>
+			<div class="form-group">
+				<h3>Send message to all our sites partners</h3>
+				<!-- <label>Message</label> -->
+				<textarea rows="5" class="form-control" name="message" id="message-to-all" placeholder="Type your message here..." required="required"></textarea>	
+			</div>
+			<div class="form-group">
+				<input type="button" id="send-message-all" class="btn btn-primary" value="Send Message">	
+			</div>
 			<div class="well">
 				<label>Last message sent: </label>
 				<p><%= message_data.message %><p>
@@ -50,6 +43,54 @@
 		</div>
 	</div>
 </div>
+
+
+<script type="text/javascript">
+	$('#send-message-all').on('click',function(e) {
+		e.preventDefault();
+		var mess = $("#message-to-all").val();
+
+		if (mess == '') {
+	       	swal(
+	          'Oops...',
+	          'Don\'t forget to add your message',
+	          'info'
+	        )
+		}else {
+			$.ajax({ 
+	            type: "POST",
+	            url: "/textblast",
+	            data: {message:mess}, 
+	            dataType: 'json',
+	            success: function(item){
+	              console.log(item);
+	              console.log('done');
+	            },
+	            error: function(err) {
+	              console.log(err);
+	            }
+	        });
+
+	        swal({
+	          title: 'Sending Your Messages',
+	          text: 'this will only take a few seconds',
+	          timer: 5000,
+	          onOpen: () => {
+	            swal.showLoading()
+	          }
+	        }).then((result) => {
+	          if (result.dismiss === 'timer') {
+	                  $("#message-to-all").val('');  
+	                  swal(
+	                    'Message Sent!',
+	                    '',
+	                    'success'
+	                  )
+	          }
+	        })
+		}
+	})
+</script>
 
 
 <% include ./partials/footer %>
