@@ -208,8 +208,8 @@
 
           infowindow = new google.maps.InfoWindow({
             maxWidth: 300,
-            content: "<h3>"+site.Room+"</h3>"+imageString(site.SiteImage,site.Room)+"<br/><p><b>Address: </b>"+site.Address+"</p>"
-          +"<p><b>Operation Hours:</b> "+moment(site.OpenTime, "HH:mm:ss").format("hh:mm A")+" - "+ moment(site.CloseTime, "HH:mm:ss").format("hh:mm A") +"</p><p><b>Estimate Traffic Count: </b>"+site.FootTraffic+"</p>"
+            content: "<div class='scrollFix'><h3>"+site.Room+"</h3>"+imageString(site.SiteImage,site.Room)+"<br/><p><b>Address: </b>"+site.Address+"</p>"
+          +"<p><b>Operation Hours:</b> "+moment(site.OpenTime, "HH:mm:ss").format("hh:mm A")+" - "+ moment(site.CloseTime, "HH:mm:ss").format("hh:mm A") +"</p><p><b>Estimate Traffic Count: </b>"+site.FootTraffic+"</p></div>"
           });
           infowindow.open(map,marker);
       }
