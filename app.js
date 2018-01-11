@@ -121,7 +121,9 @@ app.route('/templates-manager')
   .get((req,res) =>{
 
         connection.query("SELECT * FROM AircastRpiLocation",function(error,results,body){
-          rpi_location = results[0];
+          
+          rpi_location = results;
+
           res.render('templates-manager',{rpi_location,moment:moment});
         }) //end of 1nd query
             
