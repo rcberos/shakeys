@@ -133,18 +133,12 @@ app.route("/templates-manager/:id")
   .get((req,res)=>{
       let RpiID =  req.params.id;
 
-      
-      if (rpi_location && rpi_campaign && campaign_files) {
-        res.render('templates-item',{ID:RpiID,rpi_location,rpi_campaign,campaign_files,moment});
-      }else {
-          connection.query("SELECT * FROM AircastRpiLocation; SELECT * FROM AircastRpiCampaign WHERE (Template != 'temp2' and Template !='temp4' and Template !='temp1'); SELECT * FROM AircastCampaignFiles",function(error,results,body){
+        connection.query("SELECT * FROM AircastRpiLocation; SELECT * FROM AircastRpiCampaign WHERE (Template != 'temp2' and Template !='temp4' and Template !='temp1'); SELECT * FROM AircastCampaignFiles",function(error,results,body){
             rpi_location = results[0];
             rpi_campaign = results[1];
             campaign_files = results[2];
             res.render('templates-item',{ID:RpiID,rpi_location,rpi_campaign,campaign_files,moment});
           }) //end of 1nd query
-
-      }
       
       // res.render()
   })
