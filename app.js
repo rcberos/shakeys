@@ -120,10 +120,8 @@ app.route('/feedback')
 app.route('/templates-manager')
   .get((req,res) =>{
 
-        connection.query("SELECT * FROM AircastRpiLocation; SELECT * FROM AircastRpiCampaign WHERE (Template != 'temp2' and Template !='temp4' and Template !='temp1'); SELECT * FROM AircastCampaignFiles",function(error,results,body){
+        connection.query("SELECT * FROM AircastRpiLocation",function(error,results,body){
           rpi_location = results[0];
-          rpi_campaign = results[1];
-          campaign_files = results[2];
           res.render('templates-manager',{rpi_location,moment:moment});
         }) //end of 1nd query
             
