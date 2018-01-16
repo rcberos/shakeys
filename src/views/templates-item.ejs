@@ -43,6 +43,7 @@
 								<% if (temp == 'temp23') { temp = 'Upcoming Movies Portrait'} %>
 								<% if (temp == 'temp26') { temp = 'Instagram Post'} %>
 								<% if (temp == 'temp27') { temp = 'Facebook Post'} %>
+								<% if (temp == 'temp28') { temp = 'Facebook Events'} %>
 								<td><%= temp %></td>
 								<% if (item.isEnabled == 0) { %>
 									<td><input type="checkbox" id="campaign-<%= item.CampaignID %>" onchange="toggleCampaign(<%= item.CampaignID %>)" class="js-switch"></td>

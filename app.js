@@ -480,8 +480,7 @@ app.route('/aircast-location')
    }) 
 
 app.route('/add-template')
-   .get((req,res) => {
-
+   .get((req,res) => 
 
         connection.query("SELECT * FROM AircastRpiLocation; SELECT * FROM AircastCampaign; SELECT * FROM AircastRpiCampaign WHERE (Template != 'temp2' and Template != 'temp4' and Template != 'temp1') GROUP BY Template", function(error,results,body){
            rpi_location = results[0];
