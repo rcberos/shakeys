@@ -480,7 +480,7 @@ app.route('/aircast-location')
    }) 
 
 app.route('/add-template')
-   .get((req,res) => 
+   .get((req,res) => {
 
         connection.query("SELECT * FROM AircastRpiLocation; SELECT * FROM AircastCampaign; SELECT * FROM AircastRpiCampaign WHERE (Template != 'temp2' and Template != 'temp4' and Template != 'temp1') GROUP BY Template", function(error,results,body){
            rpi_location = results[0];
@@ -488,7 +488,7 @@ app.route('/add-template')
            template_list = results[2];
            res.render('add-template',{rpi_location,aircast_campaign,template_list});
         })
-   })
+   });
 
 app.route('/show-campaigns')
   .get((req,res) => {
