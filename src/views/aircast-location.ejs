@@ -20,10 +20,10 @@
 		</div>
 
 
-      <div class="col-md-7">
+
         <div id="map"></div>
-      </div>
-      <div class="col-md-5" id="aircast-sort-item">
+
+      <div id="aircast-sort-item">
         <h2 id="aircast-site-group">Site List</h2>
         <button id="sort-all" class="btn-aircast">All</button>
         <button id="sort-bpo" class="btn-aircast">BPO</button>
@@ -53,6 +53,14 @@
       	  
 
       var aircast_sites = [];
+
+
+      $(document).keyup(function(e) {
+        if (e.keyCode === 27) {
+          var modal = document.getElementById('myModal');
+          modal.style.display = "none";
+        } 
+      });
 
       $("#sort-bpo").on("click",function(){
       	$(".site-list li").show();
@@ -179,9 +187,10 @@
         markers = [];
         drop();
       }
-      function addMarkerWithTimeout(site, timeout, index) {/*
-        var marker1;
-          window.setTimeout(function() {*/
+      function addMarkerWithTimeout(site, timeout, index) {
+
+        setTimeout(function(){
+
             $("#total_counts").text(counter);
             counter++;
           var marker = new google.maps.Marker({
@@ -196,6 +205,11 @@
               });
               markers[index] = marker;
               markers.push(markers[index]);
+
+        },timeout);
+
+
+
         }
 
 
@@ -224,16 +238,16 @@
         return image_url;
       }
 
-        function placeMarker(map, location,details) {
-          var marker = new google.maps.Marker({
-                position: location,
-                map: map,
-                animation: google.maps.Animation.DROP,
-                icon: 'custom_icon.png',
-                title: position.name
-            })
+        // function placeMarker(map, location,details) {
+        //   var marker = new google.maps.Marker({
+        //         position: location,
+        //         map: map,
+        //         animation: google.maps.Animation.DROP,
+        //         icon: 'custom_icon.png',
+        //         title: position.name
+        //     })
           
-        }
+        // }
 
         function markerEvent(data) {
 
