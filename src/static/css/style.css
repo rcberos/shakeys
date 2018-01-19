@@ -260,16 +260,23 @@ textarea {
     left: 0;
     top: 0;
     height: 100vh;
-    width: 65%;
+    width: 60%;
     border: 2px solid #ffeded;
     box-shadow: 0 0 10px rgba(0,0,0,.4);
 /*    margin-bottom: 20px;
     margin-top: 20px;*/
 }
 #aircast-sort-item {
-  width: 25%;
+  width: 35%;
   margin-left: 10%;
   float: right;
+  position: relative;
+}
+
+.category-button {
+    position: absolute;
+    left: 0;
+    width: 40%;
 }
 
 #gadget-list {
@@ -282,9 +289,17 @@ textarea {
 
 
 /*aircast locator*/
+
+.site-list {
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
  .site-list-div {
-  height: 350px;
-  margin-top: 20px;
+  position: absolute;
+  right: -50px;
+  width: 75%;
+  height: 450px;
   overflow-y: scroll; 
  }
 
@@ -322,6 +337,7 @@ textarea {
     outline: none;
     border: 2px solid green;
     transition: .1s;
+    width: 100%;
  }
 
   #aircast-sort-item .btn-aircast:hover {

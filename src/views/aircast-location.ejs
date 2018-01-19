@@ -24,20 +24,20 @@
         <div id="map"></div>
 
       <div id="aircast-sort-item">
-        <h2 id="aircast-site-group">Site List</h2>
-        <button id="sort-all" class="btn-aircast">All</button>
-        <button id="sort-bpo" class="btn-aircast">BPO</button>
-        <button id="sort-food-park" class="btn-aircast">Food Park</button>
-        <button id="sort-salon" class="btn-aircast">Salon</button>
-        <button id="sort-fitness" class="btn-aircast">Fitness Center</button>
-        <button id="sort-store" class="btn-aircast">Modern Trade Support</button>
-        <button id="sort-restaurant" class="btn-aircast">Bar and Restaurant</button>
-        <button id="sort-university" class="btn-aircast">University</button>
-        <button id="sort-office" class="btn-aircast">Office</button>
+        <h2 id="aircast-site-group" class="margin-bottom-30">Site List</h2>
+        <div class="category-button">
+          <button id="sort-all" class="btn-aircast">All</button>
+          <button id="sort-bpo" class="btn-aircast">BPO</button>
+          <button id="sort-food-park" class="btn-aircast">Food Park</button>
+          <button id="sort-salon" class="btn-aircast">Salon</button>
+          <button id="sort-fitness" class="btn-aircast">Fitness Center</button>
+          <button id="sort-store" class="btn-aircast">Modern Trade Support</button>
+          <button id="sort-restaurant" class="btn-aircast">Bar and Restaurant</button>
+          <button id="sort-university" class="btn-aircast">University</button>
+          <button id="sort-office" class="btn-aircast">Office</button>
+        </div>
         <div class="site-list-div">
-          <ul class="site-list">
-          
-          </ul>  
+          <ul class="site-list"></ul>  
         </div>
       </div> 
     </div>
@@ -67,6 +67,7 @@
       	$('.site-list li').filter("li[data-category!='BPO']").hide();
       	count = sitesListCount - $('.site-list li').filter("li[data-category!='BPO']").length     
       	$("#aircast-site-group").html('BPO <small>('+count+')</small>')
+        sort('BPO');
 
       });
 
@@ -75,6 +76,7 @@
       	$('.site-list li').filter("li[data-category!='Food Park']").hide();
       	count = sitesListCount - $('.site-list li').filter("li[data-category!='Food Park']").length     
       	$("#aircast-site-group").html('Food Park <small>('+count+')</small>')
+        sort('Food Park');
       });
 
       $("#sort-salon").on("click",function(){
@@ -82,6 +84,7 @@
       	$('.site-list li').filter("li[data-category!='Salon']").hide();
       	count = sitesListCount - $('.site-list li').filter("li[data-category!='Salon']").length     
       	$("#aircast-site-group").html('Salon <small>('+count+')</small>')
+        sort('Salon');
       });
 
       $("#sort-fitness").on("click",function(){
@@ -89,6 +92,7 @@
       	$('.site-list li').filter("li[data-category!='Fitness Center']").hide();
       	count = sitesListCount - $('.site-list li').filter("li[data-category!='Fitness Center']").length     
       	$("#aircast-site-group").html('Fitness Center <small>('+count+')</small>')
+        sort('Fitness Center');
       });
 
       $("#sort-store").on("click",function(){
@@ -96,6 +100,7 @@
       	$('.site-list li').filter("li[data-category!='Modern Trade Support']").hide();
       	count = sitesListCount - $('.site-list li').filter("li[data-category!='Modern Trade Support']").length     
       	$("#aircast-site-group").html('Modern Trade Support <small>('+count+')</small>')
+        sort('Modern Trade Support');
       });
 
       $("#sort-restaurant").on("click",function(){
@@ -103,6 +108,7 @@
       	$('.site-list li').filter("li[data-category!='Bar and Restaurant']").hide();
       	count = sitesListCount - $('.site-list li').filter("li[data-category!='Bar and Restaurant']").length     
       	$("#aircast-site-group").html('Bar and Restaurant <small>('+count+')</small>')
+        sort('Bar and Restaurant');
       });
 
       $("#sort-university").on("click",function(){
@@ -110,6 +116,7 @@
       	$('.site-list li').filter("li[data-category!='University']").hide();
       	count = sitesListCount - $('.site-list li').filter("li[data-category!='University']").length     
       	$("#aircast-site-group").html('University <small>('+count+')</small>')
+        sort('University');
       });
 
       $("#sort-office").on("click",function(){
@@ -117,12 +124,30 @@
       	$('.site-list li').filter("li[data-category!='Office']").hide();
       	count = sitesListCount - $('.site-list li').filter("li[data-category!='Office']").length     
       	$("#aircast-site-group").html('Office <small>('+count+')</small>')
+        sort('Office');
       });
 
       $("#sort-all").on("click",function(){
       	$(".site-list li").show();   
       	$("#aircast-site-group").html('Aircast Sites <small>('+sitesListCount+')</small>')
+        sort('all');
       });
+
+
+
+      function sort(category) {
+        for (var i = 0; i < markers.length; i++) {
+
+          if (category == 'all') {
+            markers[i].setVisible(true);
+          }else if (markers[i].category == category) {
+            markers[i].setVisible(true);
+          } else {
+            markers[i].setVisible(false);
+          }
+        }
+
+      }
 
 
 
@@ -173,7 +198,7 @@
       function drop() {
           for (var i = 0; i < aircast_sites.length; i++) {
             //alert(aircast_sites.length);
-            addMarkerWithTimeout(aircast_sites[i], i * 100);
+            addMarkerWithTimeout(aircast_sites[i], i * 70);
             $(".site-list").append('<li class="marker-link" onclick="markerEvent(this)" data-markerid="' + i +'" data-category="'+aircast_sites[i].Category+'">'+aircast_sites[i].Room+'</li>');
           }
           sitesListCount = $(".site-list li").length;
@@ -198,7 +223,9 @@
             map: map,
             animation: google.maps.Animation.DROP,
             icon: 'img/custom_icon.png',
-            title: site.Room
+            title: site.Room,
+            area: site.Area,
+            category: site.Category
           });
           google.maps.event.addListener(marker, 'click', function(event) {
               clickMarker(marker, site);
@@ -207,8 +234,6 @@
               markers.push(markers[index]);
 
         },timeout);
-
-
 
         }
 
@@ -237,17 +262,6 @@
         }
         return image_url;
       }
-
-        // function placeMarker(map, location,details) {
-        //   var marker = new google.maps.Marker({
-        //         position: location,
-        //         map: map,
-        //         animation: google.maps.Animation.DROP,
-        //         icon: 'custom_icon.png',
-        //         title: position.name
-        //     })
-          
-        // }
 
         function markerEvent(data) {
 
