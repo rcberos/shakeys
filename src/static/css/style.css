@@ -7,15 +7,6 @@ body {
     text-align: center;
 }
 
-#report-graph {
-  display: flex;
-  flex: 1;
-  flex-wrap: wrap;
-}
-
-.aircast-frame {
-  width: 300px;
-}
 
 .margin-10 {
   margin: 10px;
@@ -59,6 +50,22 @@ body {
 .radius-0 {
   border-radius: 0;
 }
+
+
+#report-graph {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+}
+
+.aircast-frame {
+  width: 300px;
+}
+
+/*==========================
+        TEMPLATES
+==========================*/
+
 
 .add {
   text-decoration: none; 
@@ -418,6 +425,28 @@ textarea {
 
 /* 100% Image Width on Smaller Screens */
 @media only screen and (max-width: 700px){
+    
+    #map {
+      height: 50vh;
+      width: 100%;
+      position: relative;
+    }
+
+    #aircast-sort-item {
+      width: 100%;
+    }
+
+    .site-list-div {
+      position: unset;
+      width: auto;
+      height: 250px;
+
+    }
+    .category-button {
+      position: unset;
+      float: left;
+    }
+
     .modal-content {
         width: 100%;
     }
