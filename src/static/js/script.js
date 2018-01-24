@@ -197,7 +197,7 @@
       if (status == 'true') {
         toastr.warning('Campaign is currently active. Disable it first to delete the campaign.');
       }else {
-        $(data).html('<img src="/img/trash-confirm.png" onclick="deleteItem('+campaign_id_to_delete[1]+')">');
+        $(data).html('<img src="/img/trash-confirm.png" class="trash-image" onclick="deleteItem('+campaign_id_to_delete[1]+')">');
         $(data).parent().parent().css('background-color','#dfdfdf');  
       }
       

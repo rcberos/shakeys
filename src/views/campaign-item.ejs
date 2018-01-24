@@ -54,25 +54,25 @@
 									<% if (temp == 'Template') {%>
 									<% template_count++; %>
 										<%if (template_name == 'AircastRestaurant') { %>
-											<td><a href="https://aircast-templates.herokuapp.com/restaurant" target="_blank"><button>preview campaign</button></td>
+											<td><a href="https://aircast-templates.herokuapp.com/restaurant" target="_blank"><button>preview</button></td>
 										<% } else if (template_name == 'AircastNews') { %>
-											<td><a href="https://aircast-templates.herokuapp.com/news" target="_blank"><button>preview campaign</button></td>
+											<td><a href="https://aircast-templates.herokuapp.com/news" target="_blank"><button>preview</button></td>
 										<% } else if (template_name == 'AircastWeather') { %>
-											<td><a href="https://aircast-templates.herokuapp.com/weather" target="_blank"><button>preview campaign</button></td>
+											<td><a href="https://aircast-templates.herokuapp.com/weather" target="_blank"><button>preview</button></td>
 										<% } else if (template_name == 'AircastCurrency') { %>
-											<td><a href="https://aircast-templates.herokuapp.com/currency" target="_blank"><button>preview campaign</button></td>
+											<td><a href="https://aircast-templates.herokuapp.com/currency" target="_blank"><button>preview</button></td>
 										<% } else if (template_name == 'AircastTwitter') { %>
-											<td><a href="https://aircast-templates.herokuapp.com/twitter" target="_blank"><button>preview campaign</button></td>
+											<td><a href="https://aircast-templates.herokuapp.com/twitter" target="_blank"><button>preview</button></td>
 										<% } else if (template_name == 'AircastHugot') { %>
-											<td><a href="https://aircast-templates.herokuapp.com/hugot" target="_blank"><button>preview campaign</button></td>
+											<td><a href="https://aircast-templates.herokuapp.com/hugot" target="_blank"><button>preview</button></td>
 										<% } else if (template_name == 'AircastUpcomingMovies') { %>
-											<td><a href="https://aircast-templates.herokuapp.com/upcoming-movies" target="_blank"><button>preview campaign</button></td>
+											<td><a href="https://aircast-templates.herokuapp.com/upcoming-movies" target="_blank"><button>preview</button></td>
 										<% } else if (template_name == 'Instagram Post') { %>
-											<td><a href="https://aircast-templates.herokuapp.com/instagram-post" target="_blank"><button>preview campaign</button></td>
+											<td><a href="https://aircast-templates.herokuapp.com/instagram-post" target="_blank"><button>preview</button></td>
 										<% } else if (template_name == 'Facebook Posts') { %>
-											<td><a href="https://aircast-templates.herokuapp.com/facebook-post" target="_blank"><button>preview campaign</button></td>
+											<td><a href="https://aircast-templates.herokuapp.com/facebook-post" target="_blank"><button>preview</button></td>
 										<% } else { %>
-											<td>no preview available</button></td>
+											<td><button disabled="disabled">x</button></td>
 										<% } %>
 									<% break; } %>
 									<% if (campaign.CampaignID == campaign_files[i].CampaignID) {  %>
@@ -84,7 +84,7 @@
 										<% } %>
 
 										<% if (temp != 'Template') { %>
-											<td><button data-type="<%= temp %>" data-link="https://s3-ap-southeast-1.amazonaws.com/rpitv/Aircast/<%= campaign_files[i].FileName %>" onclick='previewCampaign(this)'>preview campaign</button></td>
+											<td><button data-type="<%= temp %>" data-link="https://s3-ap-southeast-1.amazonaws.com/rpitv/Aircast/<%= campaign_files[i].FileName %>" onclick='previewCampaign(this)'>preview</button></td>
 										<% } %>
 										
 									<% } %>

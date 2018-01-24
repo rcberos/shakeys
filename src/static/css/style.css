@@ -780,7 +780,6 @@ textarea {
     margin-left: 20px;
 }
 
-@media (min-width: 1200px) {
-.container {
-    width: 1270px;
+.trash-image {
+  width: 20px !important;
 }
