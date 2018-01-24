@@ -59,7 +59,7 @@ body {
 }
 
 .aircast-frame {
-  width: 450px;
+  width: 450px !important;
   margin-top: 30px;
 }
 
