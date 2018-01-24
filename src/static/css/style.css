@@ -158,6 +158,12 @@ textarea {
     resize: none;
 }
 
+.status-icon {
+    width: 10px;
+    margin-right: 5px;
+}
+
+
 .site_preview {
 	height: 300px;
 	overflow-y: scroll !important;
@@ -771,4 +777,9 @@ textarea {
     border: 2px dashed black;
     box-shadow: 2px 2px 10px rgba(0,0,0,.2);
     margin-left: 20px;
+}
+
+@media (min-width: 1200px) {
+.container {
+    width: 1270px;
 }

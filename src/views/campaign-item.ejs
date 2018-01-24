@@ -40,6 +40,11 @@
 										<% } else if (temp == 'temp2') { temp = 'Video' %>
 										<% } else { temp = 'Template' } %>
 										<td><%= temp %></td>
+										<% if (campaign.isReady == 0) { %>
+											<td><img src="/img/icon-not-ready.png" class="status-icon"><%= aircast_campaign[i].CampaignName %></td>
+										<% }else { %>
+											<td><img src="/img/icon-ready.png" class="status-icon"><%= aircast_campaign[i].CampaignName %></td>
+										<% } %>
 										<td><%= aircast_campaign[i].CampaignName %></td>
 										<% template_name = aircast_campaign[i].CampaignName %>
 									<% } %>
