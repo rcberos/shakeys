@@ -2,7 +2,7 @@
 <% include ./partials/navigation %>
 
 	<div class="container">
-		<div class="col-md-7">
+		<div class="col-md-8">
 			<% var orientation; %>
 			<% rpi_location.forEach(function(item){ %>
 				<% if (item.RpiID == ID) { %>
@@ -112,7 +112,7 @@
 
 			<a href="/show-campaigns" class="btn btn-primary">Go back</a> 
 		</div>
-		<div class="col-md-5" style="position: relative;">
+		<div class="col-md-4" style="position: relative;">
 			<button id="toggle-campaign" class="btn btn-primary">Show only active campaigns</button>
 			<button id="show-stats" class="btn btn-success">Show Stats</button>
 			<div id="aircast-preview-first">
