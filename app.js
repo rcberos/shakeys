@@ -18,6 +18,7 @@ var site_data,
     rpi_location,
     template_list;
 
+
 var aircast_portrait = [3,60,61];
 var aircast_portrait_template = ['temp17','temp18','temp19','temp20','temp22','temp23','temp24','temp25'];
 
@@ -61,7 +62,7 @@ app.use(express.static(__dirname+'/src/static'));
 app.use(bodyParser.urlencoded({ extended: false }))
  
 // parse application/json
-app.use(bodyParser.json())
+app.use(bodyParser.json());
 
 app.use(cors());
 app.use(function (req, res, next) {
