@@ -52,24 +52,26 @@
 								<% for (var i = 0; i < campaign_files.length; i++) { %>
 									<% if (temp == 'Template') {%>
 									<% template_count++; %>
-										<%if (template_name == 'AircastRestaurant') { %>
-											<td><a href="https://aircast-templates.herokuapp.com/restaurant" target="_blank"><button>preview</button></td>
-										<% } else if (template_name == 'AircastNews') { %>
-											<td><a href="https://aircast-templates.herokuapp.com/news" target="_blank"><button>preview</button></td>
-										<% } else if (template_name == 'AircastWeather') { %>
-											<td><a href="https://aircast-templates.herokuapp.com/weather" target="_blank"><button>preview</button></td>
-										<% } else if (template_name == 'AircastCurrency') { %>
-											<td><a href="https://aircast-templates.herokuapp.com/currency" target="_blank"><button>preview</button></td>
-										<% } else if (template_name == 'AircastTwitter') { %>
-											<td><a href="https://aircast-templates.herokuapp.com/twitter" target="_blank"><button>preview</button></td>
-										<% } else if (template_name == 'AircastHugot') { %>
-											<td><a href="https://aircast-templates.herokuapp.com/hugot" target="_blank"><button>preview</button></td>
-										<% } else if (template_name == 'AircastUpcomingMovies') { %>
-											<td><a href="https://aircast-templates.herokuapp.com/upcoming-movies" target="_blank"><button>preview</button></td>
+										<%if (template_name == 'AircastRestaurant' || template_name == 'AircastRestoPortrait') { %>
+											<td><button data-type="Image" data-link="https://s3-ap-southeast-1.amazonaws.com/rpitv/Template-preview/aircast-nearby-restaurant.png" onclick='previewCampaign(this)'>preview</button></td>
+										<% } else if (template_name == 'AircastNews' || template_name == 'AircastNewsPortrait') { %>
+											<td><button data-type="Image" data-link="https://s3-ap-southeast-1.amazonaws.com/rpitv/Template-preview/aircast-news.png" onclick='previewCampaign(this)'>preview</button></td>
+										<% } else if (template_name == 'AircastWeather' || template_name == 'AircastWeatherPortrait') { %>
+											<td><button data-type="Image" data-link="https://s3-ap-southeast-1.amazonaws.com/rpitv/Template-preview/aircast-weather.png" onclick='previewCampaign(this)'>preview</button></td>
+										<% } else if (template_name == 'AircastCurrency' || template_name == 'AircastCurrencyPortrait') { %>
+											<td><button data-type="Image" data-link="https://s3-ap-southeast-1.amazonaws.com/rpitv/Template-preview/aircast-currency.png" onclick='previewCampaign(this)'>preview</button></td>
+										<% } else if (template_name == 'AircastTwitter' || template_name == 'AircastTwitterPortrait') { %>
+											<td><button data-type="Image" data-link="https://s3-ap-southeast-1.amazonaws.com/rpitv/Template-preview/aircast-twitter.png" onclick='previewCampaign(this)'>preview</button></td>
+										<% } else if (template_name == 'AircastHugot' || template_name == 'AircastHugotPortrait') { %>
+											<td><button data-type="Image" data-link="https://s3-ap-southeast-1.amazonaws.com/rpitv/Template-preview/aircast-hugot.png" onclick='previewCampaign(this)'>preview</button></td>
+										<% } else if (template_name == 'AircastUpcomingMovies' || template_name == 'AircastUpcomingMoviesPortrait') { %>
+											<td><button data-type="Image" data-link="https://s3-ap-southeast-1.amazonaws.com/rpitv/Template-preview/aircast-upcoming-movies.png" onclick='previewCampaign(this)'>preview</button></td>
 										<% } else if (template_name == 'Instagram Post') { %>
-											<td><a href="https://aircast-templates.herokuapp.com/instagram-post" target="_blank"><button>preview</button></td>
+											<td><button data-type="Image" data-link="https://s3-ap-southeast-1.amazonaws.com/rpitv/Template-preview/aircast-instagram.png" onclick='previewCampaign(this)'>preview</button></td>
 										<% } else if (template_name == 'Facebook Posts') { %>
-											<td><a href="https://aircast-templates.herokuapp.com/facebook-post" target="_blank"><button>preview</button></td>
+											<td><button data-type="Image" data-link="https://s3-ap-southeast-1.amazonaws.com/rpitv/Template-preview/aircast-facebook-post.png" onclick='previewCampaign(this)'>preview</button></td>
+										<% } else if (template_name == 'Facebook Events') { %>
+											<td><button data-type="Image" data-link="https://s3-ap-southeast-1.amazonaws.com/rpitv/Template-preview/aircast-facebook-events.png" onclick='previewCampaign(this)'>preview</button></td>
 										<% } else { %>
 											<td><button disabled="disabled">x</button></td>
 										<% } %>

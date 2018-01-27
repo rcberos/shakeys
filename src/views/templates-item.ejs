@@ -18,6 +18,7 @@
 				
 			<table class="table table-hover table-striped">
 				<thead>
+					<th>CampaignID</th>
 					<th>Template</th>
 					<th>isEnabled</th>
 					<th>Paramater</th>
@@ -27,24 +28,15 @@
 					<% rpi_campaign.forEach(function(item){ %>
 						<tr><% if (ID == item.RpiID ) { %>
 								<% var temp = item.Template; var param; var hasData = false; %>
-								<% if (temp == 'temp10') { temp = 'News'} %>
-								<% if (temp == 'temp11') { temp = 'Nearby Restaurant'} %>
-								<% if (temp == 'temp12') { temp = 'Weather'} %>
-								<% if (temp == 'temp13') { temp = 'Currency'} %>
-								<% if (temp == 'temp14') { temp = 'Twitter'} %>
-								<% if (temp == 'temp15') { temp = 'Hugot'} %>
-								<% if (temp == 'temp16') { temp = 'Upcoming Movies'} %>
-								<% if (temp == 'temp17') { temp = 'News'} %>
-								<% if (temp == 'temp18') { temp = 'Weather Portrait'} %>
-								<% if (temp == 'temp19') { temp = 'Currency Portrait'} %>
-								<% if (temp == 'temp20') { temp = 'Twitter Portrait'} %>
-								<% if (temp == 'temp22') { temp = 'Hugot Portrait'} %>
-								<% if (temp == 'temp23') { temp = 'Restaurant Portrait'} %>
-								<% if (temp == 'temp23') { temp = 'Upcoming Movies Portrait'} %>
-								<% if (temp == 'temp26') { temp = 'Instagram Post'} %>
-								<% if (temp == 'temp27') { temp = 'Facebook Post'} %>
-								<% if (temp == 'temp28') { temp = 'Facebook Events'} %>
-								<td><%= temp %></td>
+								<td><span class="badge"> <%= item.CampaignID %> </span></td>
+								<% for (var i = 0; i < aircast_campaign.length; i++) { %>
+									<% if (item.CampaignID == aircast_campaign[i].CampaignID) { %>
+										<td><%= aircast_campaign[i].CampaignName %></td>
+										<%break; %>		
+									<% } %>
+								<% } %>
+
+								
 								<% if (item.isEnabled == 0) { %>
 									<td><input type="checkbox" id="campaign-<%= item.CampaignID %>" onchange="toggleCampaign(<%= item.CampaignID %>)" class="js-switch"></td>
 								<% } else { %>
