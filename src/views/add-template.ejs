@@ -314,12 +314,30 @@
 				$(this).html("Don't forget to add the parameter");
 			}).slideDown();
 		}else {	
+
+				swal({
+		          title: 'Inserting, Please wait...',
+		          text: 'this will only take a few seconds',
+		          timer: 5000,
+		          onOpen: () => {
+		            swal.showLoading()
+		          }
+		        }).then((result) => {
+		          if (result.dismiss === 'timer') {
+		                  $("#message-to-all").val('');  
+		                  swal(
+		                    'Successfully Added!',
+		                    '',
+		                    'success'
+		                  )
+		          }
+		        })
 				
 				$.ajax({
 					url: '/add-template-all/'+perAllCampaign+'/'+perAllTemplate+'/'+perAllStatus+'/'+perAllParameter,
 					success: function(data){
 						console.log('data',data);
-						if (data.success) {
+						if (data.success == true || data.success) {
 
 							$("#per-tv-parameter").val('');
 							$('#per-tv-template').prop('selectedIndex',0);

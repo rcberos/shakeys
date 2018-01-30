@@ -261,8 +261,8 @@ app.get('/add-template-all/:campaign_id/:temp_name/:status',(req,res) => {
           }
 
         })
-
-          addTemplateToCampaign();
+          console.log(id_to_add_template);
+          //addTemplateToCampaign();
 
 
       });
@@ -326,21 +326,14 @@ app.get('/add-template-all/:campaign_name/:temp_name/:status/:parameter',(req,re
             tv_orientation = 'landscape';
           }
 
-          for (var i = 0; i < all_rpi_campaign.length; i++) {
-            if (item.RpiID == all_rpi_campaign[i].RpiID &&  all_rpi_campaign[i].Template  == temp_name) {
-              console.log(`match: ${item.RpiID} : item: ${all_rpi_campaign[i].Template}`);
-              hasTemplate = true;
-              break;
-            }
-          }
-
-          if (!hasTemplate && orientation == tv_orientation) {
+          if (orientation == tv_orientation) {
             id_to_add_template.push(item.RpiID);
           }
 
         })
 
-          // addCampaignParameter();
+
+          addCampaignParameter();
 
       });
 
@@ -360,8 +353,9 @@ app.get('/add-template-all/:campaign_name/:temp_name/:status/:parameter',(req,re
         }
 
         function addAircastCampaign() {
-          connection.query("SELECT * FROM AircastCampaign WHERE Template = ? GROUP BY CampaignID LIMIT ?", [temp_name,id_to_add_template.length],function(error,results,body){
+          connection.query("SELECT * FROM AircastCampaign WHERE Template = ? GROUP BY CampaignID ORDER BY CampaignID DESC LIMIT ?", [temp_name,id_to_add_template.length],function(error,results,body){
               recent_campaign_id_list = results;
+              //console.log(recent_campaign_id_list);
               addCampaignFiles();
           });
 
@@ -370,12 +364,19 @@ app.get('/add-template-all/:campaign_name/:temp_name/:status/:parameter',(req,re
         function addCampaignFiles(){
           var ctr = 0;
           recent_campaign_id_list.forEach(function(item){
-            let x = [item.CampaignID,'source',parameter];
-            let y = [id_to_add_template[ctr],item.CampaignID,temp_name,1,status,1];
+            var x = [item.CampaignID,'source',parameter];
+            var y = [id_to_add_template[ctr],item.CampaignID,temp_name,1,status,1];
             campaign_files_toInsert.push(x);
             aircast_rpi_campaign_toInsert.push(y);
             ctr++;
           })
+
+          connection.query('INSERT INTO AircastCampaignFiles (CampaignID,FileType,FileName) VALUES ?',[campaign_files_toInsert],(error,results,body) => {
+            console.log(results);
+          })
+          connection.query("INSERT INTO AircastRpiCampaign (RpiID,CampaignID,Template,isReady,isEnabled,isPriority) VALUES ?",[aircast_rpi_campaign_toInsert],(error,results,body) => {
+            console.log(results);
+          });
 
           res.send({success: true});  
         
