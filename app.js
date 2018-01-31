@@ -464,6 +464,11 @@ app.get('/add-template-one/:id/:campaign/:template/:status/:parameter',function(
 
 })
 
+app.route('/fb-search')
+   .get((req,res) => {
+      res.render("fb-search");  
+   }) 
+
 app.get('/aircast-gallery',(req,res)=>{
   res.render('aircast-gallery');
 })
