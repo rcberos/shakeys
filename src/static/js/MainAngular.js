@@ -71,6 +71,7 @@ app.controller('MainController', function($scope, $http, $timeout, $interval, $w
 	}
 
 	$scope.search_page = function(){
+		$scope.page_name = document.getElementById('page_name').value;
 		console.log($scope.page_name);
 		if(!$scope.$$phase) {
 			$scope.$apply();
