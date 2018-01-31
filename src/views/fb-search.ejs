@@ -2,5 +2,7 @@
 	Page Name: <input type="text" ng-model="page_name" id="page_name"> <button ng-click="search_page()">Search</button>
 </div>
 <div class="container">
-	
+	<div class="row" ng-repeat="post in FB_Posts">
+		{{post.message}}
+	</div>
 </div>
