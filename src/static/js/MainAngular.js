@@ -54,7 +54,7 @@ app.controller('MainController', function($scope, $http, $timeout, $interval, $w
 
 	                $scope.FB_Name = response.name;
 	                $scope.FB_Picture = response.picture.data.url;
-	                $scope.currentTemp = "/aircast-gallery";
+	                $scope.currentTemp = "/fb-search";
 	                if(!$scope.$$phase) {
 						$scope.$apply();
 					}
