@@ -5,7 +5,7 @@ app.controller('MainController', function($scope, $http, $timeout, $interval, $w
 	    FB.init({
 	      appId      : '1567078173606071',
 	      xfbml      : true,
-	      version    : 'v2.9'
+	      version    : 'v2.12'
 	    });
 	    FB.getLoginStatus(function(response) {
 	    	console.log(response);
@@ -39,13 +39,14 @@ app.controller('MainController', function($scope, $http, $timeout, $interval, $w
 
 
 
-	$scope.Blaster = "YYYYY";
+	$scope.page_name = "";
 
 	$scope.fb_login = function(){
 		FB.login(function(response) {
 	        console.log(response);
 			if (response.status === 'connected') {
 				$scope.is_logged_in = 1;
+				$scope.FB_Token = response.authResponse.accessToken;
 				if(!$scope.$$phase) {
 					$scope.$apply();
 				}
@@ -67,6 +68,13 @@ app.controller('MainController', function($scope, $http, $timeout, $interval, $w
 	    		
 	    	}
 		}, {scope: 'email'});
+	}
+
+	$scope.search_page = function(){
+		var url = "https://graph.facebook.com/v2.12/"+$scope.page_name+"posts?fields=id,picture,message&access_token="+$scope.FB_Token;
+		$http.get(url).then(function(response){
+			console.log(response);
+		})
 	}
 });
 
