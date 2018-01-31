@@ -70,7 +70,7 @@ app.controller('MainController', function($scope, $http, $timeout, $interval, $w
 
 					
 				// });
-				console.log(fb_info);
+				// console.log(fb_info);
 	    		
 	    	} else if (response.status === 'not_authorized') {
 	    		
