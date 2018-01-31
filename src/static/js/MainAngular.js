@@ -11,6 +11,7 @@ app.controller('MainController', function($scope, $http, $timeout, $interval, $w
 		FB.login(function(response) {
 	        console.log(response);
 			if (response.status === 'connected') {
+				$scope.is_logged_in = 1;
 				// console.log(response);
 
 	            fb_info.is_logged_in = 1;
