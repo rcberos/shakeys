@@ -12,6 +12,9 @@ app.controller('MainController', function($scope, $http, $timeout, $interval, $w
 	        console.log(response);
 			if (response.status === 'connected') {
 				$scope.is_logged_in = 1;
+				if(!$scope.$$phase) {
+					$scope.$apply();
+				}
 				console.log($scope.is_logged_in);
 				// console.log(response);
 
