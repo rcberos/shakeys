@@ -71,6 +71,11 @@ app.controller('MainController', function($scope, $http, $timeout, $interval, $w
 	}
 
 	$scope.search_page = function(){
+		console.log($scope.page_name);
+		if(!$scope.$$phase) {
+			$scope.$apply();
+		}
+		console.log($scope.page_name);
 		var url = "https://graph.facebook.com/v2.12/"+$scope.page_name+"posts?fields=id,picture,message&access_token="+$scope.FB_Token;
 		$http.get(url).then(function(response){
 			console.log(response);
