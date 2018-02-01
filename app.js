@@ -469,6 +469,11 @@ app.route('/fb-search')
       res.render("fb-search");  
    }) 
 
+app.route('/fb-search')
+   .get((req,res) => {
+      res.render("fb-post");  
+   }) 
+
 app.get('/aircast-gallery',(req,res)=>{
   res.render('aircast-gallery');
 })
