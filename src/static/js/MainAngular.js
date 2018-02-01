@@ -12,12 +12,20 @@ app.controller('MainController', function($scope, $http, $timeout, $interval, $w
 	    	if (response.status === 'connected') {
 
 
-	    		FB.api('/me', 'GET', {fields: 'name,picture.height(100).width(100)'}, function(response) {
+	    		$scope.is_logged_in = 1;
+				$scope.FB_Token = response.authResponse.accessToken;
+				if(!$scope.$$phase) {
+					$scope.$apply();
+				}
+				console.log($scope.is_logged_in);
+				FB.api('/me', 'GET', {fields: 'name,picture.height(100).width(100)'}, function(response) {
 
-	                fb_info.name = response.name;
-	                fb_info.picture = response.picture.data.url;
-	                console.log(fb_info);
-
+	                $scope.FB_Name = response.name;
+	                $scope.FB_Picture = response.picture.data.url;
+	                $scope.currentTemp = "/fb-search";
+	                if(!$scope.$$phase) {
+						$scope.$apply();
+					}
 				});
 	    		
 
