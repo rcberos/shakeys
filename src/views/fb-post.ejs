@@ -1,14 +1,16 @@
-<div class="container">
-	<div class="row" ng-repeat="post in FB_Posts" height="300">
-		<div class="col-md-3" >
+<table>
+	<tr ng-repeat="post in FB_Posts">
+		<td>
 			<image src="{{post.picture}}" heigh="200">
-		</div>
-		<div class="col-md-3" >
+		</td>
+		<td>
 			{{post.message}}
-		</div>
-		<div class="col-md-3" >
+		</td>
+		<td>
 
-		</div>
-		
-	</div>
-</div>
+		</td>
+	</tr>
+</table>
+
+
+
