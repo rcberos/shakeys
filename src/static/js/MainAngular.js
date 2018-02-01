@@ -79,7 +79,7 @@ app.controller('MainController', function($scope, $http, $timeout, $interval, $w
 	}
 
 	$scope.search_page = function(){
-		$scope.currentTemp = "/fb-post";
+		$scope.currentBottom = "/fb-post";
         if(!$scope.$$phase) {
 			$scope.$apply();
 		}

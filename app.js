@@ -469,7 +469,7 @@ app.route('/fb-search')
       res.render("fb-search");  
    }) 
 
-app.route('/fb-search')
+app.route('/fb-post')
    .get((req,res) => {
       res.render("fb-post");  
    }) 
