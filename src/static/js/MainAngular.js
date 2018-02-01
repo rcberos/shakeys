@@ -97,7 +97,7 @@ app.controller('MainController', function($scope, $http, $timeout, $interval, $w
 		})
 	}
 
-	$scope.get_comment(post_id){
+	$scope.get_comment = function(post_id){
 		$scope.currentBottom = "/fb-comment";
         if(!$scope.$$phase) {
 			$scope.$apply();
