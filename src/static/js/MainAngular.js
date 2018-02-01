@@ -102,12 +102,12 @@ app.controller('MainController', function($scope, $http, $timeout, $interval, $w
         if(!$scope.$$phase) {
 			$scope.$apply();
 		}
-		var url = "https://graph.facebook.com/v2.12/"+post_id+"?fields=id,picture,message&access_token="+$scope.FB_Token;
+		// var url = "https://graph.facebook.com/v2.12/"+post_id+"?fields=id,picture,message&access_token="+$scope.FB_Token;
 		var url = "https://graph.facebook.com/v2.12/"+post_id+"/comments?fields=id,message,from{name,id,picture},comments{id,message,from{picture,id,name}}&access_token="+$scope.FB_Token;
 		$http.get(url).then(function(response){
 			console.log(response);
 			$scope.FB_Comments = response.data.data;
-		})
+		});
 	}
 });
 
