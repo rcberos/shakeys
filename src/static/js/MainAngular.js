@@ -8,21 +8,9 @@ app.controller('MainController', function($scope, $http, $timeout, $interval, $w
 		$http.get(url).then(function(response){
 			console.log(response);
 			$scope.FB_Accounts = response.data.data;
-			
+
 			// $scope.FB_Comments = response.data.data;
 		});
-
-		// FB.api(
-	 //        "/me/accounts",
-	 //        "GET",
-	 //        function (response) {
-	 //            console.log(response);
-	 //          if (response && !response.error) {
-	 //            /* handle the result */
-	 //            console.log('error');
-	 //          }
-	 //        }
-	 //    );
 	}
 
 	window.fbAsyncInit = function() {
@@ -103,6 +91,21 @@ app.controller('MainController', function($scope, $http, $timeout, $interval, $w
 	    	}
 		}, {scope: 'email'});
 	}
+
+	$scope.get_page = function(page_id, token){
+		$scope.currentTemp = "/fb-post";
+        if(!$scope.$$phase) {
+			$scope.$apply();
+		}
+
+		var url = "https://graph.facebook.com/v2.10/"+page_id+"/posts?fields=id,picture,message&access_token="+token;
+		$http.get(url).then(function(response){
+			console.log(response);
+			$scope.FB_Posts = response.data.data;
+		})
+
+	}
+
 
 	$scope.search_page = function(){
 		$scope.currentBottom = "/fb-post";

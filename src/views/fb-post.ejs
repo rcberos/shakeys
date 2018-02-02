@@ -1,16 +1,22 @@
-<table border=1>
-	<tr ng-repeat="post in FB_Posts">
-		<td>
-			<image src="{{post.picture}}" heigh="200">
-		</td>
-		<td>
-			{{post.message}}
-		</td>
-		<td>
-			<button class="btn btn-primary" ng-click="get_comment(post.id)">Get Comments</button>
-		</td>
-	</tr>
+
+<table class="table table-hover table-striped">
+	<thead>
+		<th>Picture</th>
+		<th>Message</th>
+		<th>Button</th>
+	</thead>
+	<tbody>
+		<tr ng-repeat="post in FB_Posts">
+			<td>
+				<image src="{{post.picture}}" heigh="200">
+			</td>
+			<td>
+				{{post.message}}
+			</td>
+			<td>
+				<button class="btn btn-primary" ng-click="get_comment(post.id)">Get Comments</button>
+			</td>
+		</tr>
+
+	</tbody>
 </table>
-
-
-
