@@ -6,7 +6,7 @@ app.controller('MainController', function($scope, $http, $timeout, $interval, $w
 	for(var i=0;i<blaster.length; i++){
 		console.log(blaster[i]);
 		if(i==2){
-			array.splice(i, 1);
+			blaster.splice(i, 1);
 		}
 	}
 
