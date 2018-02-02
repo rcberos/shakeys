@@ -1,22 +1,29 @@
-<table class="table table-hover table-striped">
-	<thead>
-		<th>FROM</th>
-		<th>Comment</th>
-		<th>Replies</th>
-	</thead>
-	<tbody>
-		<tr ng-repeat-start="comment in FB_Comments">
-			<td>
-				<image src="{{comment.from.picture.data.url}}" >{{comment.from.name}}
-			</td>
-			<td>
-				{{comment.message}}
-			</td>
-			<td>
-				asd
-			</td>
-		</tr>
-		<tr ng-repeat-end>
+<div class="container">
+	<div class="row"> 
+		<div class="col-md-7">
+			<table class="table table-hover table-striped">
+				<thead>
+					<th>FROM</th>
+					<th>Comment</th>
+					<th>Replies</th>
+				</thead>
+				<tbody>
+					<tr ng-repeat-start="comment in FB_Comments">
+						<td>
+							<image src="{{comment.from.picture.data.url}}" >{{comment.from.name}}
+						</td>
+						<td>
+							{{comment.message}}
+						</td>
+						<td>
+							asd
+						</td>
+					</tr>
+					
+				</tbody>
+			</table>
+		</div>
+		<div class="col-md-5" ng-show="showReplies">
 			<table class="table table-hover table-striped">
 				<tr>
 					<td>
@@ -26,7 +33,7 @@
 						Reply
 					</td>
 				<tr>
-				<tr ng-repeat="reply in comment.comments.data">
+				<tr ng-repeat="reply in commentReply">
 					<td>
 						<image src="{{reply.from.picture.data.url}}" >{{reply.from.name}}
 					</td>
@@ -35,6 +42,7 @@
 					</td>
 				</tr>
 			</table>
-		</tr>
-	</tbody>
-</table>
+		</div>
+	</div>
+</div>
+
