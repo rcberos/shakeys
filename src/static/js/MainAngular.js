@@ -181,7 +181,7 @@ app.controller('MainController', function($scope, $http, $timeout, $interval, $w
 		}
 
 		$scope.FB_ShowComments = [];
-		
+
 		for(var i=0; i<$scope.FB_Comments.length; i++){
 			
 			console.log($scope.FB_Comments[i].message);
@@ -192,6 +192,7 @@ app.controller('MainController', function($scope, $http, $timeout, $interval, $w
 				var n = $scope.FB_Comments[i].message.search($scope.filter_words[j]);
 				if(n>=0){
 					$scope.FB_ShowComments.push($scope.FB_Comments[i]);
+					break;
 				}
 			}
 		}
