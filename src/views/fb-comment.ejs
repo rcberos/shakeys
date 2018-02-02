@@ -37,7 +37,7 @@
 					<th>Replies</th>
 				</thead>
 				<tbody>
-					<tr ng-repeat="comment in FB_Comments | filter:myFilter">
+					<tr ng-repeat="comment in FB_Comments">
 						<td>
 							<image src="{{comment.from.picture.data.url}}" >{{comment.from.name}}
 						</td>
