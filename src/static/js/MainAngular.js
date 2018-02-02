@@ -176,7 +176,8 @@ app.controller('MainController', function($scope, $http, $timeout, $interval, $w
 			// $scope.FB_Comments = response.data.data;
 			$scope.FB_Comments.push(response.data.data);
 			if (angular.isDefined(response.data.paging.next)) {
-			  scan_comments(response.data.paging.next);
+				console.log(response.data.paging.next);
+			  // scan_comments(response.data.paging.next);
 			}
 		});
 	}
