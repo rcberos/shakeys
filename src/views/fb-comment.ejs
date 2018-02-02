@@ -1,41 +1,37 @@
-<table border = 1>
-	<tr>
-		<td>
-			FROM
-		</td>
-		<td>
-			Comment
-		</td>
-		<td>
-			Replies
-		</td>
-	<tr>
-	<tr ng-repeat="comment in FB_Comments">
-		<td>
-			<image src="{{comment.from.picture.data.url}}" >{{comment.from.name}}
-		</td>
-		<td>
-			{{comment.message}}
-		</td>
-		<td>
-			<table border=1>
-				<tr>
-					<td>
-						FROM
-					</td>
-					<td>
-						Reply
-					</td>
-				<tr>
-				<tr ng-repeat="reply in comment.comments.data">
-					<td>
-						<image src="{{reply.from.picture.data.url}}" >{{reply.from.name}}
-					</td>
-					<td>
-						{{reply.message}}
-					</td>
-				</tr>
-			</table
-		</td>
-	</tr>
+<table class="table table-hover table-striped">
+	<thead>
+		<th>FROM</th>
+		<th>Comment</th>
+		<th>Replies</th>
+	</thead>
+	<tbody>
+		<tr ng-repeat="comment in FB_Comments">
+			<td>
+				<image src="{{comment.from.picture.data.url}}" >{{comment.from.name}}
+			</td>
+			<td>
+				{{comment.message}}
+			</td>
+			<td>
+				<table border=1>
+					<tr>
+						<td>
+							FROM
+						</td>
+						<td>
+							Reply
+						</td>
+					<tr>
+					<tr ng-repeat="reply in comment.comments.data">
+						<td>
+							<image src="{{reply.from.picture.data.url}}" >{{reply.from.name}}
+						</td>
+						<td>
+							{{reply.message}}
+						</td>
+					</tr>
+				</table
+			</td>
+		</tr>
+	</tbody>
 </table>
