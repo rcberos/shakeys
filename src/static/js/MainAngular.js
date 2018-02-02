@@ -173,6 +173,31 @@ app.controller('MainController', function($scope, $http, $timeout, $interval, $w
 
 	$scope.filter_words = [];
 
+	function updateShowComment(){
+		$scope.FB_ShowComments = [];
+
+		if($scope.filter_words.length == 0){
+			$scope.FB_ShowComments = $scope.FB_Comments;
+		}	
+		else{
+			for(var i=0; i<$scope.FB_Comments.length; i++){
+				
+				console.log($scope.FB_Comments[i].message);
+				console.log('MESSAGE');
+				console.log($scope.FB_Comments);
+				for(var j=0; j<$scope.filter_words.length; j++){
+					console.log($scope.filter_words[j]);
+					var n = $scope.FB_Comments[i].message.search($scope.filter_words[j]);
+					if(n>=0){
+						$scope.FB_ShowComments.push($scope.FB_Comments[i]);
+						break;
+					}
+				}
+			}
+		}
+			
+	}
+
 	$scope.add_word = function(){
 		var word = document.getElementById('addword').value;
 		$scope.filter_words.push(word);
@@ -180,27 +205,18 @@ app.controller('MainController', function($scope, $http, $timeout, $interval, $w
 			$scope.$apply();
 		}
 
-		$scope.FB_ShowComments = [];
-
-		for(var i=0; i<$scope.FB_Comments.length; i++){
-			
-			console.log($scope.FB_Comments[i].message);
-			console.log('MESSAGE');
-			console.log($scope.FB_Comments);
-			for(var j=0; j<$scope.filter_words.length; j++){
-				console.log($scope.filter_words[j]);
-				var n = $scope.FB_Comments[i].message.search($scope.filter_words[j]);
-				if(n>=0){
-					$scope.FB_ShowComments.push($scope.FB_Comments[i]);
-					break;
-				}
-			}
-		}
+		updateShowComment();
 
 	}
 
 	$scope.remove_word = function(word){
-
+		for(var i=0; i<$scope.filter_words.length; i++){
+			if($scope.filter_words[i] == word){
+				$scope.filter_words.splice(i,1);
+				break;
+			}
+		}
+		updateShowComment();
 	}
 
 	$scope.get_comment = function(post_id){
