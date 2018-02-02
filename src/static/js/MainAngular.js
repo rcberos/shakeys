@@ -209,7 +209,7 @@ app.controller('MainController', function($scope, $http, $timeout, $interval, $w
 			$scope.$apply();
 		}
 
-		var url = "https://graph.facebook.com/v2.10/"+post_id+"?fields=id,message,picture&access_token="+$scope.FB_Token;
+		var url = "https://graph.facebook.com/v2.10/"+post_id+"?fields=id,message,picture,comments.summary(true)&access_token="+$scope.FB_Token;
 		console.log(url)
 		$http.get(url).then(function(response){
 			console.log(response);
@@ -225,7 +225,7 @@ app.controller('MainController', function($scope, $http, $timeout, $interval, $w
 
 
 		// // var url = "https://graph.facebook.com/v2.12/"+post_id+"?fields=id,picture,message&access_token="+$scope.FB_Token;
-		var url = "https://graph.facebook.com/v2.10/"+post_id+"/comments?fields=id,message,from{name,id,picture},comments.summary(true){id,message,from{picture,id,name}}&limit=100&access_token="+$scope.FB_Token;
+		var url = "https://graph.facebook.com/v2.10/"+post_id+"/comments?fields=id,message,from{name,id,picture},comments.summary(true){id,message,from{picture,id,name}}&limit=500&summary=true&access_token="+$scope.FB_Token;
 		
 		scan_comments(url);
 		// console.log(url)
