@@ -129,7 +129,7 @@ app.controller('MainController', function($scope, $http, $timeout, $interval, $w
 		console.log('show_replies');
 		console.log(index);
 		$scope.showReplies = true;
-		$scope.commentReply = $scope.FB_Comments[index].comments;
+		$scope.commentReply = $scope.FB_Comments[index].comments.data;
 		console.log($scope.FB_Comments[index]);
 		if(!$scope.$$phase) {
 			$scope.$apply();
