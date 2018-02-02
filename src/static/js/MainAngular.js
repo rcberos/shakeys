@@ -187,7 +187,7 @@ app.controller('MainController', function($scope, $http, $timeout, $interval, $w
 				console.log($scope.FB_Comments);
 				for(var j=0; j<$scope.filter_words.length; j++){
 					console.log($scope.filter_words[j]);
-					var n = $scope.FB_Comments[i].message.search($scope.filter_words[j]);
+					var n = $scope.FB_Comments[i].message.toLowerCase().search($scope.filter_words[j].toLowerCase());
 					if(n>=0){
 						$scope.FB_ShowComments.push($scope.FB_Comments[i]);
 						break;
@@ -261,7 +261,7 @@ app.controller('MainController', function($scope, $http, $timeout, $interval, $w
 			for(var i=0; i<response.data.data.length; i++){
 				$scope.FB_Comments.push(response.data.data[i]);
 				for(var j=0; j<$scope.filter_words.length; j++){
-					var n = response.data.data[i].message.search($scope.filter_words[j]);
+					var n = response.data.data[i].message.toLowerCase().search($scope.filter_words[j].toLowerCase());
 					if(n>=0){
 						$scope.FB_ShowComments.push(response.data.data[i]);
 					}
