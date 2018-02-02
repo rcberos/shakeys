@@ -24,24 +24,7 @@
 			</table>
 		</div>
 		<div class="col-md-5" ng-show="showReplies">
-			<table class="table table-hover table-striped">
-				<tr>
-					<td>
-						FROM
-					</td>
-					<td>
-						Reply
-					</td>
-				<tr>
-				<tr ng-repeat="reply in commentReply">
-					<td>
-						<image src="{{reply.from.picture.data.url}}" >{{reply.from.name}}
-					</td>
-					<td>
-						{{reply.message}}
-					</td>
-				</tr>
-			</table>
+			
 		</div>
 	</div>
 </div>
