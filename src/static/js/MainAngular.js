@@ -2,17 +2,25 @@ var app = angular.module('MainModule', ['ui.bootstrap']);
 
 app.controller('MainController', function($scope, $http, $timeout, $interval, $window){
 	function get_accounts(){
-		FB.api(
-	        "/me/accounts",
-	        "GET",
-	        function (response) {
-	            console.log(response);
-	          if (response && !response.error) {
-	            /* handle the result */
-	            console.log('error');
-	          }
-	        }
-	    );
+
+		var url = "https://graph.facebook.com/v2.10/me/accounts?fields=name,access_token,picture&access_token="+$scope.FB_Token;
+		console.log(url)
+		$http.get(url).then(function(response){
+			console.log(response);
+			// $scope.FB_Comments = response.data.data;
+		});
+
+		// FB.api(
+	 //        "/me/accounts",
+	 //        "GET",
+	 //        function (response) {
+	 //            console.log(response);
+	 //          if (response && !response.error) {
+	 //            /* handle the result */
+	 //            console.log('error');
+	 //          }
+	 //        }
+	 //    );
 	}
 
 	window.fbAsyncInit = function() {
