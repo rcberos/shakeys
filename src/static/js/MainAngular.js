@@ -251,6 +251,12 @@ app.controller('MainController', function($scope, $http, $timeout, $interval, $w
 		// });
 	}
 
+
+	$scope.reply_to_comment = function(index){
+		var comment_id = $scope.FB_ShowComments[index].id;
+		console.log(comment_id);
+	}
+
 	function scan_comments(url){
 		console.log('scan');
 		$http.get(url).then(function(response){
@@ -278,6 +284,8 @@ app.controller('MainController', function($scope, $http, $timeout, $interval, $w
 			console.log($scope.FB_Comments);
 		});
 	}
+
+
 
 });
 
