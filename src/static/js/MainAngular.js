@@ -149,10 +149,10 @@ app.controller('MainController', function($scope, $http, $timeout, $interval, $w
 		console.log(url)
 		$http.get(url).then(function(response){
 			console.log(response);
-			$scope.FB_SinglePost = response.data.data;
-			if(!$scope.$$phase) {
-				$scope.$apply();
-			}
+			$scope.FB_SinglePost = response.data;
+			// if(!$scope.$$phase) {
+			// 	$scope.$apply();
+			// }
 			console.log($scope.FB_SinglePost);
 		});
 
