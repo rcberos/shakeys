@@ -259,7 +259,8 @@ app.controller('MainController', function($scope, $http, $timeout, $interval, $w
 
 		var url = "https://graph.facebook.com/v2.10/"+comment_id+"/comments";
 		var data = {
-			message: "wow"
+			message: "wow",
+			access_token: $scope.FB_Token
 		}
 		$http.post(url, data).then(function(response){
 			console.log(response);
