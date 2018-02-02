@@ -8,6 +8,7 @@
 				<thead>
 					<th>FROM</th>
 					<th>Comment</th>
+					<th>Number of Replies</th>
 					<th>Replies</th>
 				</thead>
 				<tbody>
@@ -17,6 +18,9 @@
 						</td>
 						<td>
 							{{comment.message}}
+						</td>
+						<td>
+							{{comment.comments.summary.total_count}}
 						</td>
 						<td>
 							<button ng-click="show_replies($index)">Show Replies</button>
