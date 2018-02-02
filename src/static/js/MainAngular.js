@@ -155,6 +155,17 @@ app.controller('MainController', function($scope, $http, $timeout, $interval, $w
 	$scope.add_word = function(){
 		var word = document.getElementById('addword').value;
 		$scope.filter_words.push(word);
+
+		for(var i=0; i<$scope.FB_Comments.length; i++){
+			
+			for(var j=0; j<$scope.filter_words.length; j++){
+				var n = $scope.FB_Comments[i].message.search($scope.filter_words[j]);
+				if(n>=0){
+					$scope.FB_ShowComments.push($scope.FB_Comments[i]);
+				}
+			}
+		}
+
 	}
 
 	$scope.remove_word = function(word){
@@ -179,6 +190,7 @@ app.controller('MainController', function($scope, $http, $timeout, $interval, $w
 		});
 
 		$scope.FB_Comments = [];
+		$scope.FB_ShowComments = [];
 
 
 		// // var url = "https://graph.facebook.com/v2.12/"+post_id+"?fields=id,picture,message&access_token="+$scope.FB_Token;
@@ -201,6 +213,15 @@ app.controller('MainController', function($scope, $http, $timeout, $interval, $w
 
 			for(var i=0; i<response.data.data.length; i++){
 				$scope.FB_Comments.push(response.data.data[i]);
+				for(var j=0; j<$scope.filter_words.length; j++){
+					var n = response.data.data[i].message.search($scope.filter_words[j]);
+					if(n>=0){
+						$scope.FB_ShowComments.push(response.data.data[i]);
+					}
+				}
+				if($scope.filter_words.length==0){
+					$scope.FB_ShowComments.push(response.data.data[i]);
+				}
 			}
 
 			if (angular.isDefined(response.data.paging.next)) {
