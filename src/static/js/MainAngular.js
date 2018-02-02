@@ -1,6 +1,20 @@
 var app = angular.module('MainModule', ['ui.bootstrap']);
 
 app.controller('MainController', function($scope, $http, $timeout, $interval, $window){
+	function get_accounts(){
+		FB.api(
+	        "/me/accounts",
+	        "GET",
+	        function (response) {
+	            console.log(response);
+	          if (response && !response.error) {
+	            /* handle the result */
+	            console.log('error');
+	          }
+	        }
+	    );
+	}
+
 	window.fbAsyncInit = function() {
 	    FB.init({
 	      appId      : '1567078173606071',
@@ -22,10 +36,11 @@ app.controller('MainController', function($scope, $http, $timeout, $interval, $w
 
 	                $scope.FB_Name = response.name;
 	                $scope.FB_Picture = response.picture.data.url;
-	                $scope.currentTemp = "/fb-search";
+	                $scope.currentTemp = "/fb-account";
 	                if(!$scope.$$phase) {
 						$scope.$apply();
 					}
+					get_accounts();
 				});
 	    		
 
@@ -63,10 +78,11 @@ app.controller('MainController', function($scope, $http, $timeout, $interval, $w
 
 	                $scope.FB_Name = response.name;
 	                $scope.FB_Picture = response.picture.data.url;
-	                $scope.currentTemp = "/fb-search";
+	                $scope.currentTemp = "/fb-account";
 	                if(!$scope.$$phase) {
 						$scope.$apply();
 					}
+					get_accounts();
 				});
 				// console.log(fb_info);
 	    		

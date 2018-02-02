@@ -479,6 +479,11 @@ app.route('/fb-comment')
       res.render("fb-comment");  
    }) 
 
+app.route('/fb-account')
+   .get((req,res) => {
+      res.render("fb-account");  
+   }) 
+
 app.get('/aircast-gallery',(req,res)=>{
   res.render('aircast-gallery');
 })
