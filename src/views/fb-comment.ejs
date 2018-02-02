@@ -9,6 +9,19 @@
 	</div>
 </div>
 
+<div class="container">
+	<div class="row"> 
+		<div class="col-md-7">
+			<span ng-repeat="word in filter_words">
+				<span ng-click="remove_word(word)">{{word}}</span>
+			</span>
+		</div> 
+		<div class="col-md-5">
+			Word: <input type="text" ng-model="page_name" id="addword" value="ShakeysPH" > <button ng-click="add_word()" class="btn btn-primary">Add Filter Word</button>
+		</div>
+	</div>
+</div>
+
 
 <div class="container">
 	<div class="row"> 

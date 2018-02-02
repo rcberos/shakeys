@@ -139,6 +139,17 @@ app.controller('MainController', function($scope, $http, $timeout, $interval, $w
 		}
 	}
 
+	$scope.filter_words = [];
+
+	$scope.add_word = function(){
+		var word = document.getElementById('addword').value;
+		$scope.filter_words.push(word);
+	}
+
+	$scope.remove_word = function(word){
+
+	}
+
 	$scope.get_comment = function(post_id){
 		$scope.currentTemp = "/fb-comment";
         if(!$scope.$$phase) {
