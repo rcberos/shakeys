@@ -1,6 +1,16 @@
 var app = angular.module('MainModule', ['ui.bootstrap']);
 
 app.controller('MainController', function($scope, $http, $timeout, $interval, $window){
+
+	var blaster = [1,2,3,4,5,6,7,8,9,10];
+	for(var i=0;i<blaster.length; i++){
+		console.log(blaster[i]);
+		if(i==2){
+			array.splice(i, 1);
+		}
+	}
+
+
 	function get_accounts(){
         $scope.currentTemp = "/fb-account";
         if(!$scope.$$phase) {
