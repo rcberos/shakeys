@@ -150,25 +150,43 @@ app.controller('MainController', function($scope, $http, $timeout, $interval, $w
 		}
 	}
 
+	$scope.myFilter = function(post) {
+		var isMatch = false;
+
+		if ($scope.filter_words.length>0) {
+			var parts = $scope.inputText.split(' ');
+
+			filter_words.forEach(function(part) {
+				if (new RegExp(part).test(post)) {
+					isMatch = true;
+				}
+			});
+		} else {
+			isMatch = true;
+		}
+
+		return isMatch;
+    };
+
 	$scope.filter_words = [];
 
 	$scope.add_word = function(){
 		var word = document.getElementById('addword').value;
 		$scope.filter_words.push(word);
 
-		for(var i=0; i<$scope.FB_Comments.length; i++){
+		// for(var i=0; i<$scope.FB_Comments.length; i++){
 			
-			console.log($scope.FB_Comments[i].message);
-			console.log('MESSAGE');
-			console.log($scope.FB_Comments);
-			for(var j=0; j<$scope.filter_words.length; j++){
-				console.log($scope.filter_words[j]);
-				var n = $scope.FB_Comments[i].message.search($scope.filter_words[j]);
-				if(n>=0){
-					$scope.FB_ShowComments.push($scope.FB_Comments[i]);
-				}
-			}
-		}
+		// 	console.log($scope.FB_Comments[i].message);
+		// 	console.log('MESSAGE');
+		// 	console.log($scope.FB_Comments);
+		// 	for(var j=0; j<$scope.filter_words.length; j++){
+		// 		console.log($scope.filter_words[j]);
+		// 		var n = $scope.FB_Comments[i].message.search($scope.filter_words[j]);
+		// 		if(n>=0){
+		// 			$scope.FB_ShowComments.push($scope.FB_Comments[i]);
+		// 		}
+		// 	}
+		// }
 
 	}
 
