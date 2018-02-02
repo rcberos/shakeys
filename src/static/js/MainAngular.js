@@ -160,7 +160,7 @@ app.controller('MainController', function($scope, $http, $timeout, $interval, $w
 				console.log("SEARCH");
 				console.log(part);
 				console.log(post);
-				if (new RegExp(part).test(post)) {
+				if (new RegExp(part).test(post.message)) {
 					isMatch = true;
 				}
 			});
