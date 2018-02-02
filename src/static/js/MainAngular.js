@@ -156,14 +156,29 @@ app.controller('MainController', function($scope, $http, $timeout, $interval, $w
 			console.log($scope.FB_SinglePost);
 		});
 
+		$scope.FB_Comments = [];
+		scan_comments(url);
 
-		// var url = "https://graph.facebook.com/v2.12/"+post_id+"?fields=id,picture,message&access_token="+$scope.FB_Token;
-		var url = "https://graph.facebook.com/v2.10/"+post_id+"/comments?fields=id,message,from{name,id,picture},comments.summary(true){id,message,from{picture,id,name}}&access_token="+$scope.FB_Token;
-		console.log(url)
+
+		// // var url = "https://graph.facebook.com/v2.12/"+post_id+"?fields=id,picture,message&access_token="+$scope.FB_Token;
+		// var url = "https://graph.facebook.com/v2.10/"+post_id+"/comments?fields=id,message,from{name,id,picture},comments.summary(true){id,message,from{picture,id,name}}&access_token="+$scope.FB_Token;
+		// console.log(url)
+		// $http.get(url).then(function(response){
+		// 	console.log(response);
+		// 	$scope.FB_Comments = response.data.data;
+		// });
+	}
+
+	function scan_comments(url){
 		$http.get(url).then(function(response){
 			console.log(response);
-			$scope.FB_Comments = response.data.data;
+			// $scope.FB_Comments = response.data.data;
+			$scope.FB_Comments.push(response.data.data);
+			if (typeof response.data.paging.next !== 'undefined') {
+			  scan_comments(response.data.paging.next);
+			}
 		});
 	}
+
 });
 
