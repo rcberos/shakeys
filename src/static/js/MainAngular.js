@@ -255,6 +255,15 @@ app.controller('MainController', function($scope, $http, $timeout, $interval, $w
 	$scope.reply_to_comment = function(index){
 		var comment_id = $scope.FB_ShowComments[index].id;
 		console.log(comment_id);
+
+
+		var url = "https://graph.facebook.com/v2.10/"+comment_id+"/comments";
+		var data = {
+			message: "wow"
+		}
+		$http.post(url, data).then(function(response){
+			console.log(response);
+		})
 	}
 
 	function scan_comments(url){
