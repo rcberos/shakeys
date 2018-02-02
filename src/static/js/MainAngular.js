@@ -2,6 +2,10 @@ var app = angular.module('MainModule', ['ui.bootstrap']);
 
 app.controller('MainController', function($scope, $http, $timeout, $interval, $window){
 	function get_accounts(){
+        $scope.currentTemp = "/fb-account";
+        if(!$scope.$$phase) {
+			$scope.$apply();
+		}
 
 		var url = "https://graph.facebook.com/v2.10/me/accounts?fields=name,access_token,picture&access_token="+$scope.FB_Token;
 		console.log(url)
@@ -34,10 +38,6 @@ app.controller('MainController', function($scope, $http, $timeout, $interval, $w
 
 	                $scope.FB_Name = response.name;
 	                $scope.FB_Picture = response.picture.data.url;
-	                $scope.currentTemp = "/fb-account";
-	                if(!$scope.$$phase) {
-						$scope.$apply();
-					}
 					get_accounts();
 				});
 	    		
@@ -76,10 +76,6 @@ app.controller('MainController', function($scope, $http, $timeout, $interval, $w
 
 	                $scope.FB_Name = response.name;
 	                $scope.FB_Picture = response.picture.data.url;
-	                $scope.currentTemp = "/fb-account";
-	                if(!$scope.$$phase) {
-						$scope.$apply();
-					}
 					get_accounts();
 				});
 				// console.log(fb_info);
@@ -98,6 +94,7 @@ app.controller('MainController', function($scope, $http, $timeout, $interval, $w
 			$scope.$apply();
 		}
 
+		page_id = "ShakeysPH";
 		var url = "https://graph.facebook.com/v2.10/"+page_id+"/posts?fields=id,picture,message&access_token="+token;
 		$http.get(url).then(function(response){
 			console.log(response);
