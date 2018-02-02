@@ -183,7 +183,7 @@ app.controller('MainController', function($scope, $http, $timeout, $interval, $w
 
 			if (angular.isDefined(response.data.paging.next)) {
 				console.log(response.data.paging.next);
-			  // scan_comments(response.data.paging.next);
+			  scan_comments(response.data.paging.next);
 			}
 			console.log($scope.FB_Comments);
 		});
