@@ -170,6 +170,7 @@ app.controller('MainController', function($scope, $http, $timeout, $interval, $w
 	}
 
 	function scan_comments(url){
+		console.log('scan');
 		$http.get(url).then(function(response){
 			console.log(response);
 			// $scope.FB_Comments = response.data.data;
