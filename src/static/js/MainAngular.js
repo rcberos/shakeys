@@ -88,11 +88,14 @@ app.controller('MainController', function($scope, $http, $timeout, $interval, $w
 		}, {scope: 'email'});
 	}
 
-	$scope.get_page = function(page_id, token){
+	$scope.get_page = function(page_id, token, page_name, picture){
 		$scope.currentTemp = "/fb-post";
         if(!$scope.$$phase) {
 			$scope.$apply();
 		}
+
+		$scope.FB_Name = page_name;
+		$scope.FB_Picture = picture;
 
 		page_id = "ShakeysPH";
 		$scope.FB_Token = token;
