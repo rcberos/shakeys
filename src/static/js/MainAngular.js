@@ -154,7 +154,7 @@ app.controller('MainController', function($scope, $http, $timeout, $interval, $w
 		var isMatch = false;
 
 		if ($scope.filter_words.length>0) {
-			var parts = $scope.inputText.split(' ');
+			// var parts = $scope.inputText.split(' ');
 
 			filter_words.forEach(function(part) {
 				if (new RegExp(part).test(post)) {
@@ -173,6 +173,10 @@ app.controller('MainController', function($scope, $http, $timeout, $interval, $w
 	$scope.add_word = function(){
 		var word = document.getElementById('addword').value;
 		$scope.filter_words.push(word);
+		if(!$scope.$$phase) {
+			$scope.$apply();
+		}
+		
 
 		// for(var i=0; i<$scope.FB_Comments.length; i++){
 			
