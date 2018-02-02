@@ -111,7 +111,7 @@ app.controller('MainController', function($scope, $http, $timeout, $interval, $w
 		page_id = "ShakeysPH";
 		$scope.FB_Token = token;
 
-		var url = "https://graph.facebook.com/v2.10/"+page_id+"/posts?fields=id,picture,message&access_token="+$scope.FB_Token;
+		var url = "https://graph.facebook.com/v2.10/"+page_id+"/posts?fields=id,picture,message,comments.summary(true)&access_token="+$scope.FB_Token;
 		$http.get(url).then(function(response){
 			console.log(response);
 			$scope.FB_Posts = response.data.data;
@@ -209,7 +209,7 @@ app.controller('MainController', function($scope, $http, $timeout, $interval, $w
 			$scope.$apply();
 		}
 
-		var url = "https://graph.facebook.com/v2.10/"+post_id+"?fields=id,message,picture,comments.summary(true)&access_token="+$scope.FB_Token;
+		var url = "https://graph.facebook.com/v2.10/"+post_id+"?fields=id,message,picture&access_token="+$scope.FB_Token;
 		console.log(url)
 		$http.get(url).then(function(response){
 			console.log(response);
