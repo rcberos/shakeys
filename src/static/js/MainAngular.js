@@ -157,6 +157,9 @@ app.controller('MainController', function($scope, $http, $timeout, $interval, $w
 			// var parts = $scope.inputText.split(' ');
 
 			$scope.filter_words.forEach(function(part) {
+				console.log("SEARCH");
+				console.log(part);
+				console.log(post);
 				if (new RegExp(part).test(post)) {
 					isMatch = true;
 				}
