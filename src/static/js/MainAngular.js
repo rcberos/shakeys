@@ -7,6 +7,7 @@ app.controller('MainController', function($scope, $http, $timeout, $interval, $w
 		console.log(blaster[i]);
 		if(i==2){
 			blaster.splice(i, 1);
+			i=i-1;
 		}
 	}
 
