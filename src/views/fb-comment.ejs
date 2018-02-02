@@ -39,7 +39,8 @@
 				<tbody>
 					<tr ng-repeat="comment in FB_ShowComments">
 						<td>
-							<image src="{{comment.from.picture.data.url}}" >{{comment.from.name}}
+							<image src="{{comment.from.picture.data.url}}" >
+							<div>{{comment.from.name}}</div>
 						</td>
 						<td>
 							{{comment.message}}
