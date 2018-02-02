@@ -144,10 +144,15 @@ app.controller('MainController', function($scope, $http, $timeout, $interval, $w
         if(!$scope.$$phase) {
 			$scope.$apply();
 		}
-		// $scope.currentBottom = "/fb-comment";
-  //       if(!$scope.$$phase) {
-		// 	$scope.$apply();
-		// }
+
+		var url = "https://graph.facebook.com/v2.10/"+post_id+"?fields=id,message,picture&access_token="+$scope.FB_Token;
+		console.log(url)
+		$http.get(url).then(function(response){
+			console.log(response);
+			$scope.FB_SinglePost = response.data.data;
+		});
+
+
 		// var url = "https://graph.facebook.com/v2.12/"+post_id+"?fields=id,picture,message&access_token="+$scope.FB_Token;
 		var url = "https://graph.facebook.com/v2.10/"+post_id+"/comments?fields=id,message,from{name,id,picture},comments.summary(true){id,message,from{picture,id,name}}&access_token="+$scope.FB_Token;
 		console.log(url)
