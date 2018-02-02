@@ -33,6 +33,7 @@
 				<thead>
 					<th>FROM</th>
 					<th>Comment</th>
+					<th>Created Time</th>
 					<th>Number of Replies</th>
 					<th>Replies</th>
 				</thead>
@@ -44,6 +45,9 @@
 						</td>
 						<td>
 							{{comment.message}}
+						</td>
+						<td>
+							{{comment.created_time}}
 						</td>
 						<td>
 							{{comment.comments.summary.total_count}}
