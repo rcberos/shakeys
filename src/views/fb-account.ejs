@@ -1,1 +1,24 @@
-fb-account.ejs
+<table class="table table-hover table-striped">
+	<thead>
+		<th>Picture</th>
+		<th>Name</th>
+		<th>Button</th>
+		<th>Paramater</th>
+		<th>Update</th>
+	</thead>
+	<tbody>
+		<tr ng-repeat="account in FB_Accounts">
+			<td>
+				<image src="{{account.picture.data.url}}" >
+			</td>
+			<td>
+				{{account.name}}
+			</td>
+			<td>
+				<button>SELECT</button>
+			</td>
+		</tr>
+
+	</tbody>
+
+</table>

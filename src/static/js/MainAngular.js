@@ -7,6 +7,8 @@ app.controller('MainController', function($scope, $http, $timeout, $interval, $w
 		console.log(url)
 		$http.get(url).then(function(response){
 			console.log(response);
+			$scope.FB_Accounts = response.data.data;
+			
 			// $scope.FB_Comments = response.data.data;
 		});
 
