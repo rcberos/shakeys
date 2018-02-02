@@ -174,7 +174,7 @@ app.controller('MainController', function($scope, $http, $timeout, $interval, $w
 			console.log(response);
 			// $scope.FB_Comments = response.data.data;
 			$scope.FB_Comments.push(response.data.data);
-			if (typeof response.data.paging.next !== 'undefined') {
+			if (!('next' in response.data.paging)) {
 			  scan_comments(response.data.paging.next);
 			}
 		});
