@@ -125,6 +125,11 @@ app.controller('MainController', function($scope, $http, $timeout, $interval, $w
 		})
 	}
 
+	$scope.show_replies = function(index){
+		$scope.showReplies = true;
+		$scope.commentReply = $scope.FB_Comments[index].comments;
+	}
+
 	$scope.get_comment = function(post_id){
 		$scope.currentTemp = "/fb-comment";
         if(!$scope.$$phase) {
