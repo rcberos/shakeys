@@ -243,7 +243,7 @@ app.controller('MainController', function($scope, $http, $timeout, $interval, $w
 			$scope.$apply();
 		}
 
-		var url = "https://graph.facebook.com/v2.10/"+post_id+"?fields=id,message,picture,reaciton.limit(0).summary(true),comments.limit(0).summary(true),shares&access_token="+$scope.FB_Token;
+		var url = "https://graph.facebook.com/v2.10/"+post_id+"?fields=id,message,picture,reactions.limit(0).summary(true),comments.limit(0).summary(true),shares&access_token="+$scope.FB_Token;
 		console.log(url)
 		$http.get(url).then(function(response){
 			console.log(response);
