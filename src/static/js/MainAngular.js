@@ -140,6 +140,10 @@ app.controller('MainController', function($scope, $http, $timeout, $interval, $w
 	}
 
 	$scope.show_replies = function(index, id){
+		$scope.replyTemp = '/fb_reply';
+		if(!$scope.$$phase) {
+			$scope.$apply();
+		}
 		console.log('show_replies');
 		console.log(index);
 

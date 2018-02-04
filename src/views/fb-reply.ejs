@@ -1,0 +1,20 @@
+<div class="comment_head">
+	Replies
+</div>
+<table class="table table-hover table-striped">
+	<thead>
+		<th>FROM</th>
+		<th>Reply</th>
+	</thead>
+	<tr ng-repeat="reply in commentReply">
+		<td>
+			<image src="{{reply.from.picture.data.url}}" >
+			<div>
+				{{reply.from.name}}
+			</div>
+		</td>
+		<td>
+			{{reply.message}}
+		</td>
+	</tr>
+</table>
