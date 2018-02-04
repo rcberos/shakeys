@@ -79,12 +79,13 @@ body {
 }
 
 .fbicon{
-  width: 10px;
-  height: 10px;
+  width: 20px;
+  height: 20px;
 }
 
 .reaction{
-  font-size: 10px;
+  padding-top: 40px;
+  font-size: 20px;
   font-weight: bold;
 }
 .word_search{
