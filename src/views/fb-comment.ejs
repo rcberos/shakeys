@@ -4,13 +4,13 @@
 	</div>
 	<div class="row word_search"> 
 		<div class="col-md-3">
-			<image ng-src="{{FB_SinglePost.picture}}" >
+			<image ng-src="{{FB_SinglePost.picture}}" height="400px">
 		</div> 
 		<div class="col-md-9">
-			<div>
+			<div class="post_message">
 				{{FB_SinglePost.message}}
 			</div>
-			<div>
+			<div class="post_reaction">
 				<span class="reaction">
 					{{FB_SinglePost.reactions.summary.total_count}}<img class="fbicon" src="/img/fb-like-icon.png">
 				</span>

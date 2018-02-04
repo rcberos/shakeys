@@ -78,6 +78,15 @@ body {
   font-weight: bold;
 }
 
+.post_message{
+   display:block;
+    width:100%;
+    height:300px;
+    overflow:scroll;
+}
+.post_reaction{
+
+}
 .fbicon{
   width: 20px;
   height: 20px;
