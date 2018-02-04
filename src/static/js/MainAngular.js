@@ -140,6 +140,7 @@ app.controller('MainController', function($scope, $http, $timeout, $interval, $w
 	}
 
 	$scope.show_replies = function(index, id){
+		$scope.current_comment = id;
 		$scope.replyTemp = '/fb-reply';
 		if(!$scope.$$phase) {
 			$scope.$apply();
@@ -269,17 +270,20 @@ app.controller('MainController', function($scope, $http, $timeout, $interval, $w
 	}
 
 
-	$scope.reply_to_comment = function(index){
-		var comment_id = $scope.FB_ShowComments[index].id;
-		console.log(comment_id);
+	$scope.reply_to_comment = function(){
 
 
-		var url = "https://graph.facebook.com/v2.10/"+comment_id+"/comments";
+		// var comment_id = $scope.FB_ShowComments[index].id;
+		// console.log(comment_id);
+
+
+		var url = "https://graph.facebook.com/v2.10/"+$scope.current_comment+"/comments";
 		var data = {
-			message: "wow",
+			message: document.getElementById("comment_reply").value,
 			access_token: $scope.FB_Token
 		}
 		$http.post(url, data).then(function(response){
+			$scope.show_replies(1, $scope.current_comment)
 			console.log(response);
 		})
 	}
