@@ -147,7 +147,7 @@ app.controller('MainController', function($scope, $http, $timeout, $interval, $w
 		console.log('show_replies');
 		console.log(index);
 
-		var url = "https://graph.facebook.com/v2.10/"+id+"/comments?fields=id,from{id,name,picture},message&access_token="+$scope.FB_Token;
+		var url = "https://graph.facebook.com/v2.10/"+id+"/comments?order=chronological&fields=id,from{id,name,picture},message&access_token="+$scope.FB_Token;
 		$http.get(url).then(function(response){
 			console.log(response);
 			$scope.showReplies = true;
