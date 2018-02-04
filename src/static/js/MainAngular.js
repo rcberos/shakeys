@@ -139,15 +139,28 @@ app.controller('MainController', function($scope, $http, $timeout, $interval, $w
 		})
 	}
 
-	$scope.show_replies = function(index){
+	$scope.show_replies = function(index, id){
 		console.log('show_replies');
 		console.log(index);
-		$scope.showReplies = true;
-		$scope.commentReply = $scope.FB_ShowComments[index].comments.data;
-		console.log($scope.FB_Comments[index]);
-		if(!$scope.$$phase) {
-			$scope.$apply();
-		}
+
+		var url = "https://graph.facebook.com/v2.10/"+id+"/comments?fields=id,from,message&access_token="+$scope.FB_Token;
+		$http.get(url).then(function(response){
+			console.log(response);
+			$scope.showReplies = true;
+			$scope.commentReply = response.data.data;
+			if(!$scope.$$phase) {
+				$scope.$apply();
+			}
+			// $scope.FB_Posts = response.data.data;
+		})
+
+
+		// $scope.showReplies = true;
+		// $scope.commentReply = $scope.FB_ShowComments[index].comments.data;
+		// console.log($scope.FB_Comments[index]);
+		// if(!$scope.$$phase) {
+		// 	$scope.$apply();
+		// }
 	}
 
 	$scope.myFilter = function(post) {
