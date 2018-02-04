@@ -99,7 +99,9 @@ app.controller('MainController', function($scope, $http, $timeout, $interval, $w
 		}, {scope: 'email'});
 	}
 
-	$scope.get_page = function(page_id, token, page_name, picture){
+	$scop
+
+	$scope.set_account = function(page_id, token, page_name, picture){
 		$scope.currentTemp = "/fb-post";
         if(!$scope.$$phase) {
 			$scope.$apply();
@@ -108,35 +110,56 @@ app.controller('MainController', function($scope, $http, $timeout, $interval, $w
 		$scope.FB_Name = page_name;
 		$scope.FB_Picture = picture;
 
-		page_id = "ShakeysPH";
+		$scope.page_name = "ShakeysPH";
 		$scope.FB_Token = token;
 
-		var url = "https://graph.facebook.com/v2.10/"+page_id+"/posts?fields=id,picture,message,comments.summary(true)&access_token="+$scope.FB_Token;
-		$http.get(url).then(function(response){
-			console.log(response);
-			$scope.FB_Posts = response.data.data;
-		})
+		search_page();
+
+
+		// var url = "https://graph.facebook.com/v2.10/"+page_id+"/posts?fields=id,picture,message,comments.summary(true)&access_token="+$scope.FB_Token;
+		// $http.get(url).then(function(response){
+		// 	console.log(response);
+		// 	$scope.FB_Posts = response.data.data;
+		// })
+
+	}
+
+	$scope.get_page(){
+		$scope.page_name = document.getElementById("page_name").value;
+
+		$scope.hasPage = true;
+		
 
 	}
 
 
-	$scope.search_page = function(){
-		$scope.currentBottom = "/fb-post";
-        if(!$scope.$$phase) {
-			$scope.$apply();
-		}
+	// $scope.search_page = function(){
+		function search_page(){
 
-		$scope.page_name = document.getElementById('page_name').value;
-		console.log($scope.page_name);
-		if(!$scope.$$phase) {
-			$scope.$apply();
-		}
-		console.log($scope.page_name);
-		var url = "https://graph.facebook.com/v2.10/"+$scope.page_name+"/posts?fields=id,picture,message&access_token="+$scope.FB_Token;
+
+		var url = "https://graph.facebook.com/v2.10/"+$scope.page_name+"/posts?fields=id,picture,message,comments.summary(true)&access_token="+$scope.FB_Token;
 		$http.get(url).then(function(response){
 			console.log(response);
 			$scope.FB_Posts = response.data.data;
 		})
+
+
+		// $scope.currentBottom = "/fb-post";
+  //       if(!$scope.$$phase) {
+		// 	$scope.$apply();
+		// }
+
+		// $scope.page_name = document.getElementById('page_name').value;
+		// console.log($scope.page_name);
+		// if(!$scope.$$phase) {
+		// 	$scope.$apply();
+		// }
+		// console.log($scope.page_name);
+		// var url = "https://graph.facebook.com/v2.10/"+$scope.page_name+"/posts?fields=id,picture,message&access_token="+$scope.FB_Token;
+		// $http.get(url).then(function(response){
+		// 	console.log(response);
+		// 	$scope.FB_Posts = response.data.data;
+		// })
 	}
 
 	$scope.show_replies = function(index, id){

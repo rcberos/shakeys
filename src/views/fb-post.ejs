@@ -1,25 +1,39 @@
+<div class="container">
+	<div class="row">
+		<div class="col-sm-3">
+		</div>
+		<div class="col-sm-6">
+			<input type="text" id="page_name" ><button ng-click="get_page">Search Page</button>
+		</div>
+		<div class="col-sm-3">
+		</div>
+	</div>
+</div>
 
-<table class="table table-hover table-striped">
-	<thead>
-		<th>Picture</th>
-		<th>Message</th>
-		<th>Number of Comments</th>
-		<th>Button</th>
-	</thead>
-	<tbody>
-		<tr ng-repeat="post in FB_Posts">
-			<td>
-				<image src="{{post.picture}}" heigh="200">
-			</td>
-			<td>
-				{{post.message}}
-			</td>
-			<td>
-				{{post.comments.summary.total_count}}
-			</td>
-			<td>
-				<button class="btn btn-primary" ng-click="get_comment(post.id)">Get Comments</button>
-			</td>
-		</tr>
-	</tbody>
-</table>
+<div ng-show="hasPage">
+	<table class="table table-hover table-striped">
+		<thead>
+			<th>Picture</th>
+			<th>Message</th>
+			<th>Number of Comments</th>
+			<th>Button</th>
+		</thead>
+		<tbody>
+			<tr ng-repeat="post in FB_Posts">
+				<td>
+					<image src="{{post.picture}}" heigh="200">
+				</td>
+				<td>
+					{{post.message}}
+				</td>
+				<td>
+					{{post.comments.summary.total_count}}
+				</td>
+				<td>
+					<button class="btn btn-primary" ng-click="get_comment(post.id)">Get Comments</button>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+	
