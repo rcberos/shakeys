@@ -6,17 +6,19 @@
 		<th>FROM</th>
 		<th>Reply</th>
 	</thead>
-	<tr ng-repeat="reply in commentReply">
-		<td>
-			<image src="{{reply.from.picture.data.url}}" >
-			<div>
-				{{reply.from.name}}
-			</div>
-		</td>
-		<td>
-			{{reply.message}}
-		</td>
-	</tr>
+	<tbody>
+		<tr ng-repeat="reply in commentReply">
+			<td>
+				<image src="{{reply.from.picture.data.url}}" >
+				<div>
+					{{reply.from.name}}
+				</div>
+			</td>
+			<td>
+				{{reply.message}}
+			</td>
+		</tr>
+	</tbody>
 </table>
 <div class="row"> 
 	<div class="col-sm-1">

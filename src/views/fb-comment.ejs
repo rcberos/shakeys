@@ -25,10 +25,10 @@
 
 <div class="container">
 	<div class="row"> 
-		<div class="col-md-7">
-				<div class="comment_head">
-					Comments
-				</div>
+		<div class="col-sm-7">
+			<div class="comment_head">
+				Comments
+			</div>
 			<table class="table table-hover table-striped">
 				<thead>
 					<th>FROM</th>
@@ -57,11 +57,10 @@
 							<button ng-click="reply_to_comment($index)">Reply</button>
 						</td>
 					</tr>
-					
 				</tbody>
 			</table>
 		</div>
-		<div class="col-md-5" ng-show="showReplies">
+		<div class="col-sm-5" ng-show="showReplies">
 			<div ng-include = replyTemp>
 			</div>
 		</div>
