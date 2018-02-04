@@ -137,6 +137,8 @@ app.controller('MainController', function($scope, $http, $timeout, $interval, $w
 			$scope.$apply();
 		}
 
+		search_page();
+
 	}
 
 
