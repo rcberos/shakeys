@@ -129,6 +129,9 @@ app.controller('MainController', function($scope, $http, $timeout, $interval, $w
 
 		$scope.hasPage = true;
 
+		if(!$scope.$$phase) {
+			$scope.$apply();
+		}
 
 	}
 
@@ -141,6 +144,9 @@ app.controller('MainController', function($scope, $http, $timeout, $interval, $w
 		$http.get(url).then(function(response){
 			console.log(response);
 			$scope.FB_Posts = response.data.data;
+			if(!$scope.$$phase) {
+				$scope.$apply();
+			}
 		})
 
 
