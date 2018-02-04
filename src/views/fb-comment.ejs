@@ -3,7 +3,7 @@
 		<div class="col-sm-3">
 		</div>
 		<div class="col-sm-6">
-			<input type="text" id="page_name" ><button ng-click="get_page">Search Page</button>
+			<input type="text" id="page_name" ng-model="page_name" ><button class="btn btn-primary" ng-click="get_page()">Search Page</button>
 		</div>
 		<div class="col-sm-3">
 		</div>
@@ -84,7 +84,7 @@
 							{{comment.comments.summary.total_count}}
 						</td>
 						<td>
-							<button ng-click="show_replies($index,comment.id)">Show Replies</button>
+							<button class="btn btn-primary" ng-click="show_replies($index,comment.id)">Show Replies</button>
 						</td>
 					</tr>
 				</tbody>
