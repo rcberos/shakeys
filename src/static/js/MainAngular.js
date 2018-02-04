@@ -99,7 +99,7 @@ app.controller('MainController', function($scope, $http, $timeout, $interval, $w
 		}, {scope: 'email'});
 	}
 
-	$scop
+
 
 	$scope.set_account = function(page_id, token, page_name, picture){
 		$scope.currentTemp = "/fb-post";
@@ -128,13 +128,13 @@ app.controller('MainController', function($scope, $http, $timeout, $interval, $w
 		$scope.page_name = document.getElementById("page_name").value;
 
 		$scope.hasPage = true;
-		
+
 
 	}
 
 
 	// $scope.search_page = function(){
-		function search_page(){
+	function search_page(){
 
 
 		var url = "https://graph.facebook.com/v2.10/"+$scope.page_name+"/posts?fields=id,picture,message,comments.summary(true)&access_token="+$scope.FB_Token;
