@@ -2,10 +2,16 @@ body {
     padding-top: 100px !important;
     padding-bottom: 50px;
 }
+
+td {
+  word-break:break-all;
+}
+
 .starter-template {
     padding: 40px 15px;
     text-align: center;
 }
+
 
 
 .margin-10 {
