@@ -99,6 +99,12 @@ app.controller('MainController', function($scope, $http, $timeout, $interval, $w
 		}, {scope: 'email'});
 	}
 
+	$scope.fb_logout = function(){
+		FB.logout(function(response) {
+			console.log('logout');
+    		console.log(response);
+		});
+	}
 
 
 	$scope.set_account = function(page_id, token, page_name, picture){
@@ -124,6 +130,8 @@ app.controller('MainController', function($scope, $http, $timeout, $interval, $w
 
 	}
 
+	
+
 	$scope.get_page = function(){
 		console.log('get_page');
 		console.log($scope.page_name);
@@ -132,6 +140,8 @@ app.controller('MainController', function($scope, $http, $timeout, $interval, $w
 
 
 		$scope.hasPage = true;
+
+		$scope.currentTemp = "/fb-post";
 
 		if(!$scope.$$phase) {
 			$scope.$apply();
