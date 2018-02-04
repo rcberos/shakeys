@@ -110,7 +110,7 @@ app.controller('MainController', function($scope, $http, $timeout, $interval, $w
 		$scope.FB_Name = page_name;
 		$scope.FB_Picture = picture;
 
-		$scope.page_name = "ShakeysPH";
+		// $scope.page_name = "ShakeysPH";
 		$scope.FB_Token = token;
 
 		search_page();
