@@ -125,7 +125,11 @@ app.controller('MainController', function($scope, $http, $timeout, $interval, $w
 	}
 
 	$scope.get_page = function(){
+		console.log('get_page');
+		console.log($scope.page_name);
 		$scope.page_name = document.getElementById("page_name").value;
+		console.log($scope.page_name);
+
 
 		$scope.hasPage = true;
 
