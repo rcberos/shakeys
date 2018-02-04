@@ -103,6 +103,7 @@ app.controller('MainController', function($scope, $http, $timeout, $interval, $w
 		FB.logout(function(response) {
 			console.log('logout');
     		console.log(response);
+    		window.location.reload();
 		});
 	}
 
