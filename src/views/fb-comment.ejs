@@ -11,7 +11,15 @@
 				{{FB_SinglePost.message}}
 			</div>
 			<div>
-				{{FB_SinglePost.reactions.summary.total_count}}<img src="/img/fb-like-icon.png">,{{FB_SinglePost.comments.summary.total_count}}<img src="/img/fb-comment-icon.png">,<span ng-hide="FB_SinglePost.shares.count == undefined">{{FB_SinglePost.shares.count}}</span><span ng-show="FB_SinglePost.shares.count == undefined">0</span><img src="/img/fb-share-icon.png">
+				<span class="reaction">
+					{{FB_SinglePost.reactions.summary.total_count}}<img class="fbicon" src="/img/fb-like-icon.png">
+				</span>
+				<span class="reaction">
+					{{FB_SinglePost.comments.summary.total_count}}<img class="fbicon"  src="/img/fb-comment-icon.png">
+				</span>
+				<span class="reaction">
+					<span ng-hide="FB_SinglePost.shares.count == undefined">{{FB_SinglePost.shares.count}}</span><span ng-show="FB_SinglePost.shares.count == undefined">0</span><img class="fbicon"  src="/img/fb-share-icon.png">
+				</span>
 			</div>
 		</div>
 	</div>

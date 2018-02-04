@@ -78,6 +78,15 @@ body {
   font-weight: bold;
 }
 
+.fbicon{
+  width: 10px;
+  height: 10px;
+}
+
+.reaction{
+  font-size: 10px;
+  font-weight: bold;
+}
 .word_search{
   padding: 20px;
 }
