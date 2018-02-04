@@ -113,7 +113,7 @@ app.controller('MainController', function($scope, $http, $timeout, $interval, $w
 		// $scope.page_name = "ShakeysPH";
 		$scope.FB_Token = token;
 
-		search_page();
+		// search_page();
 
 
 		// var url = "https://graph.facebook.com/v2.10/"+page_id+"/posts?fields=id,picture,message,comments.summary(true)&access_token="+$scope.FB_Token;
