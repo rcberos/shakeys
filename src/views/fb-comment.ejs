@@ -66,14 +66,10 @@
 					Replies
 				</div>
 			<table class="table table-hover table-striped">
-				<tr>
-					<td>
-						FROM
-					</td>
-					<td>
-						Reply
-					</td>
-				<tr>
+				<thead>
+					<th>FROM</th>
+					<th>Reply</th>
+				</thead>
 				<tr ng-repeat="reply in commentReply">
 					<td>
 						<image src="{{reply.from.picture.data.url}}" >{{reply.from.name}}
