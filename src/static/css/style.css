@@ -81,8 +81,7 @@ body {
 .post_message{
    display:block;
     width:100%;
-    height:300px;
-    overflow:scroll;
+    height:80px;
 }
 .post_reaction{
 
