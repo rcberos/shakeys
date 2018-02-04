@@ -81,3 +81,7 @@ body {
 .word_search{
   padding: 20px;
 }
+
+.text_area{
+  width: 100%;
+}
