@@ -243,7 +243,7 @@ app.controller('MainController', function($scope, $http, $timeout, $interval, $w
 			$scope.$apply();
 		}
 
-		var url = "https://graph.facebook.com/v2.10/"+post_id+"?fields=id,message,picture&access_token="+$scope.FB_Token;
+		var url = "https://graph.facebook.com/v2.10/"+post_id+"?fields=id,message,picture,reaciton.limit(0).summary(true),comments.limit(0).summary(true),shares&access_token="+$scope.FB_Token;
 		console.log(url)
 		$http.get(url).then(function(response){
 			console.log(response);
@@ -291,7 +291,7 @@ app.controller('MainController', function($scope, $http, $timeout, $interval, $w
 	function scan_comments(url){
 		console.log('scan');
 		$http.get(url).then(function(response){
-			console.log(response);
+			// console.log(response);
 			// $scope.FB_Comments = response.data.data;
 			// $scope.FB_Comments.push(response.data.data);
 
@@ -309,10 +309,10 @@ app.controller('MainController', function($scope, $http, $timeout, $interval, $w
 			}
 
 			if (angular.isDefined(response.data.paging.next)) {
-				console.log(response.data.paging.next);
+				// console.log(response.data.paging.next);
 			  scan_comments(response.data.paging.next);
 			}
-			console.log($scope.FB_Comments);
+			// console.log($scope.FB_Comments);
 		});
 	}
 
