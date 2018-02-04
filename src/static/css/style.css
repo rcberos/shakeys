@@ -69,5 +69,6 @@ body {
 
 .account-page{
   text-align: center;
-
+  font-size: 30;
+  font-weight: bold;
 }
