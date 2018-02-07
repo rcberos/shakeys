@@ -32,7 +32,7 @@ app.controller('MainController', function($scope, $http, $timeout, $interval, $w
 	    FB.init({
 	      appId      : '1567078173606071',
 	      xfbml      : true,
-	      version    : 'v2.12'
+	      version    : 'v2.10'
 	    });
 	    FB.getLoginStatus(function(response) {
 	    	console.log(response);
