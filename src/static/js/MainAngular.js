@@ -96,7 +96,7 @@ app.controller('MainController', function($scope, $http, $timeout, $interval, $w
 	    	} else {
 	    		
 	    	}
-		}, {scope: 'email,accounts'});
+		}, {scope: 'email,manage_pages'});
 	}
 
 	$scope.fb_logout = function(){
